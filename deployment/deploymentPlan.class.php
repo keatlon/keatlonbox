@@ -107,6 +107,11 @@ class deploymentPlan
 		conf::i()->deployment['dir'][$alias] = $directory;
 	}
 
+	static function getHost($host)
+	{
+		return conf::i()->deployment['host'][$host];
+	}
+
 	static function getDir($alias)
 	{
 		$dir = conf::i()->deployment['dir'][$alias];
