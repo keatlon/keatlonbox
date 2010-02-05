@@ -23,6 +23,7 @@ abstract class deploymentTask
 		$this->task['once']			=	(int)(bool)$this->taskDocument['once'];
 		$this->task['description']	=	(string)$this->taskDocument['description'];
 		$this->task['ignore_error']	=	(int)(bool)$this->taskDocument['ignore_error'];
+		$this->task['host']			=	(string)$this->taskDocument['host'];
 	}
 
 	function prepare()
