@@ -1,0 +1,78 @@
+<?php
+
+function __autoload($className)
+{
+	$filename = router::get($className);
+	if (!$filename)
+	{
+	    die('class ' . $className . ' not found');
+	}
+	
+	require $filename;
+}
+
+function d($value, $return = false)
+{
+	if (is_null($value))
+	{
+		$v = "NULL";
+	}
+	elseif (is_bool($value))
+	{
+		if ($value)
+		{
+			$v = 'TRUE';
+		}
+		else
+		{
+			$v = 'FALSE';
+		}
+	}
+	elseif (is_numeric($value))
+	{
+		$v = (string)$value;
+	}
+	else
+	{
+		$v = print_r($value, true);
+	}
+
+    if ($return) 
+	{
+		return print_r($v, true);
+	}
+    else
+	{
+		echo "<pre>" . $v . "</pre>";
+	}
+}
+
+function dd($value)
+{
+	d($value);
+	die();
+}
+
+function __($phrase, $ns = 'index', $lang = false)
+{
+    return i18n::i()->get($phrase, $lang, $ns);
+}
+
+if (!function_exists('symlink'))
+{
+	function symlink( $target, $link )
+	{
+		return false;
+		exec('junction "' . $link . '" "' . $target . '"');
+	}
+
+	function readlink($path)
+	{
+		return 'f:/www/bwb/export/02-vip-2';
+		pclose($fp);
+		dd($output);
+	}
+
+}
+
+?>

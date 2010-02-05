@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definition>
+    <body><![CDATA[<?php
+
+class %BASECLASSNAME% extends dbPeer
+{
+    protected $instance     = false;
+    
+    protected $tableName    = '%TABLENAME%';
+    protected $primaryKey   = '%PRIMARYKEY%';
+    protected $fields       = array(%FIELDS%);
+
+    public static function setKey( $key )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doSetKey( $key );
+    }
+
+    /**
+     * get full row from table
+     *
+     * @param integer $primaryKey
+     * @return array
+     */
+    public static function  getItem( $primaryKey )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doGetItem( $primaryKey );
+    }
+
+
+    public static function  getItems( $primaryKeys )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doGetItems( $primaryKeys );
+    }
+
+    /**
+     * get array of primary keys
+     *
+     * @param array $where
+     * @param array $bind
+     * @param array $order
+     * @param array $limit
+     * @return array
+     */
+    public static function  getList( $where = array(), $join = array(), $order = array(), $limit = '' )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $join, $order, $limit);
+    }
+
+
+
+    /**
+     * insert row
+     *
+     * @param array $data
+     * @return integer
+     */
+    public static function  insert( $data )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data );
+    }
+
+
+    /**
+     * insert row
+     *
+     * @param array $data
+     * @return integer
+     */
+    public static function  replace( $data )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data );
+    }
+
+
+    /**
+     * update row by primary key
+     *
+     * @param integer $id
+     * @param array $data
+     * @return boolean
+     */
+    public static function  update($id,  $data)
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doUpdate($id,  $data);
+    }
+
+    /**
+     * delete row
+     *
+     * @param integer $primaryKey
+     */
+    public static function  delete( $primaryKey )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doDelete( $primaryKey );
+    }
+
+
+}
+
+
+]]>
+    </body>
+</definition>
