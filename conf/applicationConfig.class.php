@@ -50,12 +50,12 @@ abstract class applicationConfig
 	 ***********************************************************/
 
     public $i18n    =   array(
-        'engine'    => 'xml'
+        'engine'    => 'inline'
     );
 
     public $application    =   array(
         'frontend' => array(
-            'auth'  => array(),
+            'auth'  => array('server'),
             'i18n'  =>  array(
                 'defaultLocale' => 'en',
                 'ns'    => array('index')

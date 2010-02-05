@@ -48,7 +48,7 @@ class Minify_Controller_MinApp extends Minify_Controller_Base {
             } elseif (! is_array($files)) {
                 $files = (array)$files;
             }
-            foreach ($files as $file) {
+            foreach ($files as $k => $file) {
                 if ($file instanceof Minify_Source) {
                     $sources[] = $file;
                     continue;
@@ -56,13 +56,13 @@ class Minify_Controller_MinApp extends Minify_Controller_Base {
                 if (0 === strpos($file, '//')) {
                     $file = $_SERVER['DOCUMENT_ROOT'] . substr($file, 1);
                 }
-                $file = realpath($file);
+				$file = realpath($file);
                 if (is_file($file)) {
                     $sources[] = new Minify_Source(array(
                         'filepath' => $file
                     ));    
                 } else {
-                    $this->log("The path \"{$file}\" could not be found (or was not a file)");
+                    $this->log("The path \"{$files[$k]}\" could not be found (or was not a file)");
                     return $options;
                 }
             }
