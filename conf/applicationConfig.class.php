@@ -20,72 +20,22 @@ abstract class applicationConfig
         'exception'                 =>  '',
     );
 
-    public $site_is_down	=	false;
-    public $developers_ip	=	array ( '127.0.0.1' );
-
-    /***********************************************************
-     * 			ACCESS
-     ***********************************************************/
-    public $moderators	=	array(
-		'admin'	=> array(
-            'keatlon@gmail.com',
-            'stanislav.starcha@gmail.com',
-			'kykapeky@yahoo.com',
-			'pogodin@gmail.com'
-        )
-    );
-
-
-    /***********************************************************
-     * 			EMAIL
-     ***********************************************************/
-
-	 public $email	= array(
-		 'name_from'	=> 'BeWiBo',
-		 'email_from'	=> 'noreply@bewibo.com',
-		 'return_path'		=> 'www-data@bewibo.com',
-	 );
-
     /***********************************************************
      *                      PATH
      ***********************************************************/
-    public $rootdir 		= 	'f:/www/bwb';
+
+    public $rootdir 		= 	'';
 
     /***********************************************************
      *                      WEB DOMAINS
      ***********************************************************/
     public $domains			=	array(
-        'web'						=> 	'http://bwb.dev',
-        'admin'						=> 	'http://admin.bwb.dev',
-        'static'					=> 	'http://s.bwb.dev',
-        'image'						=> 	'http://i.bwb.dev',
-        'video'						=> 	'http://v.bwb.dev',
-        'cookie'					=> 	'.bwb.dev',
-    );
-
-    /***********************************************************
-     *                  DEPLOYMENT
-     ***********************************************************/
-    public $deployment	=	array(
-		'root_dir'	    => 'f:/www/bwb/deployment',
-		'svn_user'	    => 'keatlon',
-		'svn_password'  => 'playunfuddle',
-		'svn_url'	    => 'http://keatlon.unfuddle.com/svn/keatlon_bwb/deployment',
-
-		'bin'	=> array(
-			'php'	=> 'f:/tools/PHP/php.exe',
-			'svn'	=> 'f:/tools/svn/bin/svn.exe',
-			'sql'	=> 'f:/tools/mysql-sphinx/bin/mysql.exe'
-		),
-
-		'users'			=>	array(
-			1 => array( 'email' => 'keatlon@gmail.com', 'password' => 'test')
-		),
-
-		'dev'   => array(
-			'source_dir'	=> 'c:/www/bwb/trunk',
-			'svn_url'		=> 'http://keatlon.unfuddle.com/svn/keatlon_bwb/trunk',
-		)
+        'web'						=> 	'',
+        'admin'						=> 	'',
+        'static'					=> 	'',
+        'image'						=> 	'',
+        'video'						=> 	'',
+        'cookie'					=> 	'.',
     );
 
     /***********************************************************
@@ -105,31 +55,16 @@ abstract class applicationConfig
 
     public $application    =   array(
         'frontend' => array(
-            'auth'  => array('server'),
+            'auth'  => array(),
             'i18n'  =>  array(
                 'defaultLocale' => 'en',
-                'ns'    => array('index', 'iphone', 'iphoneweb')
+                'ns'    => array('index')
             ),
             'default'   => array(
                 'signedin'  => array('start', 'index'),
                 'signedout' => array('start', 'index'),
             ),
             'startSession'  => true
-        ),
-
-        'cp' => array(
-            'auth'  => array('cp'),
-            'i18n'  =>  array(
-                'defaultLocale' => 'en',
-                'ns'    => array('index')
-            ),
-
-            'default'   => array(
-                'signedin'  => array('do', 'index'),
-                'signedout' => array('account', 'signin'),
-            ),
-
-            'startSession'  => true,
         ),
 
         'iphone' => array(
@@ -249,19 +184,13 @@ abstract class applicationConfig
 
     public $image = array
     (
-		'storage'	=> 	'f:/www/storage/bwb',
-		'cache'		=> 	'f:/www/bwb/web/storage',
-		'imagick'	=>	'c:\soft\ImageMagick\convert.exe',
+		'storage'	=> 	'',
+		'cache'		=> 	'',
+		'imagick'	=>	'',
 		'escapecmd' =>  true,
 		'source'	=>	'c',
 
-		'sizes' => array
-		(
-			't'	    => ' -quality 90 -strip -resize 100x100! -interlace line',
-			'm'	    => ' -quality 90 -strip -resize 320x320! -interlace line',
-			'u'	    => ' -quality 90 -strip -resize 500x500> -interlace line',
-			'150x150'   => ' -quality 90 -strip -resize 150x150! -interlace line',
-		),
+		'sizes' => array (),
     );
 
     /***********************************************************
@@ -274,7 +203,11 @@ abstract class applicationConfig
 		'private_key'	=> 	'6LeuZAcAAAAAAEVScP_47NwMcoYas0jgiPjLFzXD',
     );
 
+}
 
+if (!$_SERVER['PRODUCT'])
+{
+	$_SERVER['PRODUCT'] = 'default';
 }
 
 define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
@@ -293,14 +226,7 @@ class conf
     {
         if (!self::$configuration)
         {
-            if (PRODUCT)
-			{
-				include dirname(__FILE__) . '/../../conf/' . PRODUCT . '/app.' . ENVIRONMENT . ".config.php";
-			}
-			else
-			{
-				include dirname(__FILE__) . '/../../conf/app.' . ENVIRONMENT . ".config.php";
-			}
+			include dirname(__FILE__) . '/../../conf/' . PRODUCT . '/app.' . ENVIRONMENT . ".config.php";
 			
             $className = ENVIRONMENT . 'Config';
             self::$configuration = new $className;
