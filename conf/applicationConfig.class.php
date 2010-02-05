@@ -293,7 +293,15 @@ class conf
     {
         if (!self::$configuration)
         {
-            include dirname(__FILE__) . '/../../conf/app.' . ENVIRONMENT . ".config.php";
+            if (PRODUCT)
+			{
+				include dirname(__FILE__) . '/../../conf/' . PRODUCT . '/app.' . ENVIRONMENT . ".config.php";
+			}
+			else
+			{
+				include dirname(__FILE__) . '/../../conf/app.' . ENVIRONMENT . ".config.php";
+			}
+			
             $className = ENVIRONMENT . 'Config';
             self::$configuration = new $className;
 
