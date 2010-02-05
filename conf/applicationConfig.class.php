@@ -279,6 +279,7 @@ abstract class applicationConfig
 
 define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
 define('APPLICATION',   $_SERVER['APPLICATION']);
+define('PRODUCT',		$_SERVER['PRODUCT']);
 
 class conf
 {
@@ -292,7 +293,7 @@ class conf
     {
         if (!self::$configuration)
         {
-            include dirname(__FILE__) . '/../' . ENVIRONMENT . ".config.php";
+            include dirname(__FILE__) . '/../../conf/app.' . ENVIRONMENT . ".config.php";
             $className = ENVIRONMENT . 'Config';
             self::$configuration = new $className;
 
