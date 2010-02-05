@@ -126,6 +126,10 @@ class deploymentPlan
 			case 'current_release_sources_dir':
 				return conf::i()->deployment['dir']['release'] . '/' . self::$release;
 				break;
+			
+			case 'release_storage':
+				return self::getDir('inactive_export_dir') . '/uploads';
+				break;
 		}
 
 		return false;
