@@ -1,6 +1,5 @@
 <?php
 
-
 	foreach(conf::i()->database['pool'] as $dbName => $dbConnection)
 	{
 		$dbName     =   conf::i()->database['pool']['master']['dbname'];

@@ -1,5 +1,5 @@
 <?php
-		$application = $argv[3];
+		$application = $argv[4];
 
         $actions    = builder::scanActions(conf::i()->rootdir . "/apps/{$application}");
         $classes    = builder::scanClasses(conf::i()->rootdir . "/apps/{$application}");
