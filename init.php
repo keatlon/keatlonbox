@@ -1,3 +1,3 @@
 <?php
-	include dirname(__FILE__) . "/../core/conf/applicationConfig.class.php";
+	include dirname(__FILE__) . "/../core/conf/init.php";
 ?>

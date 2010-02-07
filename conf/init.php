@@ -11,31 +11,104 @@ define('PRODUCT',		$_SERVER['PRODUCT']);
 
 class conf
 {
-    static $configuration = false;
+    static protected $conf = false;
+
+	/**
+     *  Sources directory
+     */
+    public $rootdir			= false;
+
+
+	/**
+     *  Web domains. Available keys
+     *  @var web		—	main applicatin domain
+	 *	@var static	—	static domain
+	 *	@var image	—	image domain
+	 *	@var cookie	—	cookie domain. must start with point.
+     */
+    public $domains			= false;
+
+
+	/**
+     *  Debug information
+     *  @var bool enable				—	enable/disable debugging
+	 *	@var bool display_errors		—	display errors
+	 *	@var display_level
+	 *	@var log_level
+	 *	@var log_errors			—	file to log PHP errors
+	 *	@var log_exceptions		—	file to log application exceptions
+	 *	@var log_information	—	file to log custom information
+     */
+	public $debug			= false;
+
+	
+    public $counter			= false;
+    public $i18n			= false;
+    public $application		= false;
+    public $access			= false;
+    public $ad				= false;
+	public $email			= false;
+    public $memcache		= false;
+    public $mdb				= false;
+    public $redis			= false;
+    public $database		= false;
+    public $sphinx			= false;
+    public $video			= false;
+    public $supersalt		= false;
+    public $image			= false;
+    public $captcha			= false;
 
     /**
      *
-     * @return applicationConfig
+     * @return conf
      */
     static function i()
     {
-        if (!self::$configuration)
+        if (!self::$conf)
         {
-			include dirname(__FILE__) . '/../../conf/app.' . PRODUCT . ".php";
-			include dirname(__FILE__) . '/../../conf/' . PRODUCT . '/app.' . ENVIRONMENT . ".php";
-
-            $className = ENVIRONMENT . 'Config';
-            self::$configuration = new $className;
+            self::$conf = new conf;
 
         }
 
-        return self::$configuration;
+        return self::$conf;
     }
 }
+
+$globalConfig		= include dirname(__FILE__) . '/app.global.php';
+$productConfig		= include dirname(__FILE__) . '/../../conf/app.' . PRODUCT . ".php";
+$environmentConfig	= include dirname(__FILE__) . '/../../conf/' . PRODUCT . '/app.' . ENVIRONMENT . ".php";
+
+$conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
+
+foreach($conf as $key => $value)
+{
+	conf::i()->$key = $value;
+}
+
 
 include conf::i()->rootdir . "/core/system/sys.php";
 include conf::i()->rootdir . "/core/system/router.class.php";
 
 router::init(APPLICATION);
 
+// conf::i()->im
+
+function array_merge_recursive_distinct ( array &$array1, array &$array2 )
+{
+  $merged = $array1;
+
+  foreach ( $array2 as $key => &$value )
+  {
+    if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
+    {
+      $merged [$key] = array_merge_recursive_distinct ( $merged [$key], $value );
+    }
+    else
+    {
+      $merged [$key] = $value;
+    }
+  }
+
+  return $merged;
+}
 ?>
