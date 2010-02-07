@@ -94,7 +94,6 @@ return array
             'prefix'            => '',
 			'enabled'           => false,
         ),
-	
     ),
 
     'mdb'		=> array
