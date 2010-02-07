@@ -5,19 +5,20 @@ class log
     const E_PHP         = 20;
     const E_USER        = 30;
 
+	static $erorrs		= array();
+
     static public function init()
     {
+		ini_set('display_errors', false);
+		ini_set('log_errors', false);
+		
+		error_reporting(E_ALL & ~E_NOTICE);
         set_error_handler(array('log', 'php_error_handler'), E_ALL & ~E_NOTICE);
-    }
-
-    static public function info($info)
-    {
-        log::error(log::E_USER, $info);
     }
 
     static public function exception(Exception $e)
     {
-        if (!conf::i()->log['exception'])
+        if (!conf::i()->debug['log_exception'])
         {
             return true;
         }
@@ -26,66 +27,101 @@ class log
                 .   "\n--------------------"
                 .   "\n" . $e->getTraceAsString()
                 .   "\n--------------------"
-                .   log::getUserInfo()
-                .   "\n";
+                .   "\nIP: " . $_SERVER['REMOTE_ADDR']
+				.   "\nreques: " . $_SERVER['REQUEST_URI']
+				.   "\nuserid: " . auth::getCredentials()
+        ;
 
-        self::addMessage(conf::i()->log['exception'], $message);
-    }
-
-    static public function error($level, $message)
-    {
-        if (!conf::i()->log['errors'])
-        {
-            return true;
-        }
-
-        self::addMessage(conf::i()->log['errors'], $message);
+        log::push(log::E_EXCEPTION, false, $message);
     }
 
     static public function php_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
     {
-        log::error(log::E_PHP, $errstr . " in " . $errfile . " at line " . $errline);
+		$message = $errstr . " in " . $errfile . " at line " . $errline;
+		
+		switch($errno)
+		{
+			case E_NOTICE:
+				$message = 'NOTICE: ' . $message;
+				break;
+
+			case E_WARNING:
+				break;
+		}
+		
+		log::push(log::E_PHP, $errno, $message);
     }
 
-    static protected function addMessage($filename, $message)
+    public static function push($type, $label, $msg = false)
     {
+		if (conf::i()->debug['display_errors'])
+		{
+			$item['type']		= $type;
+			$item['label']		= $label;
+			$item['message']	= $msg;
+
+			log::$erorrs[] = $item;
+		}
+
+
+		switch($type)
+		{
+			case log::E_PHP:
+
+				if (!conf::i()->debug['log_errors'])
+				{
+					return false;
+				}
+				
+				$filename = conf::i()->debug['log_errors'];
+
+				break;
+
+			case log::E_EXCEPTION:
+
+				if (!conf::i()->debug['log_exceptions'])
+				{
+					return false;
+				}
+
+				$filename = conf::i()->debug['log_exceptions'];
+
+				break;
+
+			case log::E_USER:
+
+				if (!conf::i()->debug['log_exceptions'])
+				{
+					return false;
+				}
+
+				$filename = conf::i()->debug['log_information'];
+
+				break;
+		}
+
         $fh = fopen($filename, 'a+');
-        fwrite($fh, date('d-m-Y H:i:s') . "\t" . $message . "\n");
+
+		$line = array(
+			date('d-m-Y H:i:s'),
+			$type,
+			$label,
+			$msg
+		);
+
+        fwrite($fh, implode("\t", $line) . "\n");
+		
         fclose($fh);
     }
 
-    static public function getUserInfo()
-    {
-        return "\nIP: " . $_SERVER['REMOTE_ADDR']
-        .   "\nREQUEST: " . $_SERVER['REQUEST_URI']
-        .   "\nUSER_ID: " . auth::getCredentials()
-        ;
-    }
-
-    public function sql($query, $params)
-    {
-		
-	}
-
-    public function log($msg = false, $label = false)
-    {
-        if (!$label)
-        {
-            return;
-        }
-        
-        log::error(log::E_USER, $label . ':' . $msg);
-    }
-
-	public function getTrace()
+	public static function getTrace()
 	{
-			$debugTrace = debug_backtrace();
+		$debugTrace = debug_backtrace();
 
-			foreach($debugTrace as $debugItem)
-			{
-				
-			}
-
+		foreach($debugTrace as $debugItem)
+		{
+			
+		}
 	}
 
 }

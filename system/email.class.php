@@ -37,12 +37,12 @@ class email
         $headers .= "Content-type: text/plain; charset=$send_charset\r\n";
         $headers .= "Return-Path: " . conf::i()->email['return_path'] . "\r\n";
 
-		log::info('sending email to ' . $email_to);
+		log::push(log::E_USER, 'EMAIL', 'sending to ' . $email_to);
         $result = mail($email_to, $subject, $body, $headers, '-f' . conf::i()->email['return_path']);
 
         if (!$result)
         {
-			log::info('bad result for ' . $email_to);
+			log::push(log::E_USER, 'EMAIL', 'failed sending to ' . $email_to);
             mailPeer::update($id, array('processed' => 0));
         }
         return $result;

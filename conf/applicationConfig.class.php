@@ -4,99 +4,68 @@ abstract class applicationConfig
 {
 
     /***********************************************************
-     *                  DEBUG
-     ***********************************************************/
-    public $debug		    =	false;
-
-    public $log                     =   array(
-		/*
-		* filename to log PHP error
-		*/
-        'errors'                    =>  '',
-
-		/*
-		* filename to log exceptions
-		*/
-        'exception'                 =>  '',
-    );
-
-    /***********************************************************
-     *                      PATH
+     *                      DIR
      ***********************************************************/
 
-    public $rootdir 		= 	'';
+    public $rootdir		= 	'';
 
     /***********************************************************
-     *                      WEB DOMAINS
+     *                      DOMAINS
      ***********************************************************/
     public $domains			=	array(
-        'web'						=> 	'',
-        'admin'						=> 	'',
-        'static'					=> 	'',
-        'image'						=> 	'',
-        'video'						=> 	'',
-        'cookie'					=> 	'.',
+        'web'		=> 	'',
+        'static'	=> 	'',
+        'image'		=> 	'',
+        'video'		=> 	'',
+        'cookie'	=> 	'.',
     );
 
     /***********************************************************
-     * 				COUNTERS
+     *                  DEBUG
      ***********************************************************/
+
+	public $debug                     =       array(
+		'enable'					=>	false,
+		'display_errors'            =>  false,
+		'log_errors'                =>  false,
+		'log_exceptions'            =>  false,
+		'log_information'           =>  false,
+	);
+
+	/*
+	* Enable google analitycs
+	*/
     public $counter         =   array(
         'google_analytics'          =>  false
     );
 
-	/***********************************************************
-	 * 		APPLICATION
-	 ***********************************************************/
+    /***********************************************************
+     *			I18N
+     ***********************************************************/
 
     public $i18n    =   array(
         'engine'    => 'inline'
     );
 
+    /***********************************************************
+     *			APPLICATIONS
+     ***********************************************************/
+
     public $application    =   array(
         'frontend' => array(
+			
             'auth'  => array('server'),
+			
             'i18n'  =>  array(
                 'defaultLocale' => 'en',
                 'ns'    => array('index')
             ),
+
             'default'   => array(
                 'signedin'  => array('start', 'index'),
                 'signedout' => array('start', 'index'),
             ),
             'startSession'  => true
-        ),
-
-        'iphone' => array(
-            'auth'  => array('iphone'),
-            'i18n'  =>  array(
-                'defaultLocale' => 'en',
-                'ns'    => array('iphoneweb', 'index')
-            ),
-            'default' => array(
-                'signedin'  => array('stats', 'index'),
-                'signedout' => array('stats', 'index'),
-            ),
-            'startSession'  => false
-        ),
-
-        'api' => array(
-			'renderer'	=> 'xml' ,
-            'auth'		=> array('iphone'),
-            'i18n'		=>  array(
-                'defaultLocale' => 'en',
-                'ns'    => array('index', 'iphone')
-            ),
-
-            'default' => array(
-                'signedin'  => array('http', 'error'),
-                'signedout' => false,
-            ),
-
-			// /i18n/getlabels/pid/6D501A9E-C100-5D23-AF7B-82FCC282B620/v/1.0/l/en_US
-			// C217578D61F8E37B83152DF869CC35D9
-			'key'	=> '&^WWE$#$DGaN#$LL@__!',
-            'startSession'  => false
         ),
 
         'image' => array(
@@ -105,11 +74,39 @@ abstract class applicationConfig
     );
 
     /***********************************************************
-    * 			APPSTORE
+     * 			ACCESS
+     ***********************************************************/
+
+    public $access	=	array(
+
+		/*
+		 * access group
+		 */
+		'global'	=> array(
+			/*
+			 * array of emails
+			 */
+		)
+    );
+	
+    /***********************************************************
+     * 				AD
+     ***********************************************************/
+    public $ad         =   array(
+        'enabled'                   =>  false,
+        '300x250'                   =>  false,
+        'top'                       =>  false
+    );
+
+    /***********************************************************
+    * 			EMAIL
     ***********************************************************/
-	public $appstore = array(
-		'storeUrl'	=> 'https://buy.itunes.apple.com/verifyReceipt'
-	);
+	 public $email	= array
+	(
+		 'name_from'	=> 'keatlonbox',
+		 'email_from'	=> 'postmaster@keatlonbox.com',
+		 'return_path'	=> 'postmaster@keatlonbox.com',
+	 );
 
     /***********************************************************
     * 			MEMCACHE
@@ -125,7 +122,9 @@ abstract class applicationConfig
             'retry_interval'    => 15,
             'status'            => true,
             'failure_callback'  => NULL,
-			'enabled'           => false
+			
+            'prefix'            => '',
+			'enabled'           => false,
         ),
 	
     );
@@ -137,7 +136,7 @@ abstract class applicationConfig
     (
 	    'host'              => 'localhost',
 	    'port'              => 21201,
-	    'enabled'           => true
+	    'enabled'           => false
     );
 
     /***********************************************************
@@ -148,36 +147,59 @@ abstract class applicationConfig
 	    'prefix'            => '',
 	    'host'              => 'localhost',
 	    'port'              => 6379,
+	    'enabled'           => false
     );
 
     /***********************************************************
-     *                      DATABASE
+     *			MYSQL	DATABASE
      ***********************************************************/
     public $database		=	array
     (
 		'default_connection' => 'master',
-		'pool'	=> array(
-
-			'master' => array(
+		'pool'	=> array
+		(
+			'master' => array
+			(
 				'host' 		=>	'localhost',
 				'user' 		=>	'root',
 				'password' 	=>	'root',
 				'dbname'	=>	'bwb',
 				'enabled'	=>	true
             ),
-
-			'slave' => array(
-				'host' 		=>	'localhost',
-				'user' 		=>	'root',
-				'password' 	=>	'root',
-				'dbname'	=>	'bwb',
-				'enabled'	=>	true
-            )
         )
     );
 
 	/***********************************************************
-	 * 		IMAGES
+	 * 			SPHINX
+	 ***********************************************************/
+
+    public $sphinx         =   array(
+        'config_path'               =>  '',
+        'pid_path'                  =>  '',
+        'log_path'                  =>  '',
+        'log_query_path'            =>  '',
+        'storage_path'              =>  '',
+        'database'                  =>  'master',
+        'port'                      =>  3312
+    );
+
+	/***********************************************************
+	 * 		VIDEO
+	 ***********************************************************/
+
+    public $video = array
+    (
+		'storage'	=> 	'',
+		'cache'		=> 	'',
+
+		'encoder'	=> 'ffmpeg',
+		'sizes'		=> array(
+			'normal' => ' -b 1000kb/s -r 32 -y -ar 22050 '
+        )
+    );
+
+	/***********************************************************
+	 *			IMAGES
 	 ***********************************************************/
 
     public $supersalt	= 'yEt @n0tHeR sA1t m#cH@N1Zm';
@@ -191,6 +213,9 @@ abstract class applicationConfig
 		'source'	=>	'c',
 
 		'sizes' => array (),
+
+        'watermark' => array ()
+
     );
 
     /***********************************************************
@@ -205,39 +230,4 @@ abstract class applicationConfig
 
 }
 
-if (!$_SERVER['PRODUCT'])
-{
-	$_SERVER['PRODUCT'] = 'default';
-}
-
-define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
-define('APPLICATION',   $_SERVER['APPLICATION']);
-define('PRODUCT',		$_SERVER['PRODUCT']);
-
-class conf
-{
-    static $configuration = false;
-
-    /**
-     *
-     * @return applicationConfig
-     */
-    static function i()
-    {
-        if (!self::$configuration)
-        {
-			include dirname(__FILE__) . '/../../conf/' . PRODUCT . '/app.' . ENVIRONMENT . ".config.php";
-			
-            $className = ENVIRONMENT . 'Config';
-            self::$configuration = new $className;
-
-        }
-
-        return self::$configuration;
-    }
-}
-
-include conf::i()->rootdir . "/core/system/sys.php";
-include conf::i()->rootdir . "/core/system/router.class.php";
-
-router::init(APPLICATION);
+include dirname(__FILE__) . '/init.php';
