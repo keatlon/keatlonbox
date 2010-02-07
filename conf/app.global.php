@@ -14,7 +14,7 @@ return array
     ),
 
 	'debug'                     =>       array(
-		'enable'					=>	true,
+		'enable'					=>	false,
 		'display_errors'            =>  false,
 		'display_level'				=>	E_ALL & ~E_NOTICE,
 		'log_level'					=>	E_ALL & ~E_NOTICE,
