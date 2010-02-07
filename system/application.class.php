@@ -19,7 +19,7 @@ class application
 	{
         application::$name	= APPLICATION;
 
-        if (conf::i()->debug)
+        if (conf::i()->debug['enable'])
         {
             define(APPLOG_ID, profiler::start(profiler::SYSTEM));
         }
@@ -108,7 +108,7 @@ class application
 			application::$stack->render();
 		}
 
-		if (conf::i()->debug)
+		if (conf::i()->debug['enable'])
         {
             profiler::finish(APPLOG_ID);
         }

@@ -6,7 +6,7 @@ class db
 	 */
 	public static function exec( $sql, $bind = array(), $connection_name = null )
 	{
-		$log_id = ( conf::i()->debug ) ? profiler::start(profiler::SQL, $sql, $bind) : null;
+		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql, $bind) : null;
 		$statement = dbConnection::get( $connection_name )->prepare($sql);
 		foreach ( $bind as $key => $value )
 		{
@@ -21,7 +21,7 @@ class db
 			throw new dbException($error[2], $sql);
 		}
 		
-		conf::i()->debug ? profiler::finish($log_id) : null;
+		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
 		return $statement;
 	}
 	
@@ -40,9 +40,9 @@ class db
 	
 	public static function rows( $sql, $bind = array(), $connection_name = null )
 	{
-		$log_id = ( conf::i()->debug ) ? profiler::start(profiler::SQL, $sql) : null;
+		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql) : null;
 		$statement = self::exec( $sql, $bind, $connection_name );
-		conf::i()->debug ? profiler::finish($log_id) : null;
+		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
 
 		return $statement->fetchAll( pdo::FETCH_ASSOC );
 	}

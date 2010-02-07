@@ -6,7 +6,7 @@ class dbConnection
 	
 	public static function create( $alias = null, $params = null )
 	{
-		$log_id = ( conf::i()->debug ) ? profiler::start(profiler::SQL, $alias . ' DB connecting ', 'DB connection') : null;
+		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $alias . ' DB connecting ', 'DB connection') : null;
 		
 		if ( !$alias )
 		{
@@ -35,7 +35,7 @@ class dbConnection
 
 		self::$connections[$alias] = new PDO($uri, $params['user'], $params['password'], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8", PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true) );
 		self::$connections[$alias]->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-		conf::i()->debug ? profiler::finish($log_id) : null;
+		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
 		
 		return self::$connections[$alias];
 	}
