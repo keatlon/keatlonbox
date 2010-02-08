@@ -119,9 +119,9 @@ return array
 			'master' => array
 			(
 				'host' 		=>	'localhost',
-				'user' 		=>	'root',
-				'password' 	=>	'root',
-				'dbname'	=>	'bwb',
+				'user' 		=>	'',
+				'password' 	=>	'',
+				'dbname'	=>	'',
 				'enabled'	=>	true
             ),
         )

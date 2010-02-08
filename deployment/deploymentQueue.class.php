@@ -68,7 +68,7 @@ class deploymentQueue
 			{
 				$stats['failed']++;
 
-				if (!$task['ignore_error'])
+				if (!$queueItem['ignore_error'])
 				{
 					break;
 				}
