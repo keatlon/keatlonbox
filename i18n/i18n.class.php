@@ -34,11 +34,6 @@ class i18n
 			return false;
 		}
 
-        if (auth::hasCredentials())
-        {
-            userPeer::update(auth::getCredentials(), array('locale' => $locale));
-        }
-
 		setlocale(LC_ALL, $locale);
 		cookie::set('locale', $locale);
     }

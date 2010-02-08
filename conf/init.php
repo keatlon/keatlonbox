@@ -75,8 +75,8 @@ class conf
 }
 
 $globalConfig		= include dirname(__FILE__) . '/app.global.php';
-$productConfig		= include dirname(__FILE__) . '/../../conf/app.' . PRODUCT . ".php";
-$environmentConfig	= include dirname(__FILE__) . '/../../conf/' . PRODUCT . '/app.' . ENVIRONMENT . ".php";
+$productConfig		= include dirname(__FILE__) . '/../../conf/' . PRODUCT . ".all.php";
+$environmentConfig	= include dirname(__FILE__) . '/../../conf/' . PRODUCT . '.' . ENVIRONMENT . ".php";
 
 $conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
 
