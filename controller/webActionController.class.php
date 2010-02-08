@@ -147,5 +147,10 @@ abstract class webActionController extends actionController
 	{
 		application::setContext('title', $title);
 	}
+
+	function setLayout($layout = 'index')
+	{
+		application::setContext('layout', $layout);
+	}
 }
 ?>

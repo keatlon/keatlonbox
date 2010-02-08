@@ -88,12 +88,20 @@ class application
 
 		if (self::$renderer == rendererFactory::HTML)
 		{
-			$context['data']['module'] = 'layout';
-			$context['data']['action'] = 'index';
+			$layout = 'index';
 
-			$layoutController  = actionControllerFactory::create('layout', 'index');
+			$context['data']['module'] = 'layout';
+			$context['data']['action'] = $layout;
+
+			$layoutController  = actionControllerFactory::create('layout', $layout);
 			$layoutController->dispatch(http::$request);
 			application::$stack->layoutController = $layoutController;
+
+			if (application::getContext('layout'))
+			{
+				$layoutController->setView(application::getContext('layout'));
+			}
+			
 			$layoutController->render();
 		}
 
