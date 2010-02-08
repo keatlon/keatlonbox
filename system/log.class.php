@@ -10,7 +10,6 @@ class log
     static public function init()
     {
 		ini_set('display_errors', false);
-		ini_set('log_errors', false);
 		
 		error_reporting(E_ALL & ~E_NOTICE);
         set_error_handler(array('log', 'php_error_handler'), E_ALL & ~E_NOTICE);

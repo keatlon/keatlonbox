@@ -18,7 +18,7 @@ class minifier
 
     static public function build($controller)
     {
-        $staticConfig   =   (require conf::i()->rootdir . '/conf/' . PRODUCT . '/static.php');
+        $staticConfig   =   (require conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php');
         return new Minify_Build($staticConfig[$controller]);
     }
 
