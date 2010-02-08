@@ -10,7 +10,7 @@ class deploymentPlan
 
 	static public function load($name = 'plan')
 	{
-		self::$document = simplexml_load_file( self::getDir('deployment') . '/' . $name . '.xml');
+		self::$document = simplexml_load_file( self::getDir('${plan}', 'system') . '/' . $name . '.xml');
 
 		foreach(self::$document->environment as $environmentXml)
 		{
@@ -37,7 +37,10 @@ class deploymentPlan
 		self::$plan			= $plan;
 		self::$environment	= $environment;
 		self::$release		= $release;
-		
+
+		self::setVar('release', $release);
+		self::setVar('environment', $environment);
+
 		deploymentQueue::init($environment, $plan, $release);
 
 		$xmlTasks		= self::$document->xpath("/project/environment[@name='{$environment}']/plan[@name='{$plan}']/task");
@@ -51,16 +54,17 @@ class deploymentPlan
 
 	static function getReleases()
 	{
-		$dh = opendir(self::getDir('deployment'));
+		$dh = opendir(self::getDir('${plan}', 'system'));
 
 		while (($file = readdir($dh)) !== false)
 		{
-			if (is_dir(self::getDir('deployment') . '/' . $file) && $file[0] != '.')
+			if (is_dir(self::getDir('${plan}', 'system') . '/' . $file) && $file[0] != '.')
 			{
 				$info = pathinfo($file);
 				$releases[] = $info['basename'];
 			}
         }
+
         closedir($dh);
 
 		natsort($releases);
@@ -92,7 +96,6 @@ class deploymentPlan
 	 */
 	static function getDefaultPlan($environment)
 	{
-		
 		foreach (self::$metadata['environments'][$environment]['plans'] as $plan)
 		{
 			if ($plan['default'])
@@ -102,42 +105,93 @@ class deploymentPlan
 		}
 	}
 
-	static function setDir($alias, $directory)
+
+	static function getHost($host, $environment = false)
 	{
-		conf::i()->deployment['dir'][$alias] = $directory;
+		if (!$environment)
+		{
+			$environment = self::$environment;
+		}
+		
+		return conf::i()->deployment[$environment]['host'][$host];
 	}
 
-	static function getHost($host)
+	static function setDir($alias, $directory, $environment = false)
 	{
-		return conf::i()->deployment['host'][$host];
+		if (!$environment)
+		{
+			$environment = self::$environment;
+		}
+
+		conf::i()->deployment[$environment]['dir'][$alias] = $directory;
 	}
 
-	static function getDir($alias)
+	static function match_constants($matches)
 	{
-		$dir = conf::i()->deployment['dir'][$alias];
+		return constant($matches[1]);
+	}
+
+	static function match_var($matches)
+	{
+		return $$matches[1];
+	}
+
+	static function getDir($alias, $environment = false)
+	{
+		if (!$environment)
+		{
+			$environment = self::$environment;
+		}
+
+		$dir = $alias;
+
+		if (conf::i()->deployment[$environment]['dir'])
+		foreach(conf::i()->deployment[$environment]['dir'] as $dirName => $dirPath)
+		{
+			$dir = str_replace('${' . $dirName . '}', $dirPath, $dir);
+		}
+
+		if (conf::i()->deployment[$environment]['var'])
+		foreach(conf::i()->deployment[$environment]['var'] as $key => $value)
+		{
+			$dir = str_replace('${' . $key . '}', $value, $dir);
+		}
+		
+		$dir = preg_replace_callback('|\${const:(\w*)}|', array(self, 'match_constants'), $dir);
+		$dir = preg_replace_callback('|\${var:(\w*)}|', array(self, 'match_vars'), $dir);
 
 		if ($dir)
 		{
 			return $dir;
 		}
 
-		switch($alias)
-		{
-			case 'current_release_sources_dir':
-				return conf::i()->deployment['dir']['release'] . '/' . self::$release;
-				break;
-			
-			case 'release_storage':
-				return self::getDir('inactive_export_dir') . '/uploads';
-				break;
-		}
-
-		return false;
+		return $dir;
 	}
 
 	static function getReleaseDir($release)
 	{
-		return self::getDir('release') . '/' . release;
+		return self::getDir('release', self::$environment) . '/' . release;
+	}
+
+
+	static function setVar($key, $value, $environment = false)
+	{
+		if (!$environment)
+		{
+			$environment = self::$environment;
+		}
+
+		conf::i()->deployment[$environment]['var'][$key] = $value;
+	}
+
+	static function getVar($key, $environment = false)
+	{
+		if (!$environment)
+		{
+			$environment = self::$environment;
+		}
+
+		return conf::i()->deployment[$environment]['var'][$key];
 	}
 
 }
