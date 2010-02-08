@@ -58,8 +58,13 @@ class dateHelper
 		return date($timestamp, 'd');
 	}
 
-	static function date($timestamp, $format = false)
+	static function date($timestamp = false, $format = false)
 	{
+		if (!$timestamp)
+		{
+			$timestamp = time();
+		}
+
 		if (!$format)
 		{
 			$format = 'd-m-Y';
@@ -73,8 +78,13 @@ class dateHelper
 		return strftime('%B %d, %Y', $timestamp);
 	}
 
-	static function time($timestamp, $format = false)
+	static function time($timestamp = false, $format = false)
 	{
+		if (!$timestamp)
+		{
+			$timestamp = time();
+		}
+		
 		if (!$format)
 		{
 			$format = 'H:i';
