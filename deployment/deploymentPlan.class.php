@@ -59,6 +59,11 @@ class deploymentPlan
 
 		while (($file = readdir($dh)) !== false)
 		{
+			if ($file == 'conf')
+			{
+				continue;
+			}
+			
 			if (is_dir(self::getDir('${plan}', 'system') . '/' . $file) && $file[0] != '.')
 			{
 				$info = pathinfo($file);
