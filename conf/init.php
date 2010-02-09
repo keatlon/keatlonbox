@@ -91,8 +91,6 @@ include conf::i()->rootdir . "/core/system/router.class.php";
 
 router::init(APPLICATION);
 
-// conf::i()->im
-
 function array_merge_recursive_distinct ( array &$array1, array &$array2 )
 {
   $merged = $array1;
