@@ -16,6 +16,7 @@ class deploymentPlan
 		{
 			$environment = false;
 			$environment['default'] = (bool)$environmentXml['default'];
+			$environment['hidden']	= (string)$environmentXml['hidden'];
 
 			foreach($environmentXml->plan as $planXml)
 			{
