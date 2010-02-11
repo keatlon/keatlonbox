@@ -75,7 +75,7 @@ class dateHelper
 
 	static function formatTime($timestamp)
 	{
-		return strftime('%B %d, %Y', $timestamp);
+		return date('F j, Y', $timestamp);
 	}
 
 	static function time($timestamp = false, $format = false)
