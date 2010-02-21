@@ -3,7 +3,7 @@ class authServer extends authBase
 {
     function authorize($data)
 	{
-        $user = userPeer::getItem(userPeer::getList( array('status' => 'active', 'gate' => 'normal', 'email' => $data['email'])));
+        $user = userPeer::getItem(userPeer::getList( array('status' => 'active', 'email' => $data['email'])));
 		
         if (!$user)
 		{

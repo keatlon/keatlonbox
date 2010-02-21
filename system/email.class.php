@@ -8,7 +8,6 @@ class email
         $data_charset   = 'UTF-8';
         $send_charset   = 'UTF-8';
 
-
 		if (!$id)
 		{
 			$id = mailPeer::insert(array(
