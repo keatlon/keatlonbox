@@ -9,6 +9,15 @@ define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
 define('APPLICATION',   $_SERVER['APPLICATION']);
 define('PRODUCT',		$_SERVER['PRODUCT']);
 
+if ($_SERVER['CONFDIR'])
+{
+	define('CONFDIR',	$_SERVER['CONFDIR']);
+}
+else
+{
+	define('CONFDIR',	dirname(__FILE__) . '/../../conf');
+}
+
 class conf
 {
     static protected $conf = false;
@@ -75,8 +84,8 @@ class conf
 }
 
 $globalConfig		= include dirname(__FILE__) . '/app.global.php';
-$productConfig		= include dirname(__FILE__) . '/../../conf/' . PRODUCT . ".all.php";
-$environmentConfig	= include dirname(__FILE__) . '/../../conf/' . PRODUCT . '.' . ENVIRONMENT . ".php";
+$productConfig		= include CONFDIR . '/' . PRODUCT . ".all.php";
+$environmentConfig	= include CONFDIR . '/' . PRODUCT . '.' . ENVIRONMENT . ".php";
 
 $conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
 
