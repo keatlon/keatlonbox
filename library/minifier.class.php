@@ -10,17 +10,31 @@ Minify_Logger::setLogger(new log);
 
 class minifier
 {
-    static public function serve($controller, $options)
+    static function serve($controller, $options)
     {
         Minify::setCache(conf::i()->rootdir . '/~cache/');
         Minify::serve($controller, $options);
     }
 
-    static public function build($controller)
+    static function build($controller)
     {
-        $staticConfig   =   (require CONFDIR . '/' . PRODUCT . '.static.php');
+        $staticConfig   =   (require self::getConfig());
         return new Minify_Build($staticConfig[$controller]);
     }
+
+	static function init()
+	{
+		minifier::serve('MinApp', array
+		(
+			'minApp' => array('groups' => (require self::getConfig())),
+			'maxAge' => 31536000
+		));
+	}
+
+	static function getConfig()
+	{
+		return CONFDIR . '/' . PRODUCT . '.static.php';
+	}
 
 }
 
