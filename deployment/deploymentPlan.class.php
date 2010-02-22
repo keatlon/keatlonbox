@@ -10,7 +10,7 @@ class deploymentPlan
 
 	static public function load($name = 'plan')
 	{
-		self::$document = simplexml_load_file( self::getDir('${plan}', 'system') . '/' . $name . '.xml');
+		self::$document = simplexml_load_file( self::parse('${system::plan}') . '/' . $name . '.xml');
 
 		foreach(self::$document->space as $spaceXml)
 		{
@@ -35,7 +35,7 @@ class deploymentPlan
 
 	static function prepare($space, $plan, $release)
 	{
-		self::$plan			= $plan;
+		self::$plan		= $plan;
 		self::$space	= $space;
 		self::$release		= $release;
 
@@ -55,7 +55,7 @@ class deploymentPlan
 
 	static function getReleases()
 	{
-		$dh = opendir(self::getDir('${plan}', 'system'));
+		$dh = opendir(self::parse('${system::plan}'));
 
 		while (($file = readdir($dh)) !== false)
 		{
@@ -64,7 +64,7 @@ class deploymentPlan
 				continue;
 			}
 			
-			if (is_dir(self::getDir('${plan}', 'system') . '/' . $file) && $file[0] != '.')
+			if (is_dir(self::parse('${system::plan}') . '/' . $file) && $file[0] != '.')
 			{
 				$info = pathinfo($file);
 				$releases[] = $info['basename'];
@@ -122,16 +122,6 @@ class deploymentPlan
 		return conf::i()->deployment[$space]['host'][$host];
 	}
 
-	static function setDir($alias, $directory, $space = false)
-	{
-		if (!$space)
-		{
-			$space = self::$space;
-		}
-
-		conf::i()->deployment[$space]['dir'][$alias] = $directory;
-	}
-
 	static function match_constants($matches)
 	{
 		return constant($matches[1]);
@@ -139,44 +129,25 @@ class deploymentPlan
 
 	static function match_vars($matches)
 	{
-		return $$matches[1];
+		if ($matches[2] == '::')
+		{
+			return self::getVar($matches[3], $matches[1]);
+		}
+
+		return self::getVar($matches[1]);
 	}
 
-	static function getDir($alias, $space = false)
+	static function parse($alias)
 	{
-		if (!$space)
-		{
-			$space = self::$space;
-		}
+		$alias = preg_replace_callback('|\${const:(\w*)}|', array(self, 'match_constants'), $alias);
+		$alias = preg_replace_callback('|\${(\w*)(::){0,1}(\w*)}|', array(self, 'match_vars'), $alias);
 
-		$dir = $alias;
-
-		if (conf::i()->deployment[$space]['dir'])
-		foreach(conf::i()->deployment[$space]['dir'] as $dirName => $dirPath)
-		{
-			$dir = str_replace('${' . $dirName . '}', $dirPath, $dir);
-		}
-
-		if (conf::i()->deployment[$space]['var'])
-		foreach(conf::i()->deployment[$space]['var'] as $key => $value)
-		{
-			$dir = str_replace('${' . $key . '}', $value, $dir);
-		}
-		
-		$dir = preg_replace_callback('|\${const:(\w*)}|', array(self, 'match_constants'), $dir);
-		$dir = preg_replace_callback('|\${var:(\w*)}|', array(self, 'match_vars'), $dir);
-
-		if ($dir)
-		{
-			return $dir;
-		}
-
-		return $dir;
+		return $alias;
 	}
 
 	static function getReleaseDir($release)
 	{
-		return self::getDir('release', self::$space) . '/' . release;
+		return self::parse('release', self::$space) . '/' . release;
 	}
 
 

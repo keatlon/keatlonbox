@@ -1,19 +1,36 @@
 <?php
 
-if (!$_SERVER['PRODUCT'])
+if (!defined('PRODUCT') && !$_SERVER['PRODUCT'])
 {
 	$_SERVER['PRODUCT'] = 'default';
 }
 
-define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
-define('APPLICATION',   $_SERVER['APPLICATION']);
-define('PRODUCT',		$_SERVER['PRODUCT']);
+if (!defined('ENVIRONMENT'))
+{
+	define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
+}
+
+if (!defined('APPLICATION'))
+{
+	define('APPLICATION',   $_SERVER['APPLICATION']);
+}
+
+if (!defined('PRODUCT'))
+{
+	define('PRODUCT',		$_SERVER['PRODUCT']);
+}
 
 if ($_SERVER['CONFDIR'])
 {
 	$confDir = $_SERVER['CONFDIR'];
 }
-else
+
+if (defined('CONFDIR'))
+{
+	$confDir = CONFDIR;
+}
+
+if (!$confDir)
 {
 	$confDir = dirname(__FILE__) . '/../../conf';
 }
@@ -86,6 +103,11 @@ class conf
 $globalConfig		= include dirname(__FILE__) . '/app.global.php';
 $productConfig		= include $confDir . '/' . PRODUCT . ".all.php";
 $environmentConfig	= include $confDir . '/' . PRODUCT . '.' . ENVIRONMENT . ".php";
+
+if (!$productConfig)
+{
+	var_dump($confDir);
+}
 
 $conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
 

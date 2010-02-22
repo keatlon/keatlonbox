@@ -6,7 +6,7 @@
 	$components     = builder::scanClasses(conf::i()->rootdir   . "/lib");
 	$actions        = builder::scanActions(conf::i()->rootdir   . "/core");
 
-	echo (count($core) + count($actions) + count($components) + count($configuration) + count($tasks) + count($appTasks) ) . " core classes \n";
+	echo 'core: ' . (count($core) + count($actions) + count($components) + count($configuration) + count($tasks) + count($appTasks) ) . " classes \n";
 
 	file_put_contents(conf::i()->rootdir . "/~cache/autoload-core.php",
 		"<?php \n\n " .
