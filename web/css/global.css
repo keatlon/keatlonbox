@@ -153,3 +153,7 @@ select.w200 {width:210px;}
 .pointer {cursor:pointer;}
 
 .gray {color:gray}
+
+.square { list-style-type: square; }
+.in { list-style-position: inside; }
+.out { list-style-position: outside; }
