@@ -104,11 +104,6 @@ $globalConfig		= include dirname(__FILE__) . '/app.global.php';
 $productConfig		= include $confDir . '/' . PRODUCT . ".all.php";
 $environmentConfig	= include $confDir . '/' . PRODUCT . '.' . ENVIRONMENT . ".php";
 
-if (!$productConfig)
-{
-	var_dump($confDir);
-}
-
 $conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
 
 foreach($conf as $key => $value)
