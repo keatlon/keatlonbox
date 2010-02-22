@@ -49,7 +49,10 @@ class deploymentPlan
 		foreach($xmlTasks as $xmlTask)
 		{
 			$task = deploymentTaskFactory::create($xmlTask, $space, $plan, $release);
-			$task->prepare();
+			if ($task)
+			{
+				$task->prepare();
+			}
 		}
 	}
 

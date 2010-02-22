@@ -16,7 +16,6 @@ class dbConnection
 		if ( !$params )
 		{
 			$databases = conf::i()->database['pool'];
-			
 			if ( !$databases[$alias] )
 			{
 				throw new Exception('DB connection params for "' . $alias . '" absent in Configiguration');
