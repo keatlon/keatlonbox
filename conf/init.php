@@ -89,11 +89,6 @@ $environmentConfig	= include $confDir . '/' . PRODUCT . '.' . ENVIRONMENT . ".ph
 
 $conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
 
-if (!$_SERVER['CONFDIR'])
-{
-	$confDir = conf::i()->rootdir . '/conf/';
-}
-
 foreach($conf as $key => $value)
 {
 	conf::i()->$key = $value;
@@ -101,6 +96,11 @@ foreach($conf as $key => $value)
 
 include conf::i()->rootdir . "/core/system/sys.php";
 include conf::i()->rootdir . "/core/system/router.class.php";
+
+if (!$_SERVER['CONFDIR'])
+{
+	$confDir = conf::i()->rootdir . '/conf/';
+}
 
 define('CONFDIR', $confDir);
 
