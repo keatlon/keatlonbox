@@ -3,7 +3,7 @@
 	foreach(conf::i()->database['pool'] as $dbName => $dbConnection)
 	{
 		$dbName     =   conf::i()->database['pool']['master']['dbname'];
-		$tables     =   db::rows('SHOW TABLES FROM ' . $dbName);
+		$tables     =   db::rows('SHOW TABLES FROM `' . $dbName . '`');
 		$modelPath  =   conf::i()->rootdir . '/lib/model';
 
 		foreach($tables as $table)
@@ -26,7 +26,7 @@
 			$primaryKey = 'id';
 			$fields     = array();
 
-			$columns = db::rows('show columns from ' . $tableName);
+			$columns = db::rows('show columns from `' . $tableName . '`');
 
 			foreach($columns as $column)
 			{
