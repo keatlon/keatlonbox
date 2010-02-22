@@ -44,7 +44,7 @@ if (isset($arguments['application']))
 	define('APPLICATION', $arguments['application']);
 }
 
-$cacheDir = dirname(__FILENAME__) . '/../~cache';
+$cacheDir = dirname(__FILE__) . '/../~cache';
 if (!is_dir($cacheDir))
 {
 	mkdir($cacheDir);
@@ -53,7 +53,9 @@ if (!is_dir($cacheDir))
 define('PRODUCT',	$arguments['product']);
 define('ENVIRONMENT', $arguments['environment']);
 
-include dirname(__FILE__) . "/conf/init.php";
+$rootdir = dirname(__FILE__) . "/..";
+
+// include dirname(__FILE__) . "/conf/init.php";
 include dirname(__FILE__) . "/system/builder.class.php";
 include dirname(__FILE__) . "/builder/" . $arguments['target'] . ".php";
 
