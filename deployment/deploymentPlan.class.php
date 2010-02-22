@@ -137,7 +137,7 @@ class deploymentPlan
 		return constant($matches[1]);
 	}
 
-	static function match_var($matches)
+	static function match_vars($matches)
 	{
 		return $$matches[1];
 	}

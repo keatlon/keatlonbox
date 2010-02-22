@@ -11,11 +11,11 @@ define('PRODUCT',		$_SERVER['PRODUCT']);
 
 if ($_SERVER['CONFDIR'])
 {
-	define('CONFDIR',	$_SERVER['CONFDIR']);
+	$confDir = $_SERVER['CONFDIR'];
 }
 else
 {
-	define('CONFDIR',	dirname(__FILE__) . '/../../conf');
+	$confDir = dirname(__FILE__) . '/../../conf';
 }
 
 class conf
@@ -84,19 +84,25 @@ class conf
 }
 
 $globalConfig		= include dirname(__FILE__) . '/app.global.php';
-$productConfig		= include CONFDIR . '/' . PRODUCT . ".all.php";
-$environmentConfig	= include CONFDIR . '/' . PRODUCT . '.' . ENVIRONMENT . ".php";
+$productConfig		= include $confDir . '/' . PRODUCT . ".all.php";
+$environmentConfig	= include $confDir . '/' . PRODUCT . '.' . ENVIRONMENT . ".php";
 
 $conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
+
+if (!$_SERVER['CONFDIR'])
+{
+	$confDir = conf::i()->rootdir . '/conf/';
+}
 
 foreach($conf as $key => $value)
 {
 	conf::i()->$key = $value;
 }
 
-
 include conf::i()->rootdir . "/core/system/sys.php";
 include conf::i()->rootdir . "/core/system/router.class.php";
+
+define('CONFDIR', $confDir);
 
 router::init(APPLICATION);
 
