@@ -24,6 +24,9 @@ class minifier
 
 	static function init()
 	{
+		ini_set('zlib.output_compression', 'Off');
+		ini_set('zlib.output_handler', 'Off');
+
 		minifier::serve('MinApp', array
 		(
 			'minApp' => array('groups' => (require self::getConfig())),
