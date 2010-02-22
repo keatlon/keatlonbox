@@ -34,7 +34,6 @@ if ($arguments['target']=='app' && !isset($arguments['application']))
 	exit(1);
 }
 
-
 if (isset($arguments['confdir']))
 {
 	define('CONFDIR', $arguments['confdir']);
@@ -43,6 +42,12 @@ if (isset($arguments['confdir']))
 if (isset($arguments['application']))
 {
 	define('APPLICATION', $arguments['application']);
+}
+
+$cacheDir = dirname(__FILENAME__) . '/../~cache';
+if (!is_dir($cacheDir))
+{
+	mkdir($cacheDir);
 }
 
 define('PRODUCT',	$arguments['product']);
