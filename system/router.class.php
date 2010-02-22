@@ -9,7 +9,7 @@ class router
         include conf::i()->rootdir . "/~cache/autoload-core.php";
         if ($application)
         {
-            @include conf::i()->rootdir . "/~cache/autoload-{$application}.php";
+            include conf::i()->rootdir . "/~cache/autoload-{$application}.php";
         }
         
         self::$classRoutes = array_merge((array)$coreClasses, (array)${$application . 'Classes'});
