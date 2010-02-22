@@ -4,51 +4,51 @@ class deploymentPlan
 	static private $document	= false;
 	static private $default		= false;
 	static $metadata			= false;
+	static $space				= false;
 	static $plan				= false;
-	static $environment			= false;
 	static $release				= false;
 
 	static public function load($name = 'plan')
 	{
 		self::$document = simplexml_load_file( self::getDir('${plan}', 'system') . '/' . $name . '.xml');
 
-		foreach(self::$document->environment as $environmentXml)
+		foreach(self::$document->space as $spaceXml)
 		{
-			$environment = false;
-			$environment['default'] = (bool)$environmentXml['default'];
-			$environment['hidden']	= (string)$environmentXml['hidden'];
+			$space = false;
+			$space['default'] = (bool)$spaceXml['default'];
+			$space['hidden']	= (string)$spaceXml['hidden'];
 
-			foreach($environmentXml->plan as $planXml)
+			foreach($spaceXml->plan as $planXml)
 			{
 				$plan['default']	= (bool)$planXml['default'];
 				$plan['name']		= (string)$planXml['name'];
 
-				$environment['plans'][] = $plan;
+				$space['plans'][] = $plan;
 			}
 
-			self::$metadata['environments'][(string)$environmentXml['name']] = $environment;
+			self::$metadata['spaces'][(string)$spaceXml['name']] = $space;
 		}
 
 		self::$metadata['releases']			= self::getReleases();
 
 	}
 
-	static function prepare($environment, $plan, $release)
+	static function prepare($space, $plan, $release)
 	{
 		self::$plan			= $plan;
-		self::$environment	= $environment;
+		self::$space	= $space;
 		self::$release		= $release;
 
 		self::setVar('release', $release);
-		self::setVar('environment', $environment);
+		self::setVar('space', $space);
 
-		deploymentQueue::init($environment, $plan, $release);
+		deploymentQueue::init($space, $plan, $release);
 
-		$xmlTasks		= self::$document->xpath("/project/environment[@name='{$environment}']/plan[@name='{$plan}']/task");
+		$xmlTasks		= self::$document->xpath("/project/space[@name='{$space}']/plan[@name='{$plan}']/task");
 
 		foreach($xmlTasks as $xmlTask)
 		{
-			$task = deploymentTaskFactory::create($xmlTask, $environment, $plan, $release);
+			$task = deploymentTaskFactory::create($xmlTask, $space, $plan, $release);
 			$task->prepare();
 		}
 	}
@@ -84,11 +84,11 @@ class deploymentPlan
 	}
 
 	/*
-	 * Get default environment
+	 * Get default space
 	 */
-	static function getDefaultEnvironment()
+	static function getDefaultspace()
 	{
-		foreach (self::$metadata['environments'] as $name => $data)
+		foreach (self::$metadata['spaces'] as $name => $data)
 		{
 			if ($data['default'])
 			{
@@ -100,9 +100,9 @@ class deploymentPlan
 	/*
 	 * Get default plan
 	 */
-	static function getDefaultPlan($environment)
+	static function getDefaultPlan($space)
 	{
-		foreach (self::$metadata['environments'][$environment]['plans'] as $plan)
+		foreach (self::$metadata['spaces'][$space]['plans'] as $plan)
 		{
 			if ($plan['default'])
 			{
@@ -112,24 +112,24 @@ class deploymentPlan
 	}
 
 
-	static function getHost($host, $environment = false)
+	static function getHost($host, $space = false)
 	{
-		if (!$environment)
+		if (!$space)
 		{
-			$environment = self::$environment;
+			$space = self::$space;
 		}
 		
-		return conf::i()->deployment[$environment]['host'][$host];
+		return conf::i()->deployment[$space]['host'][$host];
 	}
 
-	static function setDir($alias, $directory, $environment = false)
+	static function setDir($alias, $directory, $space = false)
 	{
-		if (!$environment)
+		if (!$space)
 		{
-			$environment = self::$environment;
+			$space = self::$space;
 		}
 
-		conf::i()->deployment[$environment]['dir'][$alias] = $directory;
+		conf::i()->deployment[$space]['dir'][$alias] = $directory;
 	}
 
 	static function match_constants($matches)
@@ -142,23 +142,23 @@ class deploymentPlan
 		return $$matches[1];
 	}
 
-	static function getDir($alias, $environment = false)
+	static function getDir($alias, $space = false)
 	{
-		if (!$environment)
+		if (!$space)
 		{
-			$environment = self::$environment;
+			$space = self::$space;
 		}
 
 		$dir = $alias;
 
-		if (conf::i()->deployment[$environment]['dir'])
-		foreach(conf::i()->deployment[$environment]['dir'] as $dirName => $dirPath)
+		if (conf::i()->deployment[$space]['dir'])
+		foreach(conf::i()->deployment[$space]['dir'] as $dirName => $dirPath)
 		{
 			$dir = str_replace('${' . $dirName . '}', $dirPath, $dir);
 		}
 
-		if (conf::i()->deployment[$environment]['var'])
-		foreach(conf::i()->deployment[$environment]['var'] as $key => $value)
+		if (conf::i()->deployment[$space]['var'])
+		foreach(conf::i()->deployment[$space]['var'] as $key => $value)
 		{
 			$dir = str_replace('${' . $key . '}', $value, $dir);
 		}
@@ -176,28 +176,28 @@ class deploymentPlan
 
 	static function getReleaseDir($release)
 	{
-		return self::getDir('release', self::$environment) . '/' . release;
+		return self::getDir('release', self::$space) . '/' . release;
 	}
 
 
-	static function setVar($key, $value, $environment = false)
+	static function setVar($key, $value, $space = false)
 	{
-		if (!$environment)
+		if (!$space)
 		{
-			$environment = self::$environment;
+			$space = self::$space;
 		}
 
-		conf::i()->deployment[$environment]['var'][$key] = $value;
+		conf::i()->deployment[$space]['var'][$key] = $value;
 	}
 
-	static function getVar($key, $environment = false)
+	static function getVar($key, $space = false)
 	{
-		if (!$environment)
+		if (!$space)
 		{
-			$environment = self::$environment;
+			$space = self::$space;
 		}
 
-		return conf::i()->deployment[$environment]['var'][$key];
+		return conf::i()->deployment[$space]['var'][$key];
 	}
 
 }

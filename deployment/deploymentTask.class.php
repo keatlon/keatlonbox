@@ -2,21 +2,21 @@
 abstract class deploymentTask
 {
 	protected	$taskDocument;
-	protected	$environment;
+	protected	$space;
 	protected	$plan;
 	protected	$release;
 	public		$task;
 
-	function  __construct($xmlTask, $environment, $plan, $release)
+	function  __construct($xmlTask, $space, $plan, $release)
 	{
 		$this->taskDocument	= clone $xmlTask;
 		
-		$this->environment	= $environment;
+		$this->space		= $space;
 		$this->plan			= $plan;
 		$this->release		= $release;
 
 		$this->task['status']		=	'new';
-		$this->task['environment']	=	$this->environment;
+		$this->task['space']	=	$this->space;
 		$this->task['plan']			=	$this->plan;
 		$this->task['release']		=	$this->release;
 		$this->task['name']			=	(string)$this->taskDocument['name'];

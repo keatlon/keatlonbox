@@ -3,17 +3,17 @@ class deploymentQueue
 {
 	static $queue				= array();
 	static $plan				= false;
-	static $environment			= false;
+	static $space				= false;
 	static $release				= false;
 	static $completed			= false;
 
-	static function init($environment, $plan, $release)
+	static function init($space, $plan, $release)
 	{
 		self::$plan			= $plan;
-		self::$environment	= $environment;
+		self::$space	= $space;
 		self::$release		= $release;
 		
-		$queueFilename = deploymentPlan::getDir('${plan}', 'system') . '/' . self::$release .'/' . self::$environment . '-' . self::$plan . '.queue';
+		$queueFilename = deploymentPlan::getDir('${plan}', 'system') . '/' . self::$release .'/' . self::$space . '-' . self::$plan . '.queue';
 
 		if (!file_exists($queueFilename))
 		{
@@ -137,7 +137,7 @@ class deploymentQueue
 
 	static function save()
 	{
-		$queueFilename = deploymentPlan::getDir('${plan}', 'system') . '/' . self::$release .'/' . self::$environment . '-' . self::$plan . '.queue';
+		$queueFilename = deploymentPlan::getDir('${plan}', 'system') . '/' . self::$release .'/' . self::$space . '-' . self::$plan . '.queue';
 		file_put_contents($queueFilename, self::$completed->asXML());
 	}
 }

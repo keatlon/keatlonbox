@@ -1,7 +1,7 @@
 <?php
 class deploymentTaskFactory
 {
-	static function create($task, $environment, $plan, $release)
+	static function create($task, $space, $plan, $release)
 	{
 		$className = (string)$task['name'] . 'DeploymentTask';
 		
@@ -10,7 +10,7 @@ class deploymentTaskFactory
 			return false;
 		}
 
-		return new $className($task, $environment, $plan, $release);
+		return new $className($task, $space, $plan, $release);
 	}
 }
 ?>
