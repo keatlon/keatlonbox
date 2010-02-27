@@ -1,4 +1,5 @@
 <?php
+	include dirname(__FILE__) . "/../conf/init.php";
 
 	foreach(conf::i()->database['pool'] as $dbName => $dbConnection)
 	{
