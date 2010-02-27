@@ -17,7 +17,7 @@ class log
 
     static public function exception(Exception $e)
     {
-        if (!conf::i()->debug['log_exception'])
+        if (!conf::i()->debug['log_exceptions'])
         {
             return true;
         }
