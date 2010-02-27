@@ -9,7 +9,7 @@ class profiler
 	protected static $stack = array();
 	protected static $counter = 0;
 
-	public static function start($type = self::SYSTEM, $message = false, $extra = false)
+	public static function start($type = self::SYSTEM, $message = false, $extra = false, $ts = false)
 	{
 
 		if ($type == self::SQL && is_array($extra))
@@ -20,8 +20,12 @@ class profiler
 			}
 		}
 
+		if (!$ts)
+		{
+			$ts = microtime(true);
+		}
 		self::$counter++;
-		$record['time'] = microtime(true);
+		$record['time'] = $ts;
 		$record['message'] = $message;
 
 		self::$stack[self::$counter] = $record;

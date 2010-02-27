@@ -21,7 +21,7 @@ class application
 
         if (conf::i()->debug['enable'])
         {
-            define(APPLOG_ID, profiler::start(profiler::SYSTEM));
+			define('TS_APPLICATION_RUN', microtime(true));
         }
 
 		session::init();
@@ -86,6 +86,11 @@ class application
         catch (moduleException $e)
         {}
 
+        if (conf::i()->debug['enable'])
+        {
+			define('TS_APPLICATION_RENDER', microtime(true));
+        }
+
 		if (self::$renderer == rendererFactory::HTML)
 		{
 			$layout = 'index';
@@ -118,7 +123,12 @@ class application
 
 		if (conf::i()->debug['enable'])
         {
-            profiler::finish(APPLOG_ID);
+			profiler::finish(profiler::start(profiler::SYSTEM, 'app::render',	false, TS_APPLICATION_RENDER));
+			profiler::finish(profiler::start(profiler::SYSTEM, 'app::run',		false, TS_APPLICATION_RUN));
+			profiler::finish(profiler::start(profiler::SYSTEM, 'app::global',	false, TS_APPLICATION_GLOBAL));
+			profiler::finish(profiler::start(profiler::SYSTEM, 'sys::global',	false, $_SERVER['REQUEST_TIME']));
+			$logItems = profiler::get();
+			include conf::i()->rootdir . '/core/web/layout/view/debug.view.php';
         }
 	}
     

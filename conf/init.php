@@ -1,5 +1,7 @@
 <?php
 
+define(TS_APPLICATION_GLOBAL, microtime(true));
+
 if (!defined('PRODUCT') && !$_SERVER['PRODUCT'])
 {
 	$_SERVER['PRODUCT'] = 'default';
