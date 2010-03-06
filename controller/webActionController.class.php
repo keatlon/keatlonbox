@@ -145,7 +145,7 @@ abstract class webActionController extends actionController
 
 	function setTitle($title)
 	{
-		application::setContext('title', $title);
+		$this->response['title'] = $title;
 	}
 
 	function setLayout($layout = 'index')
