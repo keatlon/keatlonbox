@@ -14,6 +14,7 @@ class application
     static public       $stack      = null;
     static public       $i18n       = null;
     static public       $renderer   = null;
+	static public		$layout		= 'index';
 
 	static public function run()
 	{
@@ -93,7 +94,7 @@ class application
 
 		if (self::$renderer == rendererFactory::HTML)
 		{
-			$layout = 'index';
+			$layout = self::getLayout();
 
 			$context['data']['module'] = 'layout';
 			$context['data']['action'] = $layout;
@@ -224,6 +225,15 @@ class application
         return self::$context[self::$contextIndex][$param];
     }
 
+    public static function setLayout( $layout )
+    {
+        self::$layout = $layout;
+    }
+
+    public static function getLayout()
+    {
+        return self::$layout;
+    }
 }
 
 ?>
