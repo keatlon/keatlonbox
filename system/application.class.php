@@ -129,7 +129,11 @@ class application
 			profiler::finish(profiler::start(profiler::SYSTEM, 'app::global',	false, TS_APPLICATION_GLOBAL));
 			profiler::finish(profiler::start(profiler::SYSTEM, 'sys::global',	false, $_SERVER['REQUEST_TIME']));
 			$logItems = profiler::get();
-			include conf::i()->rootdir . '/core/web/layout/view/debug.view.php';
+
+			if (self::$renderer == rendererFactory::HTML)
+			{
+				include conf::i()->rootdir . '/core/web/layout/view/debug.view.php';
+			}
         }
 	}
     
