@@ -48,6 +48,11 @@ class deploymentPlan
 
 		foreach($xmlTasks as $xmlTask)
 		{
+			if ((int)$xmlTask['ignore'])
+			{
+				continue;
+			}
+
 			$task = deploymentTaskFactory::create($xmlTask, $space, $plan, $release);
 			if ($task)
 			{
