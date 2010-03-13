@@ -82,6 +82,7 @@ class deploymentPlan
         closedir($dh);
 
 		natsort($releases);
+		$releases = array_values($releases);
 
 		return $releases;
 	}
