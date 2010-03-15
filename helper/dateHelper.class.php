@@ -67,15 +67,15 @@ class dateHelper
 
 		if (!$format)
 		{
-			$format = 'd-m-Y';
+			$format = 'd-M-Y';
 		}
 
-		return self::formatTime($timestamp);
+		return self::formatTime($timestamp, $format);
 	}
 
-	static function formatTime($timestamp)
+	static function formatTime($timestamp, $format = 'M j, Y')
 	{
-		return date('F j, Y', $timestamp);
+		return date($format, $timestamp);
 	}
 
 	static function time($timestamp = false, $format = false)
