@@ -13,7 +13,7 @@ var notificationClass = function()
 	this.centered = function(selector, message, delay)
 	{
 		var top = 95;
-		var left = parseInt( ($('body').width() - 500) / 2);
+		var left = parseInt( ($('body').width() - $('#notification').width() ) / 2);
 
 		if($.browser.msie)
 		{
