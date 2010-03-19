@@ -120,15 +120,16 @@ class deploymentPlan
 		}
 	}
 
-
-	static function getHost($host, $space = false)
+	static function getHost($alias)
 	{
-		if (!$space)
+		if (strpos($alias, 'func:') === false)
 		{
-			$space = self::$space;
+			$hosts[] = self::parse($alias);
+			return $hosts;
 		}
-		
-		return conf::i()->deployment[$space]['host'][$host];
+
+		$alias = preg_match('|\${func:(\w+)::(\w+)\(\)}|', $alias, $matches);
+		return  call_user_func(array($matches[1], $matches[2]));
 	}
 
 	static function match_constants($matches)
