@@ -136,7 +136,7 @@ class deploymentPlan
 		{
 			if ($host)
 			{
-				$host = 'ssh www-data@' . $host;
+				$host = 'ssh -o StrictHostKeyChecking=no www-data@' . $host;
 			}
 			else
 			{
