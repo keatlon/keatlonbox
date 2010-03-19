@@ -136,7 +136,7 @@ class deploymentPlan
 		{
 			if ($host)
 			{
-				$host = 'ssh root@' . $host;
+				$host = 'ssh www-data@' . $host;
 			}
 			else
 			{
