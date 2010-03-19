@@ -125,11 +125,26 @@ class deploymentPlan
 		if (strpos($alias, 'func:') === false)
 		{
 			$hosts[] = self::parse($alias);
-			return $hosts;
+		}
+		else
+		{
+			$alias	=	preg_match('|\${func:(\w+)::(\w+)\(\)}|', $alias, $matches);
+			$hosts	=	call_user_func(array($matches[1], $matches[2]));
 		}
 
-		$alias = preg_match('|\${func:(\w+)::(\w+)\(\)}|', $alias, $matches);
-		return  call_user_func(array($matches[1], $matches[2]));
+		if ($hosts) foreach($hosts as &$host)
+		{
+			if ($host)
+			{
+				$host = 'ssh root@' . $host;
+			}
+			else
+			{
+				unset($host);
+			}
+		}
+		
+		return $hosts;
 	}
 
 	static function match_constants($matches)
