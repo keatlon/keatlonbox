@@ -173,7 +173,7 @@ class application
         try
         {
             $context['controller']  = actionControllerFactory::create($module, $task);
-    
+			
             if (!$data)
             {
                 $context['data'] = $_SERVER['argv'];

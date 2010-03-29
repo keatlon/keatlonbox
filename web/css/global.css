@@ -6,6 +6,7 @@
 .bold, .b { font-weight:bold}
 .normal { font-weight:normal}
 .none {text-decoration:none}
+.underline {text-decoration:underline}
 
 .top { vertical-align:top; }
 .v { vertical-align:middle; }
