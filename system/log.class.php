@@ -22,15 +22,13 @@ class log
             return true;
         }
 
-        $message = get_class($e) . ' ' . $e->getMessage()
-                .   "\n--------------------"
-                .   "\n" . $e->getTraceAsString()
-                .   "\n--------------------"
-                .   "\nIP: " . $_SERVER['REMOTE_ADDR']
-				.   "\nreques: " . $_SERVER['REQUEST_URI']
-				.   "\nuserid: " . auth::getCredentials()
-        ;
+		$traceLines = $e->getTrace();
+		foreach ($traceLines as $traceLine)
+		{
+			$trace[] = trim($traceLine['class'] . $traceLine['type'] . $traceLine['function'] . "\t\t\t" . $traceLine['file'] . ' line ' . $traceLine['line']);
+		}
 
+        $message = get_class($e) . " " .	$e->getMessage() .  "\n\n" . implode("\n", $trace);
         log::push(log::E_EXCEPTION, false, $message);
     }
 
@@ -102,13 +100,13 @@ class log
         $fh = fopen($filename, 'a+');
 
 		$line = array(
-			date('d-m-Y H:i:s'),
-			$type,
-			$label,
+			"********************************************************************************",
+			'[' . date('d-m-Y H:i:s') . '] ' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REQUEST_URI'] . ' uid:' . auth::getCredentials(),
+			"********************************************************************************",
 			$msg
 		);
 
-        fwrite($fh, implode("\t", $line) . "\n");
+        fwrite($fh, implode("\n", $line) . "\n\n");
 		
         fclose($fh);
     }

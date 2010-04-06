@@ -53,7 +53,6 @@ class application
 		}
 
 		http::init();
-
         try
         {
 
@@ -74,8 +73,11 @@ class application
 					$event->handle();
 				}
 			}
-
         }
+		catch (dbException $e)
+		{
+			application::dispatch('exception', 'database', $e);
+		}
 		catch (accessDeniedException $e)
 		{
 			application::dispatch('exception', 'accessDenied', $e);
