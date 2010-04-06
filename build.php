@@ -15,10 +15,13 @@ if (!isset($arguments['product']))
 
 if (!isset($arguments['target']))
 {
-	printError("--target not found");
-	printUsage();
-	exit(1);
+	$targets[]	=	'core';
 }
+else
+{
+	$targets[]	=	$arguments['target'];
+}
+
 
 if (!isset($arguments['environment']))
 {
