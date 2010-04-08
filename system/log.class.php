@@ -25,10 +25,10 @@ class log
 		$traceLines = $e->getTrace();
 		foreach ($traceLines as $traceLine)
 		{
-			$trace[] = trim($traceLine['class'] . $traceLine['type'] . $traceLine['function'] . "\t\t\t" . $traceLine['file'] . ' line ' . $traceLine['line']);
+			$trace[] = trim($traceLine['class'] . $traceLine['type'] . $traceLine['function'] . "\n" . $traceLine['file'] . ' line ' . $traceLine['line']);
 		}
 
-        $message = get_class($e) . " " .	$e->getMessage() .  "\n\n" . implode("\n", $trace);
+        $message = get_class($e) . " " .	$e->getMessage() .  "\n\n" . implode("\n\n", $trace);
         log::push(log::E_EXCEPTION, false, $message);
     }
 
