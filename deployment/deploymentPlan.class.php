@@ -37,9 +37,13 @@ class deploymentPlan
 	{
 		self::$plan		= $plan;
 		self::$space	= $space;
-		self::$release		= $release;
+		
+		if (!self::parse('${release}'))
+		{
+			self::$release	= $release;
+			self::setVar('release', $release);
+		}
 
-		self::setVar('release', $release);
 		self::setVar('space', $space);
 
 		deploymentQueue::init($space, $plan, $release);
