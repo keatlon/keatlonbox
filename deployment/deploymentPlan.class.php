@@ -71,7 +71,7 @@ class deploymentPlan
 
 		while (($file = readdir($dh)) !== false)
 		{
-			if ($file == 'conf')
+			if (in_array($file, array('conf', 'archive')))
 			{
 				continue;
 			}
@@ -169,7 +169,7 @@ class deploymentPlan
 	static function parse($alias)
 	{
 		$alias = preg_replace_callback('|\${const:(\w*)}|', array(self, 'match_constants'), $alias);
-		$alias = preg_replace_callback('|\${(\w*)(::){0,1}([a-zA-Z0-9\.\-]*)}|', array(self, 'match_vars'), $alias);
+		$alias = preg_replace_callback('|\${([a-zA-Z0-9\.\-]*)(::){0,1}([a-zA-Z0-9\.\-]*)}|', array(self, 'match_vars'), $alias);
 
 		return $alias;
 	}
