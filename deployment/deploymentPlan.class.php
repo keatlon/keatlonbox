@@ -17,6 +17,15 @@ class deploymentPlan
 			$space = false;
 			$space['default'] = (bool)$spaceXml['default'];
 			$space['hidden']	= (string)$spaceXml['hidden'];
+			$space['group']	= (string)$spaceXml['group'];
+
+			if ($space['group'])
+			{
+				if (!auth::i('cp')->inGroup($space['group']))
+				{
+					continue;
+				}
+			}
 
 			foreach($spaceXml->plan as $planXml)
 			{
