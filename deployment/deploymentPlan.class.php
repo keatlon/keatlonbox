@@ -141,8 +141,8 @@ class deploymentPlan
 		}
 		else
 		{
-			$alias	=	preg_match('|\${func:(\w+)::(\w+)\(\)}|', $alias, $matches);
-			$hosts	=	call_user_func(array($matches[1], $matches[2]));
+			$alias	=	preg_match('|\${func:(\w+)::(\w+)\((.*)\)}|', $alias, $matches);
+			$hosts	=	call_user_func(array($matches[1], $matches[2]), $matches[3]);
 		}
 
 		if ($hosts) foreach($hosts as &$host)
