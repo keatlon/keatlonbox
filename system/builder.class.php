@@ -81,6 +81,12 @@ class builder
     static public function _readdir($dir, $pattern)
     {
         $files = array();
+
+		if (!file_exists($dir))
+		{
+			return $files;
+		}
+
         $handle = opendir($dir);
 
         if (!$handle)

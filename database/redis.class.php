@@ -23,7 +23,7 @@ class redis
     /**
      *	get instance of redis
      *
-     *	return redis
+     *	@return redis
      */
     static function i()
     {

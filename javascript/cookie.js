@@ -10,7 +10,7 @@ var CookieClass = function()
 		}
 		else
 		{
-			var expires = "";
+			expires = "";
 		}
 		
 		document.cookie = name+"="+value+expires+"; path=/";

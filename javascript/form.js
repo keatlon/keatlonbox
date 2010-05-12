@@ -92,7 +92,7 @@ var Form = function( form_name, multipart, method )
                 if (method == 'get')
                 {
                     var url = '';
-                    for(var l in data)
+                    for(l in data)
                     {
                         url = url + '/' + data[l].name + '/' + data[l].value;
                     }

@@ -85,9 +85,9 @@ class resizeImageController extends taskActionController
             return;
         }
 
-
 		if (!$params['convert'])
 		{
+
 	        $content = file_get_contents($cachePath);
 			
 			header('Content-Type: image/jpeg');
