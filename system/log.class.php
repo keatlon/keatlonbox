@@ -29,6 +29,7 @@ class log
 		}
 
         $message = get_class($e) . " " .	$e->getMessage() .  "\n\n" . implode("\n\n", $trace);
+		
         log::push(log::E_EXCEPTION, false, $message);
     }
 
@@ -101,13 +102,12 @@ class log
 
 		$line = array(
 			"********************************************************************************",
-			'[' . date('d-m-Y H:i:s') . '] ' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REQUEST_URI'] . ' uid:' . auth::getCredentials(),
+			'[' . date('d-m-Y H:i:s') . '] ' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REQUEST_URI'],
 			"********************************************************************************",
 			$msg
 		);
 
         fwrite($fh, implode("\n", $line) . "\n\n");
-		
         fclose($fh);
     }
 
