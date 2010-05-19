@@ -27,7 +27,7 @@ var cometClass = function()
 	{
 		comet.statuses.push(channelId);
 
-		$.get(comet.options.get_url + '?id=' + channelId, function(response){
+		$.getJSON(comet.options.get_url + '?id=' + channelId, function(response){
 
 			comet.dispatch(channelId, response);
 
@@ -35,7 +35,7 @@ var cometClass = function()
 			{
 				comet.start(channelId);
 			}
-		}, 'json');
+		});
 	}
 
 	this.put = function (channelId, params)
