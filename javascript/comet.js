@@ -20,7 +20,7 @@ var cometClass = function()
 
 	this.stop = function (channelId)
 	{
-		this.statuses.push(channelId);
+		comet.statuses = $.grep(comet.statuses, function(v) { return v != channelId; });
 	}
 
 	this.start = function (channelId)
@@ -31,7 +31,7 @@ var cometClass = function()
 
 			comet.dispatch(channelId, response);
 
-			if ($.inArray(channelId, comet.statuses))
+			if ($.inArray(channelId, comet.statuses) > -1)
 			{
 				comet.start(channelId);
 			}
