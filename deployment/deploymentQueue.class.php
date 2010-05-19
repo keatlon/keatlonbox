@@ -49,9 +49,16 @@ class deploymentQueue
 		$stats['completed']		=	0;
 		$stats['failed']		=	0;
 
-		$queueLength			=	count(self::$queue);
+		$queueLength			=	0;
 		$queueCounter			=	1;
 
+		if (self::$queue) foreach(self::$queue as $queueItem)
+		{
+			if ($queueItem['status'] != 'new')
+			{
+				$queueLength++;
+			}
+		}
 
 		if (self::$queue) foreach(self::$queue as $queueItem)
 		{
