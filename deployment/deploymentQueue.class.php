@@ -54,7 +54,7 @@ class deploymentQueue
 
 		if (self::$queue) foreach(self::$queue as $queueItem)
 		{
-			if ($queueItem['status'] != 'new')
+			if ($queueItem['status'] == 'new')
 			{
 				$queueLength++;
 			}
