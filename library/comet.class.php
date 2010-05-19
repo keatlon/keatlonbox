@@ -1,7 +1,9 @@
 <?php
 class comet
 {
-	static $push_url = 'http://cp.allthis.com/pusblish';
+	static	$enabled	=	true;
+	static	$push_url	=	'http://cp.allthis.com/publish';
+
 
 	static function init()
 	{
@@ -16,7 +18,7 @@ class comet
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		$result = $this->curl_exec($ch);
+		$result = curl_exec($ch);
 		curl_close($ch);
 	}
 }

@@ -1,6 +1,7 @@
 var cometClass = function()
 {
 	this.options = {
+		'enabled'	:	true,
 		'put_url'	:	'/publish',
 		'get_url'	:	'/activity'
 	};
@@ -34,7 +35,7 @@ var cometClass = function()
 			{
 				comet.start(channelId);
 			}
-		});
+		}, 'json');
 	}
 
 	this.put = function (channelId, params)

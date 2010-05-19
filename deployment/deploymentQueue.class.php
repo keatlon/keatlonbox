@@ -45,9 +45,13 @@ class deploymentQueue
 
 	static function run()
 	{
-		$stats['tasks']			= count($tasks);
-		$stats['completed']		= 0;
-		$stats['failed']		= 0;
+		$stats['tasks']			=	count($tasks);
+		$stats['completed']		=	0;
+		$stats['failed']		=	0;
+
+		$queueLength			=	count(self::$queue);
+		$queueCounter			=	1;
+
 
 		if (self::$queue) foreach(self::$queue as $queueItem)
 		{
@@ -56,6 +60,17 @@ class deploymentQueue
 				continue;
 			}
 
+			if (comet::$enabled)
+			{
+				$cometItem	=	array(
+					'total'			=>	$queueLength,
+					'current'		=>	$queueCounter++,
+					'description'	=>	$queueItem['description'],
+				);
+
+				comet::push(1, json_encode($cometItem));
+			}
+			
 			$output = array();
 			$r = exec($queueItem['run'], $output, $error);
 
