@@ -43,9 +43,9 @@ var cometClass = function()
 		$.post(comet.options.put_url + '?id=' + channelId, params, function(response){});
 	}
 
-	this.subscribe = function (channelId, cb)
+	this.subscribe = function (channelId, hash, cb)
 	{
-		var subscriber = {'channelId' : channelId, 'cb' : cb};
+		var subscriber = {'channelId' : channelId, 'hash':hash, 'cb' : cb};
 		comet.subscribers.push(subscriber);
 	}
 
@@ -53,7 +53,7 @@ var cometClass = function()
 	{
 		for(var l in this.subscribers)
 		{
-			if (comet.subscribers[l].channelId == channelId)
+			if ( (comet.subscribers[l].channelId == channelId) && (params.hash == comet.subscribers[l].hash) )
 			{
 				comet.subscribers[l].cb(channelId, params);
 			}

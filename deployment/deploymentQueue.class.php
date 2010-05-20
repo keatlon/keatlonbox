@@ -71,6 +71,7 @@ class deploymentQueue
 			{
 				$cometItem	=	array(
 					'total'			=>	$queueLength,
+					'hash'			=>	session::get('cometRunHash'),
 					'current'		=>	$queueCounter++,
 					'description'	=>	$queueItem['description'],
 				);
