@@ -78,6 +78,12 @@ return array
 		 'email_from'	=> 'postmaster@keatlonbox.com',
 		 'return_path'	=> 'postmaster@keatlonbox.com',
 	 ),
+	
+	'comet'			=>	array(
+		'enabled'	=>	false,
+		'push_url'	=>	'',
+		'get_url'	=>	'',
+	),
 
     'memcache'		=>	array
     (

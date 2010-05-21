@@ -7,7 +7,7 @@ class db
 	public static function exec( $sql, $bind = array(), $connection_name = null )
 	{
 		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql, $bind) : null;
-		$statement = dbConnection::get( $connection_name )->prepare($sql, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false));
+		$statement = dbConnection::get( $connection_name )->prepare($sql);
 		foreach ( $bind as $key => $value )
 		{
 			$statement->bindValue( ":{$key}", $value, PDO::PARAM_STR );

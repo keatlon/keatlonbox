@@ -3,6 +3,7 @@ class javascriptHelper
 {
 	public static function get($value, $useKeys = false)
 	{
+
 		if ( is_numeric($value) )
 		{
 			return $value;
@@ -45,16 +46,15 @@ class javascriptHelper
 			}
 			else
 			{
-				$val	= addslashes($val);
 				$k		= addslashes($k);
 
 				if ($useKeys)
 				{
-					$array[$k] = "'{$k}':'{$val}'";
+					$array[$k] = "'{$k}':" . self::get($val);
 				}
 				else
 				{
-					$array[$k] = "'{$val}'";
+					$array[$k] = self::get($val);
 				}
 
 			}

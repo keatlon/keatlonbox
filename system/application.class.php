@@ -30,7 +30,6 @@ class application
         mc::init();
 		i18n::init();
 
-
 		foreach(conf::i()->application[APPLICATION]['auth'] as $authEngine)
 		{
 			if (auth::i($authEngine)->getCredentials())
@@ -49,10 +48,10 @@ class application
 			{
 				auth::setGateway('server');
 			}
-			
 		}
 
 		http::init();
+
         try
         {
 
@@ -149,6 +148,7 @@ class application
 			if (!application::$stack)
 			{
 				application::$stack = new viewStack;
+				comet::init();
 			}
 
 			if (!$data)
