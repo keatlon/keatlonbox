@@ -9,7 +9,7 @@ class comet
 		self::$enabled	= conf::i()->comet['enabled'];
 		self::$push_url = conf::i()->comet['push_url'];
 
-		session::set('cometRunHash', md5(rand(10000)));
+		session::set('cometRunHash', md5(rand(100, 10000)));
 		conf::i()->comet['hash']	=	session::get('cometRunHash');
 		staticHelper::javascript('cometSettings', conf::i()->comet, true);
 	}

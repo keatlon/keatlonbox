@@ -30,6 +30,11 @@ class application
         mc::init();
 		i18n::init();
 
+		if (!conf::i()->application[APPLICATION]['auth'])
+		{
+			conf::i()->application[APPLICATION]['auth'] = array('server');
+		}
+
 		foreach(conf::i()->application[APPLICATION]['auth'] as $authEngine)
 		{
 			if (auth::i($authEngine)->getCredentials())
