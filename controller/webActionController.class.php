@@ -1,7 +1,7 @@
 <?php
 abstract class webActionController extends actionController
 {
-	public		$renderer	= rendererFactory::BASE;
+	public		$renderer	= rendererFactory::HTML;
 	public		$response	= false;
 
 	public		$loginRequired	= true;
@@ -15,7 +15,7 @@ abstract class webActionController extends actionController
 			{
 				$this->renderer	= conf::i()->application[application::$name]['renderer'];
 			}
-			elseif ($this->renderer == rendererFactory::BASE)
+			elseif ($this->renderer == rendererFactory::HTML)
 			{
 				
 				if ( http::$response['accept'] == 'text/html')
