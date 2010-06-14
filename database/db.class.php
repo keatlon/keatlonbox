@@ -10,7 +10,14 @@ class db
 		$statement = dbConnection::get( $connection_name )->prepare($sql);
 		foreach ( $bind as $key => $value )
 		{
-			$statement->bindValue( ":{$key}", $value, PDO::PARAM_STR );
+			if (is_int($value))
+			{
+				$statement->bindValue( ":{$key}", $value, PDO::PARAM_INT);
+			}
+			else
+			{
+				$statement->bindValue( ":{$key}", $value, PDO::PARAM_STR );
+			}
 		}
 		
 		$statement->execute();
