@@ -18,6 +18,8 @@ class application
 
 	static public function run()
 	{
+		ob_start();
+		
         application::$name	= APPLICATION;
 
         if (conf::i()->debug['enable'])
@@ -93,11 +95,6 @@ class application
         catch (moduleException $e)
         {}
 
-        if (conf::i()->debug['enable'])
-        {
-			define('TS_APPLICATION_RENDER', microtime(true));
-        }
-
 		if (self::$renderer == rendererFactory::HTML)
 		{
 			$layout = self::getLayout();
@@ -134,11 +131,24 @@ class application
 			profiler::finish(profiler::start(profiler::SYSTEM, 'app::run',		false, TS_APPLICATION_RUN));
 			profiler::finish(profiler::start(profiler::SYSTEM, 'app::global',	false, TS_APPLICATION_GLOBAL));
 			profiler::finish(profiler::start(profiler::SYSTEM, 'sys::global',	false, $_SERVER['REQUEST_TIME']));
-			$logItems = profiler::get();
+			
+			$logItems = profiler::get(profiler::SYSTEM);
+			$sqlItems = profiler::get(profiler::SQL);
+			profiler::firephp()->info(count($sqlItems));
+
+			profiler::firephp()->group('System');
+
+			foreach($logItems as $logItem)
+			{
+				profiler::firephp()->info($logItem);
+			}
+
+			profiler::firephp()->groupEnd();
+
 
 			if (self::$renderer == rendererFactory::HTML)
 			{
-				include conf::i()->rootdir . '/core/web/layout/view/debug.view.php';
+				// include conf::i()->rootdir . '/core/web/layout/view/debug.view.php';
 			}
         }
 	}
