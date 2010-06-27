@@ -1,19 +1,19 @@
 <?php
 class slicer
 {
-	public $name	= 'default';
-	public $mode	= 'pager';
-	public $count	= 0;
-	public $page	= false;
-	public $maxPage	= 0;
-	public $perPage	= 10;
-	public $nextPage    = false;
-	public $prevPage	= false;
-	public $baseUrl	= false;
-	public $nextUrl	= false;
-	public $prevUrl	= false;
-    public $enableKeys  = false;
-	public $bound = 2;
+	public $name			= 'default';
+	public $mode			= 'pager';
+	public $count			= 0;
+	public $page			= false;
+	public $maxPage			= 0;
+	public $perPage			= 10;
+	public $nextPage		= false;
+	public $prevPage		= false;
+	public $baseUrl			= false;
+	public $nextUrl			= false;
+	public $prevUrl			= false;
+    public $enableKeys		= false;
+	public $bound			= 2;
 	public $showPageFrom	= false;
 	public $showPageTo		= false;
 
@@ -44,6 +44,18 @@ class slicer
 		{
 			$this->baseUrl = $url;
 		}
+		
+		$this->perPage	= 20;
+		
+		if (http::$request['page'])
+		{
+			$this->page	= http::$request['page'];
+		}
+		else
+		{
+			$this->page		= 1;
+		}
+
 	}
 
 	/**
@@ -85,26 +97,8 @@ class slicer
 		return array_slice($list, $start, $count);
 	}
 
-	public function fetch($list, $perPage, $page = false)
+	public function build()
 	{
-        if (!is_array($list))
-        {
-            return false;
-        }
-
-		$this->list = $list;
-		$this->perPage = $perPage;
-
-		if ($page)
-		{
-			$this->page	= $page;
-		} 
-		elseif (http::$request['page'])
-		{
-			$this->page	= http::$request['page'];
-		}
-
-		$this->count	= count($list);
 		$this->maxPage	= ceil($this->count / $this->perPage);
 
 		if (!$this->page)
@@ -114,7 +108,7 @@ class slicer
 
 		// slice from end
 		// $offsetPage = ($this->maxPage - $this->page);
-		
+
 		if ($offsetPage < 0)
 		{
 			$offsetPage = 0;
@@ -133,14 +127,14 @@ class slicer
 
         if ($this->showPageTo > $this->maxPage)
         {
-			$this->showPageTo = $this->maxPage;
+			$this->showPageTo	= $this->maxPage;
 			$this->showPageFrom	= $this->maxPage - ($this->bound * 2);
 		}
 
         $this->nextPage = $this->page + 1;
         $this->prevPage = $this->page - 1;
-		$this->nextUrl = $this->addPage($this->baseUrl, $this->nextPage);
-		$this->prevUrl = $this->addPage($this->baseUrl, $this->prevPage);
+		$this->nextUrl	= $this->addPage($this->baseUrl, $this->nextPage);
+		$this->prevUrl	= $this->addPage($this->baseUrl, $this->prevPage);
 
         if ($this->page <= 1)
         {
@@ -161,6 +155,26 @@ class slicer
         {
 			$this->showPageFrom = 1;
         }
+	}
+
+	public function fetch($list, $perPage = 20, $page = false)
+	{
+        if (!is_array($list))
+        {
+            return false;
+        }
+
+		$this->list		= $list;
+		$this->perPage	= $perPage;
+
+		if ($page)
+		{
+			$this->page	= $page;
+		} 
+
+		$this->count	= count($list);
+
+		$this->build();
 
 		return slicer::slice($list, $this->perPage * ($this->page - 1), $this->perPage);
 	}
