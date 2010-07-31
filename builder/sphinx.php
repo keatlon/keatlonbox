@@ -1,6 +1,8 @@
 <?php
 
-    $sphinxConfigContent = file_get_contents(dirname(__FILE__) . "/../configuration/base/sphinx.abstract.conf");
+	include dirname(__FILE__) . "/../conf/init.php";
+
+    $sphinxConfigContent = file_get_contents(dirname(__FILE__) . "/../../conf/sphinx.abstract.conf");
 
     $sphinxConfigContent = str_replace('%%MYSQL_HOST%%',        conf::i()->database['pool'][conf::i()->sphinx['database']]['host'], $sphinxConfigContent);
     $sphinxConfigContent = str_replace('%%MYSQL_USER%%',        conf::i()->database['pool'][conf::i()->sphinx['database']]['user'], $sphinxConfigContent);
@@ -13,6 +15,6 @@
     $sphinxConfigContent = str_replace('%%PID_FILE%%',          conf::i()->sphinx['pid'], $sphinxConfigContent);
     $sphinxConfigContent = str_replace('%%PORT%%',              conf::i()->sphinx['port'], $sphinxConfigContent);
 
-    file_put_contents(conf::i()->sphinx['config_path'] . '/' . ENVIRONMENT . '.sphinx.conf', $sphinxConfigContent);
+    file_put_contents(conf::i()->sphinx['config_path'] . '/sphinx.' . ENVIRONMENT . '.conf', $sphinxConfigContent);
 
 ?>
