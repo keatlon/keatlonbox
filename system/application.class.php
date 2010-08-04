@@ -82,6 +82,7 @@ class application
         }
 		catch (dbException $e)
 		{
+			log::exception($e);
 			application::dispatch('exception', 'database', $e);
 		}
 		catch (accessDeniedException $e)

@@ -30,6 +30,7 @@ class emailActionController extends actionController
         }
         catch (dbException $e)
         {
+			log::exception($e);
             $this->response['code'] = self::EXCEPTION;
             $this->response['errors']       = $e->getMessage();
         }
