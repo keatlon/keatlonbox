@@ -190,8 +190,6 @@ abstract class dbPeer
 	 */
 		public function doInsert( $data )
 		{
-			log::push(log::E_USER, false, 'do insert');
-
 			$data['created'] = time();
 
 			$insert_data = array();
@@ -200,8 +198,6 @@ abstract class dbPeer
 			{
 				$insert_data[] = "{$column} = :{$column}";
 			}
-
-			log::push(log::E_USER, false, 'sql for insert ' . 'INSERT INTO ' . $this->tableName . ' SET ' . implode(', ', $insert_data));
 
 			db::exec('INSERT INTO ' . $this->tableName . ' SET ' . implode(', ', $insert_data), $data, $this->connectionName);
 
