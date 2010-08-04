@@ -25,7 +25,6 @@ class db
 		if ( $statement->errorCode() != '0000' )
 		{
 			$error = $statement->errorInfo();
-			dd($error[2] . $sql);
 			throw new dbException($error[2], $sql);
 		}
 		
