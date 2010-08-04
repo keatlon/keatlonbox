@@ -85,6 +85,7 @@ abstract class webActionController extends actionController
 		}
 		catch (Exception $e)
 		{
+			log::exception($e);
 			$this->response['errors']       = $e->getMessage();
 			application::dispatch('exception', 'application', $e);
 			return self::EXCEPTION;
