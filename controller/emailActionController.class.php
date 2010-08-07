@@ -57,8 +57,10 @@ class emailActionController extends actionController
 			return false;
 		}
 
+
         $renderer = rendererFactory::create('email');
         $result = $renderer->render($this);
+
 
         if (!$result)
         {

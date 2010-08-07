@@ -150,6 +150,11 @@ abstract class webActionController extends actionController
 		$this->response['title'] = $title;
 	}
 
+	function setNotice($notice)
+	{
+		$this->response['notice'] = $notice;
+	}
+
 	function setLayout($layout = 'index')
 	{
 		application::setContext('layout', $layout);

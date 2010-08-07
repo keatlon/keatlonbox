@@ -56,5 +56,15 @@ abstract class actionController
 			return $this->$name;
 		}
 	}
+
+	function getModuleName()
+	{
+		return $this->moduleName;
+	}
+	
+	function getActionName()
+	{
+		return $this->actionName;
+	}
 }
 ?>
