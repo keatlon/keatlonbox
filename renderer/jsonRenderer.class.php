@@ -10,11 +10,11 @@ class jsonRenderer extends baseRenderer
 		$result['data']		= array();
 		$result['status']	= $__action->response['code'];
 		
-		($__action->response['errors'])	? $result['errors']		= $__action->response['errors'] : '';
-		($__action->response['title'])	? $result['title']		= $__action->response['title'] : '';
-		($__action->response['message'])? $result['message']	= $__action->response['message'] : '';
-		($__action->response['notice'])	? $result['notice']		= $__action->response['notice'] : '';
-
+		($__action->response['errors'])		? $result['errors']		= $__action->response['errors'] : '';
+		($__action->response['title'])		? $result['title']		= $__action->response['title'] : '';
+		($__action->response['message'])	? $result['message']	= $__action->response['message'] : '';
+		($__action->response['notice'])		? $result['notice']		= $__action->response['notice'] : '';
+		($__action->response['redirect'])	? $result['redirect']	= $__action->response['redirect'] : '';
 
 
 		if ($__action->response['method'] == 'POST')

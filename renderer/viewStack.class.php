@@ -8,6 +8,11 @@ class viewStack
     public  $javascriptFiles    = array();
     public  $javascriptSnippets = array();
     public  $javascriptOnload   = array();
+
+	/**
+	 *
+	 * @var actionController
+	 */
 	public  $lastController		= false;
 
     public function push(actionController $controller, $stackName = 'wide', $view = false, $priority = 10, $renderer = false)

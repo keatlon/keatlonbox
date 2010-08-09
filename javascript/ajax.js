@@ -10,6 +10,13 @@ var ajaxClass = function()
 		$("body").ajaxComplete(function(e, XMLHttpRequest, ajaxOptions){
             $('#ajax_loading').hide();
 			$('#ajax_wrapper').hide(100);
+
+			var data = $.httpData(XMLHttpRequest, ajaxOptions.dataType);
+			if(typeof data.redirect != 'undefined')
+			{
+				location.href = data.redirect;
+			}
+
 		});
 
 		$("body").ajaxError(function(event, request, settings){

@@ -60,6 +60,10 @@ abstract class webActionController extends actionController
 
 			$this->afterExecute();
 		}
+		catch (redirectException $e)
+		{
+			$this->afterExecute();
+		}
 		catch (forwardException $e)
 		{
 			application::dispatch($e->module, $e->action, $data);

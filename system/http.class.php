@@ -35,6 +35,12 @@ class http
 
 	static function redirect($url)
 	{
+		if(application::getContext('controller')->renderer == 'json')
+		{
+			application::getContext('controller')->response['redirect'] = $url;
+			throw new redirectException;
+		}
+
 		Header('Location:' . $url);
 		exit;
 	}
