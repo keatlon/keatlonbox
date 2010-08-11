@@ -98,6 +98,8 @@ class application
 
 		if (self::$renderer == rendererFactory::HTML)
 		{
+			comet::init();
+
 			$layout = self::getLayout();
 
 			$context['data']['module'] = 'layout';
@@ -164,7 +166,6 @@ class application
 			if (!application::$stack)
 			{
 				application::$stack = new viewStack;
-				comet::init();
 			}
 
 			if (!$data)
