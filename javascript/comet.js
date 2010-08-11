@@ -71,8 +71,15 @@ var cometClass = function()
 
 	this.dispatch = function (channelId, params)
 	{
+		console.log('syslevel comet dispatch');
+
 		for(var l in this.subscribers)
 		{
+			console.log('subscriber channel: ' + comet.subscribers[l].channelId);
+			console.log('subscriber hash: ' + comet.subscribers[l].hash);
+			console.log('response channel: ' + channelId);
+			console.log('response hash: ' + params.hash);
+
 			if ( (comet.subscribers[l].channelId == channelId) && (params.hash == comet.subscribers[l].hash) )
 			{
 				comet.subscribers[l].cb(channelId, params);
