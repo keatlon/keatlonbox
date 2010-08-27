@@ -12,9 +12,10 @@ var ajaxClass = function()
 			$('#ajax_wrapper').hide(100);
 
 			var data = $.httpData(XMLHttpRequest, ajaxOptions.dataType);
+
 			if(typeof data.redirect != 'undefined')
 			{
-				location.href = data.redirect;
+				$.address.value(data.redirect);
 			}
 
 		});

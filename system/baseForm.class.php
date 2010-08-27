@@ -1,45 +1,71 @@
 <?php
 abstract class baseForm
 {
-    protected $allowedFields = array();
-	protected $fields;
-	protected $step;
+	static protected $instance = false;
+
+    protected $fields		= array();
+	protected $rules;
+	protected $data;
+	
 	public $errors;
-	
-	function __construct($data, $step = false)
+
+	function __construct($data = false)
 	{
-		$this->data = $data;
-		$this->step = $step;
+		if ($data)
+		{
+			$this->data	=	$data;
+		}
+
+		$this->setup();
+		$this->cleanup();
 	}
-	
+
+	function cleanup()
+	{
+		if (!$fields)
+		{
+			return true;
+		}
+
+		foreach($this->data as $k => $v)
+		{
+			if (!in_array($k, $this->fields))
+			{
+				unset($this->data[$k]);
+			}
+		}
+	}
+
+	function get($field = false)
+	{
+		if (!$field)
+		{
+			return $this->data;
+		}
+		
+		return $this->data[$field];
+	}
+
 	function validate()
 	{
-		$validated = true;
-		
-		if ($this->fields) foreach($this->fields as $field => $params)
+		if ($this->rules) foreach($this->rules as $field => $validators)
 		{
-			if (!$params['validators'])
+			if (!$validators)
 			{
 				continue;
 			}
 
-			if ($this->step && ($this->step != $params['step']))
-			{
-				continue;
-			}
-
-			foreach($params['validators'] as $validator)
+			foreach($validators as $validator)
 			{
 				if (!$validator->isValid($this->data[$field], $field))
 				{
 					$this->errors[$field] = $validator->getErrorMessage();
-					$validated = false;
 					break;
 				}
 			}
 		}
 
-		return $validated;
+		return (bool)!$this->errors;
 	}
 
 	/**
@@ -49,10 +75,14 @@ abstract class baseForm
 	 * @param array $validators
 	 * @param integer $step
 	 */
-	function addField($name, $validators = array(), $step = false)
+	function addRule($name, $validators = array())
 	{
-		$this->fields[$name]['validators'] = $validators;
-		$this->fields[$name]['step'] = $step;
+		$this->rules[$name] = $validators;
+	}
+
+	function getErrors()
+	{
+		return $this->errors;
 	}
 }
 ?>

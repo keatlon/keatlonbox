@@ -1,8 +1,8 @@
 <?php
 abstract class webActionController extends actionController
 {
-	public		$renderer	= rendererFactory::HTML;
-	public		$response	= false;
+	public		$renderer	=	rendererFactory::HTML;
+	public		$response	=	false;
 
 	public		$loginRequired	= true;
 	private		$viewName		= false;
@@ -45,12 +45,12 @@ abstract class webActionController extends actionController
 
 			if (http::$method == 'POST')
 			{
-				$response['code'] = $this->put($data);
+				$this->put($data);
 			}
 
 			if (http::$method == 'GET')
 			{
-				$response['code'] = $this->get($data);
+				$this->get($data);
 			}
 
 			if ($response['code'])
@@ -162,6 +162,12 @@ abstract class webActionController extends actionController
 	function setLayout($layout = 'index')
 	{
 		application::setContext('layout', $layout);
+	}
+
+	function setErrors($errors)
+	{
+		$this->response['errors']	=	$errors;
+		$this->response['code']		=	self::ERROR;
 	}
 }
 ?>

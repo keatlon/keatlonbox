@@ -37,6 +37,11 @@ class auth
 		return self::i()->authorize($data);
 	}
 
+	static function id()
+	{
+		return self::i()->getCredentials();
+	}
+	
 	static function getCredentials()
 	{
 		return self::i()->getCredentials();

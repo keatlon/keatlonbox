@@ -8,8 +8,9 @@ var errorRenderer = function()
 var Form = function(f)
 {
 	this.f			=	f;
-	this.multipart  =	$('input[type=file]', this.f).length > 0;
+	this.multipart  =	$(':file', this.f).length > 0;
 	this.method		=	$(this.f).attr('method');
+	this.id			=	$(this.f).attr('id');
 
 	if (this.method == '')
 	{
@@ -37,6 +38,11 @@ var Form = function(f)
 	{
 		var thisForm	= this;
 
+		$(':input,:file,', this.f).not('[type=submit],[type=hidden]').each(function(){
+
+			$('<div class="error"></div>').attr('id', thisForm.f.attr('id') + '_' + thisForm.exractFieldName($(this).attr('name')) + '_error').insertAfter(this);
+		});
+
         this.f.ajaxForm( {
             url         : $(thisForm).attr('action'),
             dataType    : 'json',
@@ -55,8 +61,8 @@ var Form = function(f)
                 }
 
 				/*
-		* Remove default value for input text
-		* */
+				* Remove default value for input text
+				* */
 				for(var l in data)
 				{
 					var obj = $('input[type=text][name="' + data[l].name + '"]');
@@ -82,7 +88,7 @@ var Form = function(f)
                     return false;
                 }
 
-                disableSubmit();
+                thisForm.disableSubmit();
             },
 
             success: function ( response )
@@ -92,7 +98,7 @@ var Form = function(f)
                 if (typeof response != 'object')
                 {
                     ajax.errorHandler(response.toString());
-                    enableSubmit();
+                    thisForm.enableSubmit();
                     return;
                 }
 
@@ -100,15 +106,15 @@ var Form = function(f)
                 {
                     if ( typeof thisForm.onError == 'function' )
                     {
-                        thisForm.onError( response );
+						eval(thisForm.onError + '( response )');
                     }
                     
                     thisForm.showErrors(response);
                 }
 
-                if ( response.status == 'success' && typeof thisForm.onSuccess != '')
+                if ( response.status == 'success' && typeof thisForm.onSuccess == 'string')
                 {
-                    thisForm.onSuccess( response );
+                    eval(thisForm.onSuccess + '( response )');
                 }
 
                 if (response.status == 'exception')
@@ -116,20 +122,23 @@ var Form = function(f)
                     console.log('Exception', response.errors);
                 }
 
-                enableSubmit();
+                thisForm.enableSubmit();
 
-
+				if (typeof response.notice != 'undefined')
+				{
+					notification.success(response.notice);
+				}
             }
         } );
 	}
 
-	var disableSubmit = function()
+	this.disableSubmit = function()
 	{
 		$('input:submit', this.f).attr('disabled', true);
 		$('button:submit', this.f).attr('disabled', true);
 	};
 
-	var enableSubmit = function()
+	this.enableSubmit = function()
 	{
 		$('input:submit', this.f).attr('disabled', false);
 		$('button:submit', this.f).attr('disabled', false);
@@ -147,8 +156,8 @@ var Form = function(f)
 		{
 			for ( var fieldName in response.errors )
 			{
-				$('#' + this.form_namespace + '_' + fieldName + '_error').html(response.errors[fieldName]);
-				$('#' + this.form_namespace + '_' + fieldName + '_error').show(200);
+				$('#' + this.id + '_' + fieldName + '_error').html(response.errors[fieldName]);
+				$('#' + this.id + '_' + fieldName + '_error').show(200);
 			}
 
 			return;
@@ -165,9 +174,20 @@ var Form = function(f)
 		{
 			for ( var fieldName in this.lastResponseData.errors )
 			{
-				$('#' + this.form_namespace + '_' + fieldName + '_error').hide();
+				$('#' + this.id + '_' + fieldName + '_error').hide();
 			}
 		}
+	};
+
+	this.exractFieldName = function(n)
+	{
+		var r = new RegExp(/\[(.*)\]/g).exec(n);
+		if (r == null)
+		{
+			return n;
+		}
+
+		return r[1];
 	};
 
 	this.init();
