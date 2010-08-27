@@ -5,34 +5,21 @@ var errorRenderer = function()
 	this.ER_FIELDS      = 2;
 };
 
-var Form = function( form_name, multipart, method )
+var Form = function(f)
 {
-	// Constructor
-	this.form_namespace = form_name;
-	this.formJObject    = $('#' + this.form_namespace + '_form');
-	this.multipart      = ( typeof multipart == 'undefined' ) ? false : multipart;
+	this.f			=	f;
+	this.multipart  =	$('input[type=file]', this.f).length > 0;
+	this.method		=	$(this.f).attr('method');
 
-    if (typeof method == 'undefined')
-    {
-        var method = 'post';
-    }
-
-    if (method == 'get')
-    {
-        this.multipart = false;
-    }
-
-	this.lastResponseData = null;
-	this.steps = $('.step', this.formJObject).length;
-	this.current_step = 1;
-	if (this.steps)
+	if (this.method == '')
 	{
-		$('.step', this.formJObject).eq(0).show();
+		this.method = 'post';
 	}
 
-	this.onSuccess		= null
-	this.onError		= null;
-	this.onSuccessStep	= null;
+	this.lastResponseData = null;
+
+	this.onSuccess		= $(this.f).attr('onsuccess');
+	this.onError		= $(this.f).attr('onerror');
 	this.onBeforeSubmit = null;
 
 	var errRenderer = new errorRenderer();
@@ -46,21 +33,14 @@ var Form = function( form_name, multipart, method )
 		this.errorRendererContainer = typeof ( container == 'undefined') ? this.errorRendererContainer : container;
 	}
 
-	this.bind = function ( module, action )
+	this.init = function ()
 	{
 		var thisForm	= this;
-		var step		= false;
-		var step_url	= '';
 
-		if ( this.current_step < this.steps )
-		{
-			step_url = '&step=' + this.current_step;
-		}
-
-        this.formJObject.ajaxForm( {
-            url         : application.url( module, action ),
+        this.f.ajaxForm( {
+            url         : $(thisForm).attr('action'),
             dataType    : 'json',
-            type        : method,
+            type        : thisForm.method,
             iframe      : false,
 
             beforeSubmit: function (data, jobj, opt)
@@ -89,7 +69,7 @@ var Form = function( form_name, multipart, method )
 					}
 				}
 
-                if (method == 'get')
+                if ($(thisForm).method == 'get')
                 {
                     var url = '';
                     for(l in data)
@@ -126,7 +106,7 @@ var Form = function( form_name, multipart, method )
                     thisForm.showErrors(response);
                 }
 
-                if ( response.status == 'success' && typeof thisForm.onSuccess == 'function')
+                if ( response.status == 'success' && typeof thisForm.onSuccess != '')
                 {
                     thisForm.onSuccess( response );
                 }
@@ -145,14 +125,14 @@ var Form = function( form_name, multipart, method )
 
 	var disableSubmit = function()
 	{
-		$('input:submit', this.formJObject).attr('disabled', true);
-		$('button:submit', this.formJObject).attr('disabled', true);
+		$('input:submit', this.f).attr('disabled', true);
+		$('button:submit', this.f).attr('disabled', true);
 	};
 
 	var enableSubmit = function()
 	{
-		$('input:submit', this.formJObject).attr('disabled', false);
-		$('button:submit', this.formJObject).attr('disabled', false);
+		$('input:submit', this.f).attr('disabled', false);
+		$('button:submit', this.f).attr('disabled', false);
 	};
 
 	this.showErrors = function(response)
@@ -189,4 +169,14 @@ var Form = function( form_name, multipart, method )
 			}
 		}
 	};
+
+	this.init();
 };
+
+
+function autobindForms()
+{
+	$('form').each(function(){
+		new Form($(this));
+	});
+}

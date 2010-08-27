@@ -29,6 +29,28 @@ var ajaxClass = function()
         console.log('Ajax Transport Error', data);
 	};
 
+	this.url = function (url, params, callback, datatype)
+	{
+		if (typeof datatype == 'undefined')
+		{
+			datatype = 'json';
+		}
+		
+		$.get(url, params, function(response){
+
+			if (typeof callback == 'function')
+			{
+				callback(response);
+			}
+
+			if (datatype == 'json' && response.status == 'exception')
+			{
+				 console.log('Exception', response.errors);
+			}
+
+		}, datatype);
+	}
+
 	this.get = function (module, action, params, callback, datatype)
 	{
 		if (typeof datatype == 'undefined')

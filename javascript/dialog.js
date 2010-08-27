@@ -16,6 +16,15 @@ var dialogClass = function()
 		})
 	}
 
+	this.url = function ( url, params )
+	{
+		ajax.url(url, params, function( response )
+		{
+			dialog.show(response.title, response.body);
+			application.processAction(response.context.module, response.context.action);
+		})
+	}
+
     this.show = function ( title, content )
 	{
         $('#' + contentContainer).html( content );
