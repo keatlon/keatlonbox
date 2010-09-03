@@ -4,7 +4,7 @@ class emailRenderer extends baseRenderer
     public function render(actionController $__action, $__view = false)
     {
         $rnd1983view = '/frontend/notification/view/' . $__action->actionName;
-        
+
         $content    =   __(partialHelper::render($rnd1983view, false, true));
         $footer     =   __(partialHelper::render("/frontend/notification/view/footer", false, true));
 

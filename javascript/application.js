@@ -22,7 +22,10 @@ var applicationClass = function ()
 	}
 	
 	this.init = function()
-	{}
+	{
+		this.context.module = app.context.module;
+		this.context.action = app.context.action;
+	}
 	
 	this.processAction = function( module, action )
 	{

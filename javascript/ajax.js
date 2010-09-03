@@ -15,7 +15,14 @@ var ajaxClass = function()
 
 			if(typeof data.redirect != 'undefined')
 			{
-				$.address.value(data.redirect);
+				if ($.address)
+				{
+					$.address.value(data.redirect);
+				}
+				else
+				{
+					location.href = data.redirect;
+				}
 			}
 
 		});

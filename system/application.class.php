@@ -113,7 +113,15 @@ class application
 			{
 				$layoutController->setView(application::getContext('layout'));
 			}
-			
+
+			staticHelper::javascript('app', array(
+				'context'	=> array
+				(
+					'module'	=>	application::$context[count(application::$context)]['module'],
+					'action'	=>	application::$context[count(application::$context)]['action'],
+				)
+			));
+
 			$layoutController->render();
 		}
 
