@@ -11,19 +11,25 @@ var ajaxClass = function()
             $('#ajax_loading').hide();
 			$('#ajax_wrapper').hide(100);
 
-			var data = $.httpData(XMLHttpRequest, ajaxOptions.dataType);
+			var response = $.httpData(XMLHttpRequest, ajaxOptions.dataType);
 
-			if(typeof data.redirect != 'undefined')
+			if(typeof response.jsonredirect != 'undefined')
 			{
 				if ($.address)
 				{
-					$.address.value(data.redirect);
+					$.address.value(response.redirect);
 				}
 				else
 				{
-					location.href = data.redirect;
+					location.href = response.redirect;
 				}
 			}
+
+			if(typeof response.redirect != 'undefined')
+			{
+				location.href = response.redirect;
+			}
+
 
 		});
 

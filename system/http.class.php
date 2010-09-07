@@ -33,11 +33,19 @@ class http
 		return http::$files[$field]['tmp_name'];
 	}
 
-	static function redirect($url)
+	static function redirect($url, $direct = false)
 	{
 		if(application::getContext('controller')->renderer == 'json')
 		{
-			application::getContext('controller')->response['redirect'] = $url;
+			if ($direct)
+			{
+				application::getContext('controller')->response['redirect'] = $url;
+			}
+			else
+			{
+				application::getContext('controller')->response['jsonredirect'] = $url;
+			}
+			
 			throw new redirectException;
 		}
 

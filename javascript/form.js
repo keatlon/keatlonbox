@@ -157,7 +157,7 @@ var Form = function(f)
 			for ( var fieldName in response.errors )
 			{
 				$('#' + this.id + '_' + fieldName + '_error').html(response.errors[fieldName]);
-				$('#' + this.id + '_' + fieldName + '_error').show(200);
+				$('#' + this.id + '_' + fieldName + '_error').show();
 			}
 
 			return;

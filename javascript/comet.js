@@ -11,7 +11,7 @@ var cometClass = function()
 
 	this.init = function ()
 	{
-		this.options = cometSettings;
+		this.options = app.comet;
 	};
 
 	this.errorHandler = function (data)

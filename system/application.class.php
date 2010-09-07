@@ -119,7 +119,9 @@ class application
 				(
 					'module'	=>	application::$context[count(application::$context)]['module'],
 					'action'	=>	application::$context[count(application::$context)]['action'],
-				)
+				),
+				
+				'comet'		=>	conf::i()->comet
 			));
 
 			$layoutController->render();
