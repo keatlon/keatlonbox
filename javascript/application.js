@@ -68,6 +68,12 @@ var applicationClass = function ()
 		_loadedJavaScript[js] = true;
 		$.getScript( js, callback );
 	}
+
+	this.log = function (message)
+	{
+		$('#jsdebug').append('<div class="sf-debug-item">' + message + '</div>');
+	}
+	
 };
 
 var application = new applicationClass();

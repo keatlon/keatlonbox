@@ -11,6 +11,11 @@ function __autoload($className)
 	require $filename;
 }
 
+function h($value)
+{
+	return htmlspecialchars($value, ENT_QUOTES);
+}
+
 function d($value, $return = false)
 {
 	if (is_null($value))
