@@ -235,8 +235,21 @@ return array
 
     'captcha' => array
     (
-		'public_key'	=> 	'6LeuZAcAAAAAAPFRowqDzGIuSwZTvCnAQwt0ORum',
-		'private_key'	=> 	'6LeuZAcAAAAAAEVScP_47NwMcoYas0jgiPjLFzXD',
+		'public_key'	=> 	'',
+		'private_key'	=> 	'',
     ),
+
+
+    /***********************************************************
+     *                      FACEBOOK
+     ***********************************************************/
+
+    'facebook' => array
+    (
+		'id'		=> 	'',
+		'key'		=> 	'',
+		'secret'	=> 	'',
+    ),
+
 
 );

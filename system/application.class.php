@@ -5,8 +5,9 @@ class application
     static protected    $context        = array();
     static protected    $contextIndex   = 0;
     
-    static public       $name       = null;
-    static public       $events     = null;
+    static public       $name       =	null;
+    static public       $events     =	null;
+	static public		$options	=	false;
 	
 	/**
 	 * @var viewStack
@@ -121,7 +122,7 @@ class application
 					'action'	=>	application::$context[count(application::$context)]['action'],
 				),
 				
-				'comet'		=>	conf::i()->comet
+				'options'	=>	application::$options
 			));
 
 			$layoutController->render();
