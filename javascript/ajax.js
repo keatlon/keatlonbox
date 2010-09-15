@@ -17,11 +17,11 @@ var ajaxClass = function()
 			{
 				if ($.address)
 				{
-					$.address.value(response.redirect);
+					$.address.value(response.jsonredirect);
 				}
 				else
 				{
-					location.href = response.redirect;
+					location.href = response.jsonredirect;
 				}
 			}
 

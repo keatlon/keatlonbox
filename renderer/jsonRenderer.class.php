@@ -15,6 +15,7 @@ class jsonRenderer extends baseRenderer
 		($__action->response['message'])	? $result['message']	= $__action->response['message'] : '';
 		($__action->response['notice'])		? $result['notice']		= $__action->response['notice'] : '';
 		($__action->response['redirect'])	? $result['redirect']	= $__action->response['redirect'] : '';
+		($__action->response['jsonredirect'])	? $result['jsonredirect']	= $__action->response['jsonredirect'] : '';
 
 
 		if ($__action->response['method'] == 'POST')

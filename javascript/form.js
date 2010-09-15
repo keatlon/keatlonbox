@@ -10,7 +10,6 @@ var Form = function(f)
 	this.f			=	f;
 	this.multipart  =	$(':file', this.f).length > 0;
 	this.method		=	$(this.f).attr('method');
-	this.id			=	$(this.f).attr('id');
 
 	if (this.method == '')
 	{
@@ -34,13 +33,18 @@ var Form = function(f)
 		this.errorRendererContainer = typeof ( container == 'undefined') ? this.errorRendererContainer : container;
 	}
 
+	this.url2key = function (url)
+	{
+		return url.substring(1).split('/').join('_');
+	}
+
 	this.init = function ()
 	{
 		var thisForm	= this;
 
 		$(':input,:file,', this.f).not('[type=submit],[type=hidden]').each(function(){
 
-			$('<div class="error"></div>').attr('id', thisForm.f.attr('id') + '_' + thisForm.exractFieldName($(this).attr('name')) + '_error').insertAfter(this);
+			$('<div class="error"></div>').attr('id', thisForm.url2key(thisForm.f.attr('action')) + '_' + thisForm.exractFieldName($(this).attr('name')) + '_error').insertAfter(this);
 		});
 
         this.f.ajaxForm( {
@@ -156,8 +160,8 @@ var Form = function(f)
 		{
 			for ( var fieldName in response.errors )
 			{
-				$('#' + this.id + '_' + fieldName + '_error').html(response.errors[fieldName]);
-				$('#' + this.id + '_' + fieldName + '_error').show();
+				$('#' + this.url2key(this.f.attr('action')) + '_' + fieldName + '_error').html(response.errors[fieldName]);
+				$('#' + this.url2key(this.f.attr('action')) + '_' + fieldName + '_error').show();
 			}
 
 			return;
@@ -174,7 +178,7 @@ var Form = function(f)
 		{
 			for ( var fieldName in this.lastResponseData.errors )
 			{
-				$('#' + this.id + '_' + fieldName + '_error').hide();
+				$('#' + this.url2key(this.f.attr('action')) + '_' + fieldName + '_error').hide();
 			}
 		}
 	};
