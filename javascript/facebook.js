@@ -2,7 +2,7 @@ var facebookClass = function ()
 {
 	this.init = function()
 	{
-		$('body').append('<div id="fb-root"></div>')
+		$('body').append('<div id="fb-root"></div>');
 		FB.init({appId: app.options.facebook.id, status: true, cookie: true, xfbml: false});
 	}
 
@@ -15,7 +15,17 @@ var facebookClass = function ()
 				callback()
 			}
 		}, {'perms' : perms});
-		
+	}
+
+	this.signin = function ()
+	{
+		ajax.put('/account/facebook', {'facebook_id':facebook.id()});
+	}
+
+	this.id		=	function()
+	{
+		var session = FB.getSession();
+		return session.uid;
 	}
 }
 

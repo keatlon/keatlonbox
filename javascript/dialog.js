@@ -2,6 +2,12 @@ var dialogClass = function()
 {
 	var contentContainer = 'dialog';
 
+	this.init = function()
+	{
+		$('body').append('<div id="dialog"></div>');
+		$('#dialog').dialog({width:450, minHeight:200, autoOpen: false, bgiframe:true, modal:true});
+	}
+
 	this.close = function ( )
 	{
 		$('#dialog').dialog('close');

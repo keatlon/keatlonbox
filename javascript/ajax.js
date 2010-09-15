@@ -65,14 +65,14 @@ var ajaxClass = function()
 		}, datatype);
 	}
 
-	this.get = function (module, action, params, callback, datatype)
+	this.get = function (url, params, callback, datatype)
 	{
 		if (typeof datatype == 'undefined')
 		{
 			datatype = 'json';
 		}
 
-		$.get(application.url(module, action), params, function(response){
+		$.get(url, params, function(response){
 			
 			if (typeof callback == 'function')
 			{
@@ -87,14 +87,14 @@ var ajaxClass = function()
 		}, datatype);
 	}
 
-	this.put = function (module, action, params, callback, datatype)
+	this.put = function (url, params, callback, datatype)
 	{
 		if (typeof datatype == 'undefined')
 		{
 			datatype = 'json';
 		}
 
-		$.post(application.url(module, action), params, function(response){
+		$.post(url, params, function(response){
 
 			if ( typeof callback == 'function')
 			{

@@ -1,5 +1,11 @@
 var notificationClass = function()
 {
+	this.init = function()
+	{
+		$('body').append('<div id="notification"></div>');
+		$('body').append('<div id="error"></div>');
+	}
+
 	this.success = function (message, params)
 	{
 		this.centered('#notification', message, 2500);
