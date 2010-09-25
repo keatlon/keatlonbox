@@ -36,5 +36,5 @@ mySettings = {
 function showInsertImageDlg(obj)
 {
     var selector = '1';
-    dialog.load('navigator','image', {'selector' : selector});
+    dialog.load('/navigator/image', {'selector' : selector});
 };

@@ -116,9 +116,11 @@ var Form = function(f)
                     thisForm.showErrors(response);
                 }
 
-                if ( response.status == 'success' && typeof thisForm.onSuccess == 'string')
+				var success_method = thisForm.url2key(thisForm.f.attr('action')) + '_success';
+
+                if ( response.status == 'success')
                 {
-                    eval(thisForm.onSuccess + '( response )');
+                    eval( ' if (typeof ' + success_method + ' == "function") ' + success_method + '( response )');
                 }
 
                 if (response.status == 'exception')

@@ -13,12 +13,12 @@ var dialogClass = function()
 		$('#dialog').dialog('close');
 	}
 
-	this.load = function ( module, action, params )
+	this.load = function ( url, params )
 	{
-		ajax.get(module, action, params, function( response )
+		ajax.get(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			application.processAction(module, action);
+			application.processAction(response.context.module, response.context.action);
 		})
 	}
 
