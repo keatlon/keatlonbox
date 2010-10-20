@@ -103,7 +103,7 @@ abstract class webActionController extends actionController
 		application::$stack->push($this, 'wide', $this->viewName);
 	}
 
-	public function forward($module , $action)
+	public function forward($module , $action = 'index')
 	{
 		throw new forwardException($module, $action, $data);
 	}
