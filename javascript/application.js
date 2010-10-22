@@ -7,10 +7,19 @@ var applicationClass = function ()
 	
 	var _loadedJavaScript = {};
 
-	this.execute = function()
+	this.execute = function(response)
 	{
+		if (typeof response != 'undefined')
+		{
+			app.context	=	response.context;
+		}
+		else
+		{
+			response	=	{};
+		}
+
 		this.init();
-		this.processAction(this.context.module, this.context.action);
+		this.processAction(this.context.module, this.context.action, response);
 	}
 	
 	this.addContext = function( variables )
@@ -27,10 +36,10 @@ var applicationClass = function ()
 		this.context.action = app.context.action;
 	}
 	
-	this.processAction = function( module, action )
+	this.processAction = function( module, action, response )
 	{
 		action = action.substring(0, 1).toUpperCase() + action.substring(1, action.length);
-		eval( "if ( typeof " + module + action + " == 'function' ) { " + module + action + "() }; " );
+		eval( "if ( typeof " + module + action + " == 'function' ) { " + module + action + "(response) }; " );
 	}
 	
 	this.url = function( module, action, params )

@@ -116,6 +116,9 @@ var Form = function(f)
                     thisForm.showErrors(response);
                 }
 
+				application.execute(response);
+
+
 				var success_method = thisForm.url2key(thisForm.f.attr('action')) + '_success';
 
                 if ( response.status == 'success')
