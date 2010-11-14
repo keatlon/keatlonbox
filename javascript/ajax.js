@@ -30,6 +30,20 @@ var ajaxClass = function()
 				location.href = response.redirect;
 			}
 
+			if (response.notice)
+			{
+				notification.success(response.notice);
+			}
+
+			if (response.status == 'exception')
+			{
+				console.log('Exception', response.errors);
+			}
+
+			if (response.status == 'error')
+			{
+				console.log('Error', response.errors);
+			}
 
 		});
 
@@ -99,24 +113,6 @@ var ajaxClass = function()
 			if ( typeof callback == 'function')
 			{
 				callback(response);
-			}
-
-			if (datatype == 'json')
-			{
-				if (response.status == 'success' && typeof callback != 'function' && response.message)
-				{
-						notification.success(response.message);
-				}
-
-				if (response.status == 'exception')
-				{
-					console.log('Exception', response.errors);
-				}
-
-				if (response.status == 'error')
-				{
-					console.log('Error', response.errors);
-				}
 			}
 
 		}, datatype);

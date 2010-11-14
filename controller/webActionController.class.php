@@ -169,5 +169,12 @@ abstract class webActionController extends actionController
 		$this->response['errors']	=	$errors;
 		$this->response['code']		=	self::ERROR;
 	}
+
+	function setError($field, $message)
+	{
+		$this->response['errors'][$field]	=	$message;
+		$this->response['code']		=	self::ERROR;
+	}
+
 }
 ?>

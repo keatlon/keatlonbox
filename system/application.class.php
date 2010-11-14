@@ -148,16 +148,16 @@ class application
 			
 			$logItems = profiler::get(profiler::SYSTEM);
 			$sqlItems = profiler::get(profiler::SQL);
-			profiler::firephp()->info(count($sqlItems));
-
-			profiler::firephp()->group('System');
+			
+			// profiler::firephp()->info(count($sqlItems));
+			// profiler::firephp()->group('System');
 
 			foreach($logItems as $logItem)
 			{
-				profiler::firephp()->info($logItem);
+				// profiler::firephp()->info($logItem);
 			}
 
-			profiler::firephp()->groupEnd();
+			// profiler::firephp()->groupEnd();
 
 
 			if (self::$renderer == rendererFactory::HTML)

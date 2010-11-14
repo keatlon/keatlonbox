@@ -17,9 +17,6 @@ var Form = function(f)
 	}
 
 	this.lastResponseData = null;
-
-	this.onSuccess		= $(this.f).attr('onsuccess');
-	this.onError		= $(this.f).attr('onerror');
 	this.onBeforeSubmit = null;
 
 	var errRenderer = new errorRenderer();
@@ -38,13 +35,38 @@ var Form = function(f)
 		return url.substring(1).split('/').join('_');
 	}
 
+	this.url2method = function (url)
+	{
+		var parts	=	url.substring(1).split('/');
+		var method	=	'';
+		
+		for (var l in parts)
+		{
+			if (l == 0)
+			{
+				method = parts[l];
+				continue;
+			}
+
+			method = method + parts[l].substring(0, 1).toUpperCase() + parts[l].substring(1, parts[l].length);
+		}
+
+		return method;
+	}
+
 	this.init = function ()
 	{
-		var thisForm	= this;
+		var thisForm		= this;
+		var errorSelector	= false;
 
 		$(':input,:file,', this.f).not('[type=submit],[type=hidden]').each(function(){
 
-			$('<div class="error"></div>').attr('id', thisForm.url2key(thisForm.f.attr('action')) + '_' + thisForm.exractFieldName($(this).attr('name')) + '_error').insertAfter(this);
+			errorSelector	=	thisForm.url2key(thisForm.f.attr('action')) + '_' + thisForm.exractFieldName($(this).attr('name')) + '_error';
+
+			if (!$('#' + errorSelector).length)
+			{
+				$('<div class="error"></div>').attr('id', errorSelector).insertAfter(this);
+			}
 		});
 
         this.f.ajaxForm( {
@@ -106,37 +128,21 @@ var Form = function(f)
                     return;
                 }
 
-                if ( response.status == 'error' )
-                {
-                    if ( typeof thisForm.onError == 'function' )
-                    {
-						eval(thisForm.onError + '( response )');
-                    }
-                    
-                    thisForm.showErrors(response);
-                }
-
-				application.execute(response);
-
-
-				var success_method = thisForm.url2key(thisForm.f.attr('action')) + '_success';
+				var successMethod	= thisForm.url2method(thisForm.f.attr('action')) + 'Success';
+				var errorMethod	= thisForm.url2method(thisForm.f.attr('action')) + 'Error';
 
                 if ( response.status == 'success')
                 {
-                    eval( ' if (typeof ' + success_method + ' == "function") ' + success_method + '( response )');
+                    eval( ' if (typeof ' + successMethod + ' == "function") ' + successMethod + '( response )');
                 }
 
-                if (response.status == 'exception')
+                if ( response.status == 'error')
                 {
-                    console.log('Exception', response.errors);
+                    thisForm.showErrors(response);
+                    eval( ' if (typeof ' + errorMethod + ' == "function") ' + errorMethod + '( response )');
                 }
 
                 thisForm.enableSubmit();
-
-				if (typeof response.notice != 'undefined')
-				{
-					notification.success(response.notice);
-				}
             }
         } );
 	}
@@ -205,7 +211,7 @@ var Form = function(f)
 
 function autobindForms()
 {
-	$('form').each(function(){
+	$('form[action]').each(function(){
 		new Form($(this));
 	});
 }
