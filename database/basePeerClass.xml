@@ -41,12 +41,25 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $limit
      * @return array
      */
-    public static function  getList( $where = array(), $join = array(), $order = array(), $limit = '' )
+    public static function  getList( $where = array(), $join = array(), $order = array(), $limit = false, $offset = false, &$total = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $join, $order, $limit);
+        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $join, $order, $limit, $offset, $total);
     }
 
 
+    /**
+     * get array of primary keys
+     *
+     * @param array $where
+     * @param array $bind
+     * @param array $order
+     * @param array $limit
+     * @return array
+     */
+    public static function  getSlicedList( $where = array(), $offset = false, $limit = false, &$total = false )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, false, false, $limit, $offset, $total );
+    }
 
     /**
      * insert row

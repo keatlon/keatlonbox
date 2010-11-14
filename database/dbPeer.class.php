@@ -69,7 +69,7 @@ abstract class dbPeer
 	 * @param array $limit
 	 * @return array
 	 */
-	public function doGetList( $where = array(), $join = array(), $order = array(), $limit = '' )
+	public function doGetList( $where = array(), $join = array(), $order = array(), $limit = false, $offset = false, &$total = false )
 	{
 		$bind           = array();
 		$where_clause   = array();
@@ -172,6 +172,17 @@ abstract class dbPeer
 
 			$where_sql = implode(' AND ', $where_clause);
 			$order_sql = implode(', ', $order);
+
+			if ($limit && $offset)
+			{
+				$limit = $offset . ', ' . $limit;
+			}
+
+			$countSql = 'SELECT COUNT(' . $this->tableName . '.' . $this->primaryKey . ') cnt ' .  ' FROM ' . implode(',', $fromTables) .
+			( $where_sql ? ' WHERE ' . $where_sql : '' );
+
+			$countRow	=	db::row( $countSql, $bind, $this->connectionName );
+			$total		=	$countRow['cnt'];
 
 			$sql = 'SELECT ' . $this->tableName . '.' . $this->primaryKey . ' ' . $this->primaryKey . '
 		FROM ' . implode(',', $fromTables) .

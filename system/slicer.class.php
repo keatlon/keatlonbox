@@ -97,8 +97,23 @@ class slicer
 		return array_slice($list, $start, $count);
 	}
 
-	public function build()
+	public function build($count = false, $perPage = 20, $page = false)
 	{
+		if (!$this->perPage)
+		{
+			$this->perPage	= $perPage;
+		}
+
+		if (!$this->page && $page)
+		{
+			$this->page	= $page;
+		}
+
+		if (!$this->count && $count)
+		{
+			$this->count	= $count;
+		}
+
 		$this->maxPage	= ceil($this->count / $this->perPage);
 
 		if (!$this->page)
