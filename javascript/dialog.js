@@ -5,7 +5,13 @@ var dialogClass = function()
 	this.init = function()
 	{
 		$('body').append('<div id="dialog"></div>');
-		$('#dialog').dialog({width:450, minHeight:200, autoOpen: false, bgiframe:true, modal:true});
+		$('#dialog').dialog({
+			width		:	450,
+			autoOpen	:	false,
+			bgiframe	:	true,
+			modal		:	true,
+			closeText	:	'Close'
+		});
 	}
 
 	this.close = function ( )
@@ -18,7 +24,7 @@ var dialogClass = function()
 		ajax.get(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			application.processAction(response.context.module, response.context.action);
+			boot_page(response);
 		})
 	}
 
@@ -27,7 +33,7 @@ var dialogClass = function()
 		ajax.url(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			application.processAction(response.context.module, response.context.action);
+			boot_page(response);
 		})
 	}
 

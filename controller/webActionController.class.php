@@ -134,12 +134,12 @@ abstract class webActionController extends actionController
 		$this->viewName = $view;
 	}
 
-	public function get($webRequest)
+	public function get($request)
 	{
 
 	}
 
-	public function put($webRequest)
+	public function put($request)
 	{
 
 	}
