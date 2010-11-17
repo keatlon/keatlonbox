@@ -56,7 +56,9 @@ class db
 	
 	public static function cols( $sql, $bind = array(), $connection_name = null )
 	{
+		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql) : null;
 		$statement = self::exec( $sql, $bind, $connection_name );
+		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
 		return $statement->fetchAll( pdo::FETCH_COLUMN );
 	}
 	

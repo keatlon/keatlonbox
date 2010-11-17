@@ -29,13 +29,39 @@
 
 			$columns = db::rows('show columns from `' . $tableName . '`');
 
+			$primaryKeys	=	array();
+			
+			$primaryFields	=	array();
+			$primaryTFields	=	array();
+			$primaryOFields	=	array();
+			$primaryBinds	=	array();
+			$fields			=	array();
+
 			foreach($columns as $column)
 			{
 				if ($column['Key'] == 'PRI')
 				{
-					$primaryKey = $column['Field'];
+					$primaryKeys[] = $column['Field'];
 				}
+
+				$fields[]	=	"'" . $column['Field'] . "'";
 			}
+			
+			foreach ($primaryKeys as $primaryField)
+			{
+				$primaryFields[]	=	"'" . $primaryField . "'";
+				$primaryTFields[]	=	"'" . $tableName . "." . $primaryField . "'";
+				$primaryOFields[]	=	"'" . $tableName . "." . $primaryField . " DESC'";
+
+				$primaryBinds[]		=	" " . $primaryField . " = :" . $primaryField . " ";
+			}
+
+			$primaryKey		=	"array(" . implode(',', $primaryFields) .  ")";
+			$primaryTKey	=	"array(" . implode(',', $primaryTFields) .  ")";
+			$primaryOKey	=	"array(" . implode(',', $primaryOFields) .  ")";
+			$primaryBind	=	implode('AND', $primaryBinds);
+			$multiPrimary	=	count($primaryKeys) > 1 ? 'true' : 'false';
+			
 
 			$baseClassName = implode('', $parts) . 'BasePeer';
 			$baseClassPath = $modelPath . '/base/' . $baseClassName . '.class.php';
@@ -44,7 +70,14 @@
 			$baseClassContent = str_replace('%CLASSNAME%', $className, $baseClassContent);
 			$baseClassContent = str_replace('%TABLENAME%', $tableName, $baseClassContent);
 			$baseClassContent = str_replace('%PRIMARYKEY%', $primaryKey, $baseClassContent);
+			$baseClassContent = str_replace('%PRIMARYTKEY%', $primaryTKey, $baseClassContent);
+			$baseClassContent = str_replace('%PRIMARYOKEY%', $primaryOKey, $baseClassContent);
+			$baseClassContent = str_replace('%PRIMARYBIND%', $primaryBind, $baseClassContent);
+			$baseClassContent = str_replace('%MULTIPRIMARY%', $multiPrimary, $baseClassContent);
+
 			$baseClassContent = str_replace('%FIELDS%', implode(',', $fields), $baseClassContent);
+
+
 			file_put_contents($baseClassPath, $baseClassContent);
 
 			$xml = simplexml_load_file(conf::i()->rootdir . '/core/database/peerClass.xml');
