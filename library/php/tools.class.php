@@ -27,6 +27,18 @@ class tools
 		return $result;
 	}
 
+	static public function extend($field, $mainList, $mainKey, $sourceList, $sourceKey)
+    {
+		$sourceList = tools::makeAssociative($sourceKey, $sourceList);
+
+		foreach($mainList as &$mainItem)
+		{
+			$mainItem[$field] = $sourceList[$mainItem[$mainKey]];
+		}
+
+		return $mainList;
+	}
+
     static public function extractKey($key, $array)
     {
         $result = array();

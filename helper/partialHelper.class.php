@@ -19,7 +19,8 @@ class partialHelper
         if ($return)
         {
             $template = ob_get_contents();
-            ob_clean();
+			ob_end_clean();
+
             return $template;
         }
     }

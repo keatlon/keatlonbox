@@ -209,9 +209,14 @@ var Form = function(f)
 };
 
 
-function autobindForms()
+function autobindForms(selector)
 {
-	$('form[action]').each(function(){
+	if (typeof selector == 'undefined')
+	{
+		selector	=	'form[action]';
+	}
+
+	$(selector).each(function(){
 		new Form($(this));
 	});
 }
