@@ -24,6 +24,11 @@ abstract class dbPeer
 	 */
 	public function doGetItem($primaryKey)
 	{
+		if (!$primaryKey)
+		{
+			return false;
+		}
+
 		return db::row('SELECT * FROM ' . $this->tableName . " WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($primaryKey), $this->connectionName);
 	}
 
