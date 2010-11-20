@@ -15,9 +15,16 @@ var ajaxClass = function()
 
 			if(typeof response.jsonredirect != 'undefined')
 			{
-				if ($.address)
+				if (enableAjaxNavigation)
 				{
-					$.address.value(response.jsonredirect);
+					if ($.address)
+					{
+						$.address.value(response.jsonredirect);
+					}
+					else
+					{
+						location.href = response.jsonredirect;
+					}
 				}
 				else
 				{
