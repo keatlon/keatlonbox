@@ -6,7 +6,7 @@ var dialogClass = function()
 	{
 		$('body').append('<div id="dialog"></div>');
 		$('#dialog').dialog({
-			width		:	450,
+			width		:	'auto',
 			autoOpen	:	false,
 			bgiframe	:	true,
 			modal		:	true,
