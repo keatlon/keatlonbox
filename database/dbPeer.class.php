@@ -24,6 +24,11 @@ abstract class dbPeer
 	 */
 	public function doGetItem($primaryKey)
 	{
+		if (is_array($primaryKey))
+		{
+			$primaryKey	=	$primaryKey[0];
+		}
+
 		if (!$primaryKey)
 		{
 			return false;
