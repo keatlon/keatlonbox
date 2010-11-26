@@ -37,6 +37,11 @@ class auth
 		return self::i()->authorize($data);
 	}
 
+	static function mongoId()
+	{
+		return _mongo::primary(self::i()->getCredentials());
+	}
+
 	static function id()
 	{
 		return self::i()->getCredentials();

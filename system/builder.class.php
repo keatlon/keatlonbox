@@ -24,7 +24,7 @@ class builder
 
         foreach($files as $path)
         {
-            if (preg_match('#/([a-zA-Z0-9]+)\.class\.php#', $path, $matches))
+            if (preg_match('#/([a-zA-Z0-9_]+)\.class\.php#', $path, $matches))
             {
                 $result[$matches[1]] = $path;
             }
