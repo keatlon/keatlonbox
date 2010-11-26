@@ -25,7 +25,7 @@ class profiler
 		{
 			$ts = microtime(true);
 		}
-		
+
 		self::$counter++;
 
 		$record['time']		= $ts;

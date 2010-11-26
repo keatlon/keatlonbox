@@ -6,10 +6,25 @@ class db
 	 */
 	public static function exec( $sql, $bind = array(), $connection_name = null )
 	{
-		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql, $bind) : null;
-		$statement = dbConnection::get( $connection_name )->prepare($sql);
 		foreach ( $bind as $key => $value )
 		{
+			if (is_array($value))
+			{
+				$sql	=	str_replace(':' . $key, implode(',', $value), $sql);
+			}
+		}
+
+		$statement = dbConnection::get( $connection_name )->prepare($sql);
+
+		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql, $bind) : null;
+
+		foreach ( $bind as $key => $value )
+		{
+			if (is_array($value))
+			{
+				continue;
+			}
+			
 			if (is_int($value))
 			{
 				$statement->bindValue( ":{$key}", $value, PDO::PARAM_INT);
@@ -29,6 +44,7 @@ class db
 		}
 		
 		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
+
 		return $statement;
 	}
 	
@@ -47,18 +63,13 @@ class db
 	
 	public static function rows( $sql, $bind = array(), $connection_name = null )
 	{
-		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql) : null;
 		$statement = self::exec( $sql, $bind, $connection_name );
-		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
-
 		return $statement->fetchAll( pdo::FETCH_ASSOC );
 	}
 	
 	public static function cols( $sql, $bind = array(), $connection_name = null )
 	{
-		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql) : null;
 		$statement = self::exec( $sql, $bind, $connection_name );
-		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
 		return $statement->fetchAll( pdo::FETCH_COLUMN );
 	}
 	
