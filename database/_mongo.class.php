@@ -30,7 +30,7 @@ class _mongo
 
 	static function id($id)
 	{
-		return $id instanceof MongoId ? $id : new MongoId($id);
+		return ($id instanceof MongoId) ? $id : new MongoId($id);
 	}
 }
 
