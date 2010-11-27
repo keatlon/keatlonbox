@@ -168,7 +168,8 @@ return array
      ***********************************************************/
     'database'		=>	array
     (
-		'default_connection' => 'master',
+		'engine'				=>	'mysql',
+		'default_connection'	=>	'master',
 		'pool'	=> array
 		(
 			'master' => array

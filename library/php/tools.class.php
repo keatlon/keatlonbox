@@ -19,9 +19,10 @@ class tools
 
 	static public function makeAssociative($key, $array)
     {
+		$result	=	array();
 		foreach($array as $item)
 		{
-			$result[$item[$key]] = $item;
+			$result[(string)$item[$key]] = $item;
 		}
 
 		return $result;
@@ -50,7 +51,7 @@ class tools
 
         foreach($array as $item)
         {
-            $result[] = $item[$key];
+            $result[] = (string)$item[$key];
         }
         return $result;
     }

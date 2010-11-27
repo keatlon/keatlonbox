@@ -6,11 +6,32 @@ class imageStorage extends storage
 		$data['name'] = $originalName;
 		$data['crc32'] = sprintf('%u', crc32(file_get_contents($tmpFile)));
 
-		$id	= imagePeer::insert($data);
+		switch(conf::i()->database['engine'])
+		{
+			case	'mysql':
+				$id	= imagePeer::insert($data);
+				break;
+
+			case	'mongo':
+				images::i()->insert($data);
+				$id	=	(string)$data['_id'];
+				break;
+		}
+
 
 		if (!storage::store($tmpFile, imageStorage::storagePath($id)))
 		{
-			imagePeer::delete($id);
+			switch(conf::i()->database['engine'])
+			{
+				case	'mysql':
+					imagePeer::delete($id);
+					break;
+
+				case	'mongo':
+					images::i()->remove(_mongo::primary($id));
+					break;
+			}
+
 			return false;
 		}
 		
