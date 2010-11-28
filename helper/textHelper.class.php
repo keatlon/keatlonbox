@@ -175,6 +175,42 @@ class textHelper
 		return $ret;
 	}
 
+	static function sentence($text, $count = 1)
+	{
+		$sentences = explode('.', $text);
+
+
+		if (count($sentences) == 1)
+		{
+			return $sentences[0];
+		}
+
+		$l = 0;
+		foreach($sentences as $sentence)
+		{
+			if (!trim($sentence))
+			{
+				continue;
+			}
+
+			$result .= $sentence . '.';
+
+			$l++;
+			
+			if ($l == $count)
+			{
+				break;
+			}
+		}
+
+		if (count($sentences) > $count)
+		{
+			$result .= ' (more)';
+		}
+
+		return $result;
+	}
+
 }
 
 ?>
