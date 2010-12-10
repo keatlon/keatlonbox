@@ -10,6 +10,7 @@ var dialogClass = function()
 			autoOpen	:	false,
 			bgiframe	:	true,
 			modal		:	true,
+			minHeight	:	0,
 			closeText	:	'Close'
 		});
 	}
