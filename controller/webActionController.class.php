@@ -87,6 +87,12 @@ abstract class webActionController extends actionController
 			application::dispatch('exception', 'loginRequired', $e);
 			return self::EXCEPTION;
 		}
+		catch (accessDeniedException $e)
+		{
+			$this->response['errors']       = $e->getMessage();
+			application::dispatch('exception', 'accessDenied', $e);
+			return self::EXCEPTION;
+		}
 		catch (Exception $e)
 		{
 			log::exception($e);

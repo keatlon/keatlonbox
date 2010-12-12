@@ -3,7 +3,7 @@ class emailRenderer extends baseRenderer
 {
     public function render(actionController $__action, $__view = false)
     {
-        $rnd1983view = '/frontend/notification/view/' . $__action->actionName;
+        $rnd1983view = '/frontend/' . $__action->moduleName . '/view/' . $__action->actionName;
 
         $content    =   __(partialHelper::render($rnd1983view, false, true));
         $footer     =   __(partialHelper::render("/frontend/notification/view/footer", false, true));
@@ -22,6 +22,8 @@ class emailRenderer extends baseRenderer
         {
             return email::send($__action->recipient, $__action->email, $__action->subject, $content . "\n\n" . $footer);
         }
+
+
 
         return true;
     }
