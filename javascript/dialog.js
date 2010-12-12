@@ -25,7 +25,7 @@ var dialogClass = function()
 		ajax.get(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			boot_page(response);
+			boot_page(response, '#' + contentContainer);
 		})
 	}
 
@@ -34,7 +34,7 @@ var dialogClass = function()
 		ajax.url(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			boot_page(response);
+			boot_page(response, '#' + contentContainer);
 		})
 	}
 
