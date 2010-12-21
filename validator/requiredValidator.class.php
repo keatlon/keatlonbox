@@ -3,7 +3,8 @@ class requiredValidator extends baseValidator
 {
 	function isValid($value, $fieldname = false)
 	{
-		return !empty($value);
+		$value	=	trim($value);
+		return		!empty($value);
 	}
 }
 ?>
