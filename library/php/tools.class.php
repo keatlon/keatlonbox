@@ -51,7 +51,7 @@ class tools
 
         foreach($array as $item)
         {
-            $result[] = (string)$item[$key];
+            $result[] = $item[$key];
         }
         return $result;
     }
