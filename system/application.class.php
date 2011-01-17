@@ -17,16 +17,9 @@ class application
     static public       $renderer   = null;
 	static public		$layout		= 'index';
 
-	static public function run()
+	static public function init()
 	{
-		ob_start();
-		
         application::$name	= APPLICATION;
-
-        if (conf::i()->debug['enable'])
-        {
-			define('TS_APPLICATION_RUN', microtime(true));
-        }
 
 		session::init();
         log::init();
@@ -59,6 +52,20 @@ class application
 		}
 
 		http::init();
+	}
+
+	static public function run()
+	{
+
+		ob_start();
+
+		application::init();
+
+        if (conf::i()->debug['enable'])
+        {
+			define('TS_APPLICATION_RUN', microtime(true));
+        }
+
 
         try
         {
