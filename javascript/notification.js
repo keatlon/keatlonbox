@@ -1,5 +1,7 @@
 var notificationClass = function()
 {
+	this.timer	=	false;
+
 	this.options =
 	{
 		id				:	'notification',
@@ -14,8 +16,10 @@ var notificationClass = function()
 			$('#' + notification.options.id).fadeIn(100);
 		},
 
-		hide			:	function(){
-			$('#' + notification.options.id).fadeOut(500);
+		hide			:	function()
+		{
+
+			$('#' + notification.options.id + ':visible').fadeOut(500);
 		},
 		
 		delay			:	2500
@@ -27,6 +31,13 @@ var notificationClass = function()
 			position	:	'fixed',
 			display		:	'none'
 		}).addClass(notification.options.className));
+
+		var nobj = this;
+
+		$('.' + notification.options.className).bind('click', function() {
+			$(this).slideUp(100);
+			clearTimeout(nobj.timer);
+		})
 	}
 
 	this.success = function (message, params)
@@ -76,7 +87,7 @@ var notificationClass = function()
 
 		if (notification.options.delay)
 		{
-			nameTimer = setTimeout("notification.options.hide()", notification.options.delay);
+			this.timer = setTimeout("notification.options.hide()", notification.options.delay);
 		}
 	}
 
