@@ -15,7 +15,7 @@ var ajaxClass = function()
 
 			if(typeof response.jsonredirect != 'undefined')
 			{
-				if (enableAjaxNavigation)
+				if (typeof enableAjaxNavigation != 'undefined' && enableAjaxNavigation)
 				{
 					if ($.address)
 					{
