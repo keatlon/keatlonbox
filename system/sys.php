@@ -58,9 +58,9 @@ function dd($value)
 	die();
 }
 
-function __($phrase, $ns = 'index', $lang = false)
+function __($phrase)
 {
-    return i18n::i()->get($phrase, $lang, $ns);
+    return i18n::get($phrase);
 }
 
 if (!function_exists('symlink'))

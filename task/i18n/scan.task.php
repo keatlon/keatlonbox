@@ -3,24 +3,33 @@ class scanI18nController extends taskActionController
 {
     function execute($params)
     {
-        $application = $params[4];
+        $application	=	$params[4];
+        $locale			=	$params[5];
+		$scantime		=	time();
+        $items			=	$this->scanPhrases(conf::i()->rootdir . '/apps/' . $application);
 
-        $items		=	$this->scanPhrases(conf::i()->rootdir . '/apps/' . $application);
-		$scantime	=	time();
+		if ($locale)
+		{
+			i18n::compile($application, $scantime);
+		}
+
+		dd('done');
 
         foreach($items as $item)
         {
             foreach($item['phrases'] as $original)
             {
-                $phrase['scantime']		=	$item['filename'];
+                $phrase['scantime']		=	$scantime;
+                $phrase['application']	=	$application;
+                $phrase['locale']		=	$locale;
                 $phrase['filename']		=	$item['filename'];
                 $phrase['original']		=	$original;
-                $phrase['hash']			=	md5($phrase);
-                $phrase['application']	=	$application;
+                $phrase['hash']			=	md5($original);
 
-				i18n::addPhrase($translation);
+				i18n::addPhrase($phrase, $application);
             }
         }
+
     }
 
     function scanPhrases($path)

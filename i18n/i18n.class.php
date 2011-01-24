@@ -2,29 +2,16 @@
 
 class i18n
 {
-	static private $instance;
+	static private $locale;
+	static private $application;
+	static private $phrases;
 	
     static function init()
     {
         mb_internal_encoding("UTF-8");
         date_default_timezone_set('UTC');
-
-        if (conf::i()->application[application::$name]['i18n']['ns'])
-        foreach(conf::i()->application[application::$name]['i18n']['ns'] as $ns)
-        {
-            i18n::i()->load($ns);
-        }
-	}
-
-	static function i()
-    {
-		if (!i18n::$instance)
-        {
-	        $translationClass = conf::i()->i18n['engine'] . 'Translation';
-			i18n::$instance = new $translationClass;
-		}
-
-		return i18n::$instance;
+		self::$application	=	application::$name;
+		i18n::load();
 	}
 
     static function setLocale($locale)
@@ -34,8 +21,7 @@ class i18n
 			return false;
 		}
 
-		$this->locale	=	$locale;
-		
+		self::$locale	=	$locale;
 		setlocale(LC_ALL, $locale);
 		cookie::set('locale', $locale);
     }
@@ -72,28 +58,61 @@ class i18n
     {
     }
 
-    function compile($application, $locale = 'en')
+    static function compile($application)
     {
+		$phrases	=	i18n::getPhrases($application);
+		
+		$xml		=	simplexml_load_string(
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<!DOCTYPE some_name [
+		<!ENTITY nbsp "&#160;">
+		<!ENTITY larr "&#8592;">
+		<!ENTITY rarr "&#8594;">
+		]>
+		<i18n/>');
+
+
+
+		if ($phrases) foreach($phrases as $phrase)
+		{
+			$label	=	$xml->addChild('lb');
+			$label->addAttribute('name', $phrase['name']);
+
+			if ($phrase['translations']) foreach($phrase['translations'] as $translation)
+			{
+				$phrase = $label->addChild('translation', $translation['phrase']);
+				$phrase->addAttribute('locale', $translation['locale']);
+			}
+		}
+
+		$dom = new DOMDocument();
+		$dom->loadXML($xml->asXML());
+		$dom->formatOutput = true;
+
+		file_put_contents(self::getFilename($application), $dom->saveXML());
     }
 
-    function load($application, $locale = 'en')
+    static private function getFilename($application)
     {
-        $this->phrases[$application]  =	simplexml_load_file( conf::i()->rootdir . '/~cache/i18n.' . $locale . '.' . $application . '.xml');
+		return conf::i()->rootdir . '/~cache/i18n.' . $application . '.xml';
+	}
+
+    static function load($application = false, $locale = false)
+    {
+        self::$phrases[$application]  =	simplexml_load_file( conf::i()->rootdir . '/~cache/i18n.' . $locale . '.' . $application . '.xml');
     }
 
-    function get($phrase, $locale = false, $application = false)
+    static function get($phrase)
     {
-        if (!$locale)
-        {
-            $locale = $this->locale;
-        }
+		$locale			=	self::$locale;
+		$application	=	self::$application;
 
-        if (!$application)
-        {
-            $application = $this->application;
-        }
+		if (!self::$phrases[$application])
+		{
+            return $phrase;
+		}
 
-        $node = $this->phrases[$ns]->xpath("/i18n/lb[@name='" . $phrase . "']/translation[@locale='" . $locale . "']");
+        $node = self::$phrases[$application]->xpath("/i18n/lb[@name='" . $phrase . "']/translation[@locale='" . $locale . "']");
 
         if (!$node)
         {
@@ -103,17 +122,27 @@ class i18n
         return (string)$node[0];
     }
 
-	function addPhrase($translation)
+	function addPhrase($phrase, $application)
 	{
-		switch(conf::i()->db['engine'])
+		switch(conf::i()->database['engine'])
 		{
 			case 'mysql':
-				mysqlTranslation::insert($phrase);
-				break;
+				return mysqlTranslation::insert($phrase, $application);
 
 			case 'mongo':
-				mongoTranslation::insert($phrase);
-				break;
+				return mongoTranslation::insert($phrase, $application);
+		}
+	}
+
+	function getPhrases($application)
+	{
+		switch(conf::i()->database['engine'])
+		{
+			case 'mysql':
+				return mysqlTranslation::getPhrases($application);
+
+			case 'mongo':
+				return mongoTranslation::getPhrases($application);
 		}
 	}
 }
