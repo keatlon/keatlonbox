@@ -34,6 +34,8 @@ class i18n
 			return false;
 		}
 
+		$this->locale	=	$locale;
+		
 		setlocale(LC_ALL, $locale);
 		cookie::set('locale', $locale);
     }
@@ -62,6 +64,58 @@ class i18n
         return json_decode($body, true);
     }
 
+    function import()
+    {
+    }
+
+    function export()
+    {
+    }
+
+    function compile($application, $locale = 'en')
+    {
+    }
+
+    function load($application, $locale = 'en')
+    {
+        $this->phrases[$application]  =	simplexml_load_file( conf::i()->rootdir . '/~cache/i18n.' . $locale . '.' . $application . '.xml');
+    }
+
+    function get($phrase, $locale = false, $application = false)
+    {
+        if (!$locale)
+        {
+            $locale = $this->locale;
+        }
+
+        if (!$application)
+        {
+            $application = $this->application;
+        }
+
+        $node = $this->phrases[$ns]->xpath("/i18n/lb[@name='" . $phrase . "']/translation[@locale='" . $locale . "']");
+
+        if (!$node)
+        {
+            return $phrase;
+        }
+
+        return (string)$node[0];
+    }
+
+	function addPhrase($translation)
+	{
+		switch(conf::i()->db['engine'])
+		{
+			case 'mysql':
+				mysqlTranslation::insert($phrase);
+				break;
+
+			case 'mongo':
+				mongoTranslation::insert($phrase);
+				break;
+		}
+	}
 }
 
 ?>

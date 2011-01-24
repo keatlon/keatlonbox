@@ -5,40 +5,20 @@ class scanI18nController extends taskActionController
     {
         $application = $params[4];
 
-        $items = $this->scanPhrases(conf::i()->rootdir . '/apps/' . $application);
-
-        $phrases    = translationPeer::getItems(translationPeer::getList());
-        $hashes     = tools::extractKey('hash', $phrases);
-
+        $items		=	$this->scanPhrases(conf::i()->rootdir . '/apps/' . $application);
+		$scantime	=	time();
 
         foreach($items as $item)
         {
-            foreach($item['phrases'] as $phrase)
+            foreach($item['phrases'] as $original)
             {
-                $translation['hash']            =   md5($phrase);
-                $translation['application']     =   $application;
+                $phrase['scantime']		=	$item['filename'];
+                $phrase['filename']		=	$item['filename'];
+                $phrase['original']		=	$original;
+                $phrase['hash']			=	md5($phrase);
+                $phrase['application']	=	$application;
 
-                $index = array_search($translation['hash'], $hashes);
-                
-                if (!$index)
-                {
-                    $translation['status']  =   'pending';
-                    $translation['ru_RU']      =   $phrase;
-                    translationPeer::insert($translation);
-                    echo 'phrase id ' . $phrases[$index]['id'] . ' created' . "\n";
-                }
-                else
-                {
-                    if (!$updated[$phrases[$index]['id']])
-                    {
-                        translationPeer::update($phrases[$index]['id'], array('created' => time()));
-                        echo 'phrase id ' . $phrases[$index]['id'] . ' updated' . "\n";
-                        $updated[$phrases[$index]['id']] = true;
-                    }
-
-                }
-
-
+				i18n::addPhrase($translation);
             }
         }
     }

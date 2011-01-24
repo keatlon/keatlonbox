@@ -2,11 +2,9 @@
 
 abstract class baseTranslation
 {
-    protected $namespace    = false;
-    protected $locale       = false;
-    
-    function load($ns = 'index', $defaultLocale = 'en') {}
-    function get($phrase, $locale = false, $ns = 'index') {}
+    static function insert($phrase, $timestamp) {}
+    static function update($id, $phrase, $timestamp) {}
+    static function remove($id) {}
 }
 
 ?>
