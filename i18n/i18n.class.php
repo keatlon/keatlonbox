@@ -134,8 +134,13 @@ class i18n
 		}
 	}
 
-	function getPhrases($application)
+	function getPhrases($application = false)
 	{
+		if (!$application)
+		{
+			$application = application::$name;
+		}
+
 		switch(conf::i()->database['engine'])
 		{
 			case 'mysql':
