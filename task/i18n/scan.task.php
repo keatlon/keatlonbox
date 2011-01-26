@@ -8,13 +8,6 @@ class scanI18nController extends taskActionController
 		$scantime		=	time();
         $items			=	$this->scanPhrases(conf::i()->rootdir . '/apps/' . $application);
 
-		if ($locale)
-		{
-			i18n::compile($application, $scantime);
-		}
-
-		dd('done');
-
         foreach($items as $item)
         {
             foreach($item['phrases'] as $original)
@@ -30,6 +23,10 @@ class scanI18nController extends taskActionController
             }
         }
 
+		if ($locale)
+		{
+			i18n::compile($application, $scantime);
+		}
     }
 
     function scanPhrases($path)

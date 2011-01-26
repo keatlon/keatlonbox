@@ -2,16 +2,19 @@
 
 class i18n
 {
-	static private $locale;
-	static private $application;
-	static private $phrases;
+	static private $locale		=	false;
+	static private $application	=	false;
+	static private $phrases		=	array();
 	
     static function init()
     {
         mb_internal_encoding("UTF-8");
         date_default_timezone_set('UTC');
+
 		self::$application	=	application::$name;
-		i18n::load();
+		self::$locale		=	self::getLocale();
+		
+		i18n::load(self::$application);
 	}
 
     static function setLocale($locale)
@@ -38,16 +41,16 @@ class i18n
         return $_COOKIE['locale'];
     }
 
-    static function translate($engine, $phrase, $in, $out)
+    static function translatePhrase($hash, $lang, $translation)
     {
-        $url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" . urlencode($phrase) . "&langpair=" . $in . "%7C" . $out;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $body = curl_exec($ch);
-        curl_close($ch);
+		switch(conf::i()->database['engine'])
+		{
+			case 'mysql':
+				return mysqlTranslation::translatePhrase($hash, $lang, $translation);
 
-        return json_decode($body, true);
+			case 'mongo':
+				return mongoTranslation::translatePhrase($hash, $lang, $translation);
+		}
     }
 
     function import()
@@ -97,22 +100,19 @@ class i18n
 		return conf::i()->rootdir . '/~cache/i18n.' . $application . '.xml';
 	}
 
-    static function load($application = false, $locale = false)
+    static function load($application = false)
     {
-        self::$phrases[$application]  =	simplexml_load_file( conf::i()->rootdir . '/~cache/i18n.' . $locale . '.' . $application . '.xml');
+        self::$phrases[$application]  =	simplexml_load_file(self::getFilename($application));
     }
 
     static function get($phrase)
     {
-		$locale			=	self::$locale;
-		$application	=	self::$application;
-
-		if (!self::$phrases[$application])
+		if (!self::$phrases[self::$application])
 		{
             return $phrase;
 		}
 
-        $node = self::$phrases[$application]->xpath("/i18n/lb[@name='" . $phrase . "']/translation[@locale='" . $locale . "']");
+        $node = self::$phrases[self::$application]->xpath("/i18n/lb[@name='" . $phrase . "']/translation[@locale='" . self::$locale . "']");
 
         if (!$node)
         {

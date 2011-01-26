@@ -26,8 +26,9 @@ class mongoTranslation extends baseTranslation
 			if ($row['locale'])
 			{
 				$phrase['name']	=	$row['hash'];
+				$phrase['hash']	=	$row['hash'];
 
-				$translations[]	=	array
+				$translations[$row['locale']]	=	array
 				(
 					'locale'	=>	$row['locale'],
 					'phrase'	=>	$row['original']
@@ -36,11 +37,12 @@ class mongoTranslation extends baseTranslation
 			else
 			{
 				$phrase['name']	=	$row['original'];
+				$phrase['hash']	=	md5($row['original']);
 			}
 
 			if ($row['translations']) foreach($row['translations'] as $translation)
 			{
-				$translations[]	=	array
+				$translations[$translation['locale']]	=	array
 				(
 					'locale'	=>	$translation['locale'],
 					'phrase'	=>	$translation['phrase']
@@ -54,6 +56,22 @@ class mongoTranslation extends baseTranslation
 		return $phrases;
 	}
 
+	static function translatePhrase($hash, $locale, $phrase)
+	{
+		$translation['locale']	=	$locale;
+		$translation['phrase']	=	$phrase;
+
+		translations::i()->update(array('hash' => $hash), array
+		(
+			'$pull'	=>	array('translations' => array('locale' => $locale)),
+		));
+		
+		translations::i()->update(array('hash' => $hash), array
+		(
+			'$push'	=>	array('translations' => $translation)
+		));
+	}
+		
     static function update($id, $phrase, $timestamp) {}
     static function remove($id) {}
 
