@@ -20,6 +20,11 @@ abstract class baseForm
 		$this->cleanup();
 	}
 
+	function setup()
+	{
+		
+	}
+
 	function cleanup()
 	{
 		if (!$fields)

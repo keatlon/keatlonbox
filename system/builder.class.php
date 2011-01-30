@@ -63,6 +63,21 @@ class builder
         return $result;
     }
 
+    static public function scanViews($path)
+    {
+        $files = builder::_readdir($path, '|(.*)\.view\.php$|');
+
+        foreach($files as $path)
+        {
+            if (preg_match('#/([a-zA-Z0-9]+)/view/([a-zA-Z0-9]+)\.view\.php#', $path, $matches))
+            {
+                $result[$matches[2] . ucfirst($matches[1]) . 'BaseForm'] = $path;
+            }
+        }
+
+        return $result;
+	}
+	
     static public function scanPHP($path)
     {
         $files = builder::_readdir($path, '|(.*)\.php$|');

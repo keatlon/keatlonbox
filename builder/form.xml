@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definition>
+    <body><![CDATA[<?php
+
+class %BASECLASSNAME% extends baseForm
+{
+	/**
+	 * @return %BASECLASSNAME%
+	 */
+	static function i()
+	{
+		return self::$instance ? self::$instance : self::$instance = new %BASECLASSNAME%();
+	}
+}
+
+
+]]>
+    </body>
+</definition>
