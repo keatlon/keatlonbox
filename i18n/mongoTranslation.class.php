@@ -7,16 +7,19 @@ class mongoTranslation extends baseTranslation
 
 		if ($row)
 		{
-			return;
+			return translations::i()->update(_mongo::primary($row['_id']), array('$set' => array('scantime' => $phrase['scantime'])));
 		}
 
 		translations::i()->insert($phrase);
 	}
 
-	static function getPhrases($application)
+	static function removePhrase($hash)
 	{
-		$cursor = translations::i()->find(array('application' => $application));
-
+		translations::i()->remove(array('hash' => $hash));
+	}
+	
+	static function fetchPhrases($cursor)
+	{
 		while($cursor->hasNext())
 		{
 			$row			=	$cursor->getNext();
@@ -54,6 +57,33 @@ class mongoTranslation extends baseTranslation
 		}
 
 		return $phrases;
+	}
+
+	static function getUntranslatedPhrases($application, $lang)
+	{
+		return self::fetchPhrases(translations::i()->find(array(
+			'application'			=> $application,
+			'translations.locale'	=>	array('$ne' => $lang)
+		)));
+	}
+
+	static function getLostPhrases($application)
+	{
+		return self::fetchPhrases(translations::i()->find(array('application' => $application, 'lost' => 1)));
+	}
+
+	static function setLostPhrases($application, $scantime)
+	{
+		return translations::i()->update(
+			array('scantime'	=> array('$ne' => $scantime)),
+			array('$set'		=>	array('lost' =>	1)),
+			array('multiple'	=> true)
+		);
+	}
+
+	static function getPhrases($application)
+	{
+		return self::fetchPhrases(translations::i()->find(array('application' => $application)));
 	}
 
 	static function translatePhrase($hash, $locale, $phrase)

@@ -43,6 +43,11 @@ class i18n
 
     static function translatePhrase($hash, $lang, $translation)
     {
+		if (trim($translation) == '')
+		{
+			return false;
+		}
+
 		switch(conf::i()->database['engine'])
 		{
 			case 'mysql':
@@ -51,14 +56,6 @@ class i18n
 			case 'mongo':
 				return mongoTranslation::translatePhrase($hash, $lang, $translation);
 		}
-    }
-
-    function import()
-    {
-    }
-
-    function export()
-    {
     }
 
     static function compile($application)
@@ -137,6 +134,18 @@ class i18n
 		}
 	}
 
+	function removePhrase($hash)
+	{
+		switch(conf::i()->database['engine'])
+		{
+			case 'mysql':
+				return mysqlTranslation::removePhrase($hash);
+
+			case 'mongo':
+				return mongoTranslation::removePhrase($hash);
+		}
+	}
+
 	function getPhrases($application = false)
 	{
 		if (!$application)
@@ -152,6 +161,87 @@ class i18n
 			case 'mongo':
 				return mongoTranslation::getPhrases($application);
 		}
+	}
+
+	function getUntranslatedPhrases($application, $lang)
+	{
+		switch(conf::i()->database['engine'])
+		{
+			case 'mysql':
+				return mysqlTranslation::getUntranslatedPhrases($application, $lang);
+
+			case 'mongo':
+				return mongoTranslation::getUntranslatedPhrases($application, $lang);
+		}
+	}
+
+	function getLostPhrases($application)
+	{
+		switch(conf::i()->database['engine'])
+		{
+			case 'mysql':
+				return mysqlTranslation::getLostPhrases($application);
+
+			case 'mongo':
+				return mongoTranslation::getLostPhrases($application);
+		}
+	}
+
+    static function scan($application, $locale)
+    {
+		$scantime		=	time();
+        $items			=	i18n::scanPhrases(conf::i()->rootdir . '/apps/' . $application);
+
+        foreach($items as $item)
+        {
+            foreach($item['phrases'] as $original)
+            {
+                $phrase['scantime']		=	$scantime;
+                $phrase['application']	=	$application;
+                $phrase['locale']		=	$locale;
+                $phrase['filename']		=	$item['filename'];
+                $phrase['original']		=	$original;
+                $phrase['hash']			=	md5($original);
+
+				i18n::addPhrase($phrase, $application);
+            }
+        }
+
+		switch(conf::i()->database['engine'])
+		{
+			case 'mysql':
+				mysqlTranslation::setLostPhrases($application, $scantime);
+
+			case 'mongo':
+				mongoTranslation::setLostPhrases($application, $scantime);
+		}
+
+		return count($items);
+	}
+
+    static function scanPhrases($path)
+    {
+        $files = builder::_readdir($path, '|(.*)\.php$|');
+
+        foreach($files as $file)
+        {
+            $content = file_get_contents($file);
+            preg_match_all("#__\(['\"]{1}(.*)['\"]{1}\)#msuU", $content, $matches);
+            $item['filename']   = $file;
+            $item['phrases']    = $matches[1];
+            $items[] = $item;
+        }
+
+        return $items;
+    }
+
+	static function export($application)
+	{
+		header('Content-Type: application/xml');
+		header('Content-Disposition: attachment; filename="i18n.' . $application . '.xml"');
+		header("Expires: Mon, 7 Dec 2010 05:00:00 GMT");
+		header("Cache-Control: max-age=86400");
+		echo file_get_contents(self::getFilename($application));
 	}
 }
 
