@@ -1,14 +1,14 @@
 <?php
 class emailActionController extends actionController
 {
-    const HANDLER_SENDMAIL      = 'sendmail';
-    const HANDLER_PRINT         = 'print';
-    const HANDLER_IGNORE        = 'ignore';
+    const HANDLER_SENDMAIL      =	'sendmail';
+    const HANDLER_PRINT         =	'print';
+    const HANDLER_IGNORE        =	'ignore';
 
-    public		$handler        = emailActionController::HANDLER_SENDMAIL;
-    protected	$subject      = '';
-    protected	$recipient    = '';
-    protected	$email        = '';
+    public		$handler        =	emailActionController::HANDLER_SENDMAIL;
+    protected	$subject		=	'';
+    protected	$name			=	'';
+    protected	$email			=	'';
 
     function __construct($moduleName, $actionName)
     {
@@ -60,16 +60,15 @@ class emailActionController extends actionController
         $renderer = rendererFactory::create('email');
         $result = $renderer->render($this);
 
-
         if (!$result)
         {
             $this->response['code'] = emailActionController::ERROR;
         }
     }
 
-    public function setRecipient($value)
+    public function setName($value)
     {
-        $this->recipient = $value;
+        $this->name = $value;
     }
 
     public function setSubject($value)
@@ -82,13 +81,21 @@ class emailActionController extends actionController
         $this->email = $value;
     }
 
-    public function setRecipientByUserId($userId)
-    {
-        $user       = userPeer::getItem($userId);
-        $userData   = userDataPeer::getItem($userId);
+	function beforeRender()
+	{
+		ob_start();
+	}
 
-        $this->setEmail($user['email']);
-        $this->setRecipient($userData['name']);
-    }
+	function afterRender()
+	{
+		$content	= ob_get_contents();
+		ob_end_clean();
+
+        if ($this->handler == emailActionController::HANDLER_SENDMAIL)
+        {
+            return email::send($this->name, $this->email, $this->subject, $content);
+        }
+	}
+
 }
 ?>

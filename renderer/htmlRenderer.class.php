@@ -3,7 +3,7 @@ class htmlRenderer extends baseRenderer
 {
     public function render(actionController $__action, $__view = false)
     {
-        $__action->beforeRender();
+        $__action->beforeRender($__action);
 
         if (!$this->assigned && $__action->action_vars)
         {
@@ -37,7 +37,7 @@ class htmlRenderer extends baseRenderer
 
         include $path;
 
-        $__action->afterRender();
+        $__action->afterRender($__action);
     }
 }
 ?>

@@ -11,7 +11,7 @@ class actionControllerFactory
     {
         if (!actionControllerFactory::check($module, $action))
         {
-            throw new controllerException();
+            throw new controllerException('Module ' . $module . ' ' . $action . ' does not exist');
     	}
 
         $actionClassName = $action . ucfirst($module) . 'Controller';

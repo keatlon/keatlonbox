@@ -5,7 +5,7 @@ abstract class actionController
 	const		ERROR		= 'error';
 	const		EXCEPTION	= 'exception';
 
-	public		$response			= false;
+	public		$response		= false;
 	private		$moduleName		= false;
 	private		$actionName		= false;
 
