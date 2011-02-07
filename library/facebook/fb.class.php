@@ -36,6 +36,16 @@ class fb
 		return self::i()->api('/me');
 	}
 
+	static function friends()
+	{
+		return self::i()->api('/me/friends');
+	}
+
+	static function photo($facebookId)
+	{
+		return imageStorage::save('http://graph.facebook.com/' . $facebookId . '/picture?type=large');
+	}
+	
 	static function init()
 	{
 	}

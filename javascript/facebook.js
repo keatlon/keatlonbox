@@ -8,7 +8,9 @@ var facebookClass = function ()
 		}
 
 		$('body').append('<div id="fb-root"></div>');
-		FB.init({appId: app.options.facebook.id, status: true, cookie: true, xfbml: false});
+
+		FB.init({appId: app.options.facebook.id, status: true, cookie: true, xfbml: true});
+
 	}
 
 	this.connect = function(perms, callback)
@@ -32,6 +34,17 @@ var facebookClass = function ()
 		var session = FB.getSession();
 		return session.uid;
 	}
+
+	this.personalRequest	=	function(id, message)
+	{
+		FB.ui({
+			method	:	'apprequests',
+			to		:	id,
+			message	:	message
+		});
+	}
+
+
 }
 
 var facebook = new facebookClass();
