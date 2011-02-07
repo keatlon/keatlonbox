@@ -94,6 +94,11 @@ class slicer
 
 	public static function slice($list, $start, $count)
 	{
+		if (!$count)
+		{
+			return array_slice($list, $start);
+		}
+
 		return array_slice($list, $start, $count);
 	}
 

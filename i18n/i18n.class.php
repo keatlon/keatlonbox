@@ -13,7 +13,7 @@ class i18n
 
 		self::$application	=	application::$name;
 		self::$locale		=	self::getLocale();
-		
+
 		i18n::load(self::$application);
 	}
 
@@ -99,9 +99,6 @@ class i18n
 
     static function load($application = false)
     {
-		//$xml = simplexml_load_file(self::getFilename($application));
-		//die($xml);
-
         self::$phrases[$application]  =	simplexml_load_file(self::getFilename($application));
     }
 
@@ -112,7 +109,12 @@ class i18n
             return $phrase;
 		}
 
-        $node = self::$phrases[self::$application]->xpath("/i18n/lb[@name='" . md5($phrase) . "']/translation[@locale='" . self::$locale . "']");
+		if (conf::i()->translation['type'] == 'hash')
+		{
+			$phrase = md5($phrase);
+		}
+
+		$node = self::$phrases[self::$application]->xpath("/i18n/lb[@name='" . $phrase . "']/translation[@locale='" . self::$locale . "']");
 
         if (!$node)
         {
