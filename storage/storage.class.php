@@ -17,7 +17,17 @@ class storage
 
 	protected static function subpath($id)
 	{
-        return '/' . chunk_split(base_convert(abs((int) $id), 10, 36), 1, '/');
+		switch(conf::i()->database['engine'])
+		{
+			case	'mysql':
+		        return '/' . chunk_split(base_convert(abs((int) $id), 10, 36), 1, '/');
+				break;
+
+			case	'mongo':
+		        return '/' . chunk_split(substr(strrev((string) $id), 4), 2, '/');
+				break;
+		}
+
 	}
 
 	protected static function createDir($dir)
