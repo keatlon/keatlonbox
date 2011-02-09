@@ -29,6 +29,14 @@ var facebookClass = function ()
 		ajax.put('/account/facebook', {'facebook_id':facebook.id()});
 	}
 
+	this.signout = function ()
+	{
+		FB.logout(function()
+		{
+			location.href='/account/signout';
+		});
+	}
+
 	this.id		=	function()
 	{
 		var session = FB.getSession();
