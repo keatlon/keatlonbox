@@ -43,13 +43,13 @@ var facebookClass = function ()
 		return session.uid;
 	}
 
-	this.personalRequest	=	function(id, message)
+	this.personalRequest	=	function(id, message, callback)
 	{
 		FB.ui({
 			method	:	'apprequests',
 			to		:	id,
 			message	:	message
-		});
+		}, callback);
 	}
 
 
