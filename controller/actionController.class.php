@@ -5,12 +5,12 @@ abstract class actionController
 	const		ERROR		= 'error';
 	const		EXCEPTION	= 'exception';
 
-	public		$response		= false;
-	private		$moduleName		= false;
-	private		$actionName		= false;
+	public		$response		=	false;
+	private		$moduleName		=	false;
+	private		$actionName		=	false;
 
-	private		$action_vars	= array();
-
+	private		$action_vars	=	array();
+	
 	function __construct($moduleName, $actionName)
 	{
 		$this->moduleName = $moduleName;

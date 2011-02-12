@@ -1,6 +1,9 @@
 <?php
 class http
 {
+	const	GET				=	'GET';
+	const	POST			=	'POST';
+
 	static $response        = false;
 	static $request         = false;
 	static $files           = false;

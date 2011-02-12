@@ -1,11 +1,12 @@
 <?php
 abstract class webActionController extends actionController
 {
-	public		$renderer	=	rendererFactory::HTML;
-	public		$response	=	false;
+	public		$renderer		=	rendererFactory::HTML;
+	public		$response		=	false;
+	public		$jsonMode		=	http::GET;
 
-	public		$loginRequired	= true;
-	private		$viewName		= false;
+	public		$loginRequired	=	true;
+	private		$viewName		=	false;
 
 	public function dispatch($data)
 	{
@@ -43,12 +44,12 @@ abstract class webActionController extends actionController
 
 			$this->response['method'] = http::$method;
 
-			if (http::$method == 'POST')
+			if (http::$method == http::POST)
 			{
 				$this->put($data);
 			}
 
-			if (http::$method == 'GET')
+			if (http::$method == http::GET)
 			{
 				$this->get($data);
 			}
@@ -187,5 +188,10 @@ abstract class webActionController extends actionController
 		$this->response['code']		=	self::ERROR;
 	}
 
+	function setJsonMode($mode = false)
+	{
+		$this->jsonMode = $mode;
+	}
+	
 }
 ?>

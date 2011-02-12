@@ -17,8 +17,7 @@ class jsonRenderer extends baseRenderer
 		($__action->response['redirect'])	? $result['redirect']	= $__action->response['redirect'] : '';
 		($__action->response['jsonredirect'])	? $result['jsonredirect']	= $__action->response['jsonredirect'] : '';
 
-
-		if ($__action->response['method'] == 'POST')
+		if ($__action->response['method'] == http::POST || $__action->jsonMode == http::POST)
 		{
 			if ($__action->response['code'] == actionController::SUCCESS)
 			{
@@ -29,7 +28,7 @@ class jsonRenderer extends baseRenderer
 			}
 		}
 
-		if ($__action->response['method'] == 'GET')
+		if ($__action->response['method'] == http::GET)
 		{
 			ob_start();
 			$__action->renderer = rendererFactory::HTML;
