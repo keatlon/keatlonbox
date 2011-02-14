@@ -1,0 +1,7 @@
+<?
+class emailStorageMongo extends emailStorage
+{
+
+}
+
+?>

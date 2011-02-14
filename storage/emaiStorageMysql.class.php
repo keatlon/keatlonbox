@@ -1,0 +1,7 @@
+<?
+class emailStorageMysql extends emailStorage
+{
+
+}
+
+?>
