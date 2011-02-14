@@ -9,8 +9,60 @@ var facebookClass = function ()
 
 		$('body').append('<div id="fb-root"></div>');
 
+		FB.Event.subscribe('auth.login', function(response) {
+		});
+
+		FB.Event.subscribe('auth.logout', function(response) {
+		});
+
+		FB.Event.subscribe('auth.statusChange', function(response) {
+		});
+
+		FB.Event.subscribe('auth.sessionChange', function(response) {
+		});
+
+
+		FB.Event.subscribe('edge.create', function(response) {
+		});
+
+		FB.Event.subscribe('edge.remove', function(response) {
+		});
+
+		FB.Event.subscribe('comments.add', function(response) {
+		});
+
+		FB.Event.subscribe('fb.log', function(response) {
+		});
+
+		FB.Event.subscribe('xfbml.render', function() {
+		});
+
 		FB.init({appId: app.options.facebook.id, status: true, cookie: true, xfbml: true});
 
+		FB.getLoginStatus(function(response) {
+			if (response.session)
+			{
+				if(facebookId && (response.session.uid != facebookId))
+				{
+					location.href='/account/signout';
+					return false;
+				}
+
+				if (!facebookId)
+				{
+					ajax.put('/account/signin/mode/facebook');
+				}
+
+			}
+			else
+			{
+				if (facebookId)
+				{
+					location.href='/account/signout';
+				}
+			}
+		});
+		
 	}
 
 	this.connect = function(perms, callback)
