@@ -109,12 +109,14 @@ class i18n
             return $phrase;
 		}
 
+		$hashedPhrase = $phrase;
+
 		if (conf::i()->translation['type'] == 'hash')
 		{
-			$phrase = md5($phrase);
+			$hashedPhrase = md5($phrase);
 		}
 
-		$node = self::$phrases[self::$application]->xpath("/i18n/lb[@name='" . $phrase . "']/translation[@locale='" . self::$locale . "']");
+		$node = self::$phrases[self::$application]->xpath("/i18n/lb[@name='" . $hashedPhrase . "']/translation[@locale='" . self::$locale . "']");
 
         if (!$node)
         {
