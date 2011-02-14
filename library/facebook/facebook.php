@@ -430,7 +430,7 @@ class Facebook
    * @return the decoded response object
    * @throws FacebookApiException
    */
-  protected function _graph($path, $method='GET', $params=array()) {
+  function _graph($path, $method='GET', $params=array()) {
 
     if (is_array($method) && empty($params)) {
       $params = $method;

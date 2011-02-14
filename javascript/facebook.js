@@ -24,9 +24,34 @@ var facebookClass = function ()
 		}, {'perms' : perms});
 	}
 
-	this.signin = function ()
+	this.signin = function (callback)
 	{
-		ajax.put('/account/facebook', {'facebook_id':facebook.id()});
+		dialog.load('/account/waiting');
+		ajax.put('/account/signin', {'mode' : 'facebook', 'facebook_id' : facebook.id()}, function (response){
+
+			dialog.close();
+			
+			if (typeof callback != 'undefined')
+			{
+				callback(response);
+			}
+			
+		});
+	}
+
+	this.signup = function (callback)
+	{
+		dialog.load('/account/waiting');
+		ajax.put('/account/signup', {'mode' : 'facebook', 'facebook_id' : facebook.id()}, function (response){
+
+			dialog.close();
+			
+			if (typeof callback != 'undefined')
+			{
+				callback(response);
+			}
+
+		});
 	}
 
 	this.signout = function ()
