@@ -47,12 +47,6 @@ var facebookClass = function ()
 					location.href='/account/signout';
 					return false;
 				}
-
-				if (!facebookId)
-				{
-					ajax.put('/account/signin/mode/facebook');
-				}
-
 			}
 			else
 			{
