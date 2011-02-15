@@ -201,7 +201,13 @@ class slicer
 
     protected function addPage($url, $page, $divider = '/', $equal = '/')
     {
+		if ($url == '/')
+		{
+			$url = '';
+		}
+
         $page = (int)$page;
+
         if (strpos($url, $divider . 'page' . $equal) === false)
         {
             return $url . $divider . 'page' . $equal . $page;

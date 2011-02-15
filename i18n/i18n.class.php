@@ -94,7 +94,8 @@ class i18n
 
     static private function getFilename($application)
     {
-		return conf::i()->rootdir . '/~cache/i18n.' . $application . '.xml';
+		$path = conf::i()->i18n['path'] ? conf::i()->i18n['path'] : '/~cache';
+		return conf::i()->rootdir . $path . '/i18n.' . $application . '.xml';
 	}
 
     static function load($application = false)
