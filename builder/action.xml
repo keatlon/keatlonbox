@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definition>
+    <body><![CDATA[<?php
+
+class %ACTION%%MODULE%Controller extends webActionController
+{
+    public function get($request)
+    {
+    }
+
+    public function put($request)
+    {
+    }
+}
+
+]]>
+    </body>
+</definition>
