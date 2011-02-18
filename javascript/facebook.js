@@ -44,7 +44,9 @@ var facebookClass = function ()
 			{
 				if(facebookId && (response.session.uid != facebookId))
 				{
-					location.href='/account/signout';
+					ajax.put('/account/signout', {'redirect' : false}, function (response){
+						location.reload();
+					})
 					return false;
 				}
 			}
@@ -52,7 +54,9 @@ var facebookClass = function ()
 			{
 				if (facebookId)
 				{
-					location.href='/account/signout';
+					ajax.put('/account/signout', {'redirect' : false}, function (response){
+						location.reload();
+					})
 				}
 			}
 		});
