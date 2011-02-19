@@ -21,6 +21,17 @@ abstract class authBase
         $_SESSION['c'][get_class($this)]    = $userId;
     }
 
+    function setExtraCredentials($data)
+    {
+        $_SESSION['ce'][get_class($this)]    = $data;
+    }
+
+    function getExtraCredentials()
+    {
+        return $_SESSION['ce'][get_class($this)];
+    }
+
+
     function hasCredentials()
 	{
         return isset($_SESSION['c'][get_class($this)]);
@@ -29,6 +40,7 @@ abstract class authBase
     function clearCredentials()
 	{
         unset($_SESSION['c'][get_class($this)]);
+        unset($_SESSION['ce'][get_class($this)]);
 		session::destroy();
     }
 

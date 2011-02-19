@@ -11,6 +11,10 @@ class authMongo extends authBase
         }
 
 		$this->setCredentials((string)$user['_id']);
+		$this->setExtraCredentials(array
+		(
+			'email'			=>	$user['email']
+		));
 
         return (string)$user['_id'];
     }

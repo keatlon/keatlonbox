@@ -52,6 +52,11 @@ class auth
 		return self::i()->getCredentials();
 	}
 
+	static function getExtraCredentials()
+	{
+		return self::i()->getExtraCredentials();
+	}
+
 	static function createUser($data)
 	{
 		return self::i()->createUser($data);
@@ -60,6 +65,11 @@ class auth
 	static function setCredentials($userId)
 	{
 		return self::i()->setCredentials($userId);
+	}
+
+	static function setExtraCredentials($data)
+	{
+		return self::i()->setExtraCredentials($data);
 	}
 
 	static function hasCredentials()
