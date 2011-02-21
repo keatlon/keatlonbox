@@ -14,7 +14,10 @@ class i18n
 		self::$application	=	application::$name;
 		self::$locale		=	self::getLocale();
 
-		i18n::load(self::$application);
+		if (conf::i()->i18n['enabled'])
+		{
+			i18n::load(self::$application);
+		}
 	}
 
     static function setLocale($locale)

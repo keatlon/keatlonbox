@@ -45,7 +45,8 @@ return array
      ***********************************************************/
 
     'i18n'    =>   array(
-        'engine'    => 'inline'
+		'enabled'	=>	true,
+        'engine'    =>	false
     ),
 
     /***********************************************************
@@ -57,11 +58,6 @@ return array
 			
             'auth'  => array('server'),
 			
-            'i18n'  =>  array(
-                'defaultLocale' => 'en',
-                'ns'    => array('index')
-            ),
-
             'default'   => array(
                 'signedin'  => array('start', 'index'),
                 'signedout' => array('start', 'index'),
@@ -106,9 +102,10 @@ return array
 
 	 'email'	=>	array
 	(
-		 'name_from'	=> 'keatlonbox',
-		 'email_from'	=> 'postmaster@keatlonbox.com',
-		 'return_path'	=> 'postmaster@keatlonbox.com',
+		 'enabled'		=>	true,
+		 'name_from'	=>	'keatlonbox',
+		 'email_from'	=>	'postmaster@keatlonbox.com',
+		 'return_path'	=>	'postmaster@keatlonbox.com',
 	 ),
 
     /***********************************************************

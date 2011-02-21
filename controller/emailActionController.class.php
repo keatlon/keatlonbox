@@ -91,6 +91,11 @@ class emailActionController extends actionController
 		$content	= ob_get_contents();
 		ob_end_clean();
 
+		if (!conf::i()->email['enabled'])
+		{
+			return;
+		}
+
         if ($this->handler == emailActionController::HANDLER_SENDMAIL)
         {
             return email::send($this->name, $this->email, $this->subject, $content);

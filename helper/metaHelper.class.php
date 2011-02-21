@@ -2,13 +2,15 @@
 class metaHelper
 {
 	private static $title;
+
+	private static $properties;
 	
-	function setTitle($title)
+	static function setTitle($title)
 	{
 		self::$title = $title;
 	}
 
-	function getTitle()
+	static function getTitle()
 	{
 		if (!self::$title)
 		{
@@ -17,5 +19,16 @@ class metaHelper
 
 		return self::$title;
 	}
+
+	static function add($property, $content)
+	{
+		self::$properties[$property] = $content;
+	}
+
+	static function get()
+	{
+		return self::$properties;
+	}
+
 }
 ?>
