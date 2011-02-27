@@ -115,7 +115,7 @@ class i18n
 
 		$hashedPhrase = $phrase;
 
-		if (conf::i()->translation['type'] == 'hash')
+		if (conf::i()->i18n['type'] == 'hash')
 		{
 			$hashedPhrase = md5($phrase);
 		}
