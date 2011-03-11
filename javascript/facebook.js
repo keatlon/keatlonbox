@@ -92,7 +92,8 @@ var facebookClass = function ()
 	this.signup = function (callback)
 	{
 		dialog.load('/account/waiting');
-		ajax.put('/account/signup', {'mode' : 'facebook', 'facebook_id' : facebook.id()}, function (response){
+		
+		ajax.put('/account/signup', {'mode' : 'facebook', 'facebook_id' : facebook.id(), 'i': $('.invitation-code').val() }, function (response){
 
 			dialog.close();
 			

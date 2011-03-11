@@ -11,9 +11,9 @@
 
 .top { vertical-align:top; }
 .v { vertical-align:middle; }
-.block { display:block; }
-.hidden { display:none; }
-.inline { display:inline;}
+.block { display:block !important; }
+.hidden { display:none !important; }
+.inline { display:inline !important;}
 
 .left { float:left; }
 .right { float:right; }
