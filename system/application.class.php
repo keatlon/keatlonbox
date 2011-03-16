@@ -197,7 +197,7 @@ class application
 
 		self::$contextIndex++;
 		self::$context[self::$contextIndex] = $context;
-		$code		= self::$context[self::$contextIndex]['controller']->dispatch($context['data']);
+		$code			= self::$context[self::$contextIndex]['controller']->dispatch($context['data']);
 		self::$renderer	= self::$context[self::$contextIndex]['controller']->renderer;
 
 		self::$contextIndex--;
@@ -262,7 +262,6 @@ class application
 
     public static function getContext( $param )
     {
-        
         return self::$context[self::$contextIndex][$param];
     }
 
@@ -275,6 +274,11 @@ class application
     {
         return self::$layout;
     }
+
+	static function getLastAction()
+	{
+		return self::$stack->lastController;
+	}
 }
 
 ?>

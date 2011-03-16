@@ -192,6 +192,5 @@ abstract class webActionController extends actionController
 	{
 		$this->jsonMode = $mode;
 	}
-	
 }
 ?>

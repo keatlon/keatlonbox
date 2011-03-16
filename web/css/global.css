@@ -12,7 +12,7 @@
 .top { vertical-align:top; }
 .v { vertical-align:middle; }
 .block { display:block !important; }
-.hidden { display:none !important; }
+.hidden { display:none; }
 .inline { display:inline !important;}
 
 .left { float:left; }
