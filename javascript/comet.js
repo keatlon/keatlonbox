@@ -11,7 +11,10 @@ var cometClass = function()
 
 	this.init = function ()
 	{
-		this.options = app.comet;
+		if(typeof app.comet != 'undefined')
+		{
+			this.options = app.comet;
+		}
 	};
 
 	this.errorHandler = function (data)
@@ -30,7 +33,7 @@ var cometClass = function()
 		{
 			return false;
 		}
-		
+
 		comet.statuses = $.grep(comet.statuses, function(v) { return v != channelId; });
 		return true;
 	}
