@@ -38,29 +38,6 @@ var facebookClass = function ()
 		});
 
 		FB.init({appId: app.options.facebook.id, status: true, cookie: true, xfbml: true});
-
-		FB.getLoginStatus(function(response) {
-			if (response.session)
-			{
-				if(facebookId && (response.session.uid != facebookId))
-				{
-					ajax.put('/account/signout', {'redirect' : false}, function (response){
-						location.reload();
-					})
-					return false;
-				}
-			}
-			else
-			{
-				if (facebookId)
-				{
-					ajax.put('/account/signout', {'redirect' : false}, function (response){
-						location.reload();
-					})
-				}
-			}
-		});
-		
 	}
 
 	this.connect = function(perms, callback)
