@@ -138,6 +138,9 @@ select.w200 {width:210px;}
 .l22 {line-height:22px;}
 .l25 {line-height:25px;}
 .l30 {line-height:30px;}
+.l35 {line-height:35px;}
+.l40 {line-height:40px;}
+.l40 {line-height:50px;}
 
 .dashed { text-decoration:none; border-bottom:1px dashed #aaa;}
 .dashed:hover { text-decoration:none;}
