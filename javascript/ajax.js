@@ -2,16 +2,18 @@ var ajaxClass = function()
 {
 	this.init = function ()
 	{
-		$('body').ajaxStart(function(){
+		$('body').ajaxStart(function()
+		{
 			$('#ajax_wrapper').fadeIn(200);
 			$('#ajax_loading').show();
-		 });
+		});
 
-		$("body").ajaxComplete(function(e, XMLHttpRequest, ajaxOptions){
+		$("body").ajaxComplete(function(e, xhr, settings)
+		{
             $('#ajax_loading').hide();
 			$('#ajax_wrapper').hide(100);
 
-			var response = $.httpData(XMLHttpRequest, ajaxOptions.dataType);
+			var response	=	jQuery.parseJSON(xhr.responseText);
 
 			if(typeof response.jsonredirect != 'undefined')
 			{

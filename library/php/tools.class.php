@@ -3,18 +3,12 @@ class tools
 {
     static function filter($array, $keys)
     {
-        $keys = explode(',', $keys);
-
-        $result = array();
-        foreach($array as $key => $value)
+		if (!is_array($keys))
         {
-            if (in_array($key, $keys))
-            {
-                $result[$key] = $value;
-            }
-        }
-        
-        return $result;
+			$keys = explode(',', $keys);
+		}
+
+		return array_intersect_key($array, array_flip($keys));
     }
 
 	static public function makeAssociative($key, $array)

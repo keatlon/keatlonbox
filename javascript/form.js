@@ -16,8 +16,10 @@ var Form = function(f)
 		this.method = 'post';
 	}
 
-	this.lastResponseData = null;
-	this.onBeforeSubmit = null;
+	this.lastResponseData	=	null;
+	this.onBeforeSubmit		=	null;
+	this.onSuccess			=	null;
+	this.onError			=	null;
 
 	var errRenderer = new errorRenderer();
 
@@ -32,7 +34,7 @@ var Form = function(f)
 
 	this.url2key = function (url)
 	{
-		return url.substring(1).split('/').join('_');
+		return this.url2method(url);
 	}
 
 	this.url2method = function (url)
@@ -128,18 +130,33 @@ var Form = function(f)
                     return;
                 }
 
-				var successMethod	= thisForm.url2method(thisForm.f.attr('action')) + 'Success';
-				var errorMethod	= thisForm.url2method(thisForm.f.attr('action')) + 'Error';
+				var successMethod	=	thisForm.url2method(thisForm.f.attr('action')) + 'Success';
+				var errorMethod		=	thisForm.url2method(thisForm.f.attr('action')) + 'Error';
 
                 if ( response.status == 'success')
                 {
-                    eval( ' if (typeof ' + successMethod + ' == "function") ' + successMethod + '( response )');
+                    if (thisForm.onSuccess)
+					{
+						thisForm.onSuccess(response);
+					}
+					else
+					{
+	                    eval( ' if (typeof ' + successMethod + ' == "function") ' + successMethod + '( response )');
+					}
                 }
 
                 if ( response.status == 'error')
                 {
                     thisForm.showErrors(response);
-                    eval( ' if (typeof ' + errorMethod + ' == "function") ' + errorMethod + '( response )');
+
+                    if (thisForm.onError)
+					{
+						thisForm.onError(response);
+					}
+					else
+					{
+	                    eval( ' if (typeof ' + errorMethod + ' == "function") ' + errorMethod + '( response )');
+					}
                 }
 
                 thisForm.enableSubmit();

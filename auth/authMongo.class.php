@@ -24,5 +24,10 @@ class authMongo extends authBase
 		parent::clearCredentials();
 		http::redirect('/');
 	}
+
+	function me($id)
+	{
+		return (_mongo::id($id) == auth::id());
+	}
 }
 ?>
