@@ -58,8 +58,9 @@ var Form = function(f)
 
 	this.init = function ()
 	{
-		var thisForm		= this;
-		var errorSelector	= false;
+		var thisForm		=	this;
+		var errorSelector	=	false;
+		var useIframe		=	($(':file,', this.f).length > 0) ? true : false
 
 		$(':input,:file,', this.f).not('[type=submit],[type=hidden]').each(function(){
 
@@ -75,7 +76,7 @@ var Form = function(f)
             url         : $(thisForm).attr('action'),
             dataType    : 'json',
             type        : thisForm.method,
-            iframe      : false,
+            iframe      : useIframe,
 
             beforeSubmit: function (data, jobj, opt)
 			{
