@@ -60,6 +60,18 @@ class tools
         return array_shift($array);
     }
 
+    static public function search($array, $key, $value)
+    {
+		foreach ($array as $k => $item)
+		{
+			if ($item[$key]	== $value)
+			{
+				return $array[$k];
+			}
+		}
+
+		return false;
+    }
 
 }
 ?>
