@@ -91,6 +91,16 @@ class emailActionController extends actionController
 		$content	= ob_get_contents();
 		ob_end_clean();
 
+        if ($this->action_vars)
+        {
+            foreach($this->action_vars as $var_name => $var_value)
+            {
+				$params[$var_name] = $var_value;
+            }
+        }
+
+		$content	=	textHelper::smartParse($content, $params);
+
 		if (!conf::i()->email['enabled'])
 		{
 			return;
