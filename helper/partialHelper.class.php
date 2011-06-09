@@ -1,27 +1,26 @@
 <?php
 class partialHelper
 {
-    public static function render($template, $variables = array(), $return = false)
+    public static function render($templateRnD1983001, $variablesRnD1983001 = array(), $returnRnD1983001 = false)
     {
-        if ($variables)
-        foreach ($variables as $name => $value)
+        if ($variablesRnD1983001) foreach ($variablesRnD1983001 as $nameRnD1983001 => $valueRnD1983001)
         {
-            $$name = $value;
+            $$nameRnD1983001 = $valueRnD1983001;
         }
 
-        if ($return)
+        if ($returnRnD1983001)
         {
             ob_start();
         }
 
-        include baseRenderer::getTemplatePath($template);
+        include baseRenderer::getTemplatePath($templateRnD1983001);
 
-        if ($return)
+        if ($returnRnD1983001)
         {
-            $template = ob_get_contents();
+            $templateRnD1983001 = ob_get_contents();
 			ob_end_clean();
 
-            return $template;
+            return $templateRnD1983001;
         }
     }
 }
