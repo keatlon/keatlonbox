@@ -4,22 +4,22 @@ var notificationClass = function()
 
 	this.options =
 	{
-		id				:	'notification',
+		selector		:	'.notifications',
 
-		className		:	'notification',
+		itemClass		:	'notification',
 
 		position		:	'center',
 		
 		show			:	function()
 		{
-			$('#' + notification.options.id).hide();
-			$('#' + notification.options.id).fadeIn(100);
+			// $(notification.options.selector).hide();
+			// $(notification.options.selector).fadeIn(100);
 		},
 
 		hide			:	function()
 		{
 
-			$('#' + notification.options.id + ':visible').fadeOut(500);
+			// $(notification.options.selector + ':visible').fadeOut(500);
 		},
 		
 		delay			:	2500
@@ -27,17 +27,31 @@ var notificationClass = function()
 
 	this.init = function()
 	{
-		$('body').append($('<div>').attr('id', notification.options.id).css({
-			position	:	'fixed',
-			display		:	'none'
-		}).addClass(notification.options.className));
+		$('body').append($('<div>').addClass('notifications').css({
+			position	:	'fixed'
+		}));
 
-		var nobj = this;
+		var left	=	0;
 
-		$('.' + notification.options.className).bind('click', function() {
-			$(this).slideUp(100);
-			clearTimeout(nobj.timer);
-		})
+		switch(notification.options.position)
+		{
+			case 'right':
+				$(notification.options.selector).css('bottom', '');
+				$(notification.options.selector).css('left', '');
+				$(notification.options.selector).css('right', '0px');
+				$(notification.options.selector).css('top', '40px');
+				break;
+
+			case 'center':
+				left	= parseInt( ($('body').width() - $('#' + notification.options.id).width() ) / 2);
+
+				$(notification.options.selector).css('bottom', '');
+				$(notification.options.selector).css('right', '');
+				$(notification.options.selector).css('left', left + 'px');
+				$(notification.options.selector).css('top', '0px');
+
+				break;
+		}
 	}
 
 	this.success = function (message, params)
@@ -50,48 +64,53 @@ var notificationClass = function()
 		this.show(message);
 	}
 
-	this.applyPosition = function()
-	{
-		var left	=	0;
-
-		switch(notification.options.position)
-		{
-			case 'right':
-				$('#' + notification.options.id).css('bottom', '');
-				$('#' + notification.options.id).css('left', '');
-				$('#' + notification.options.id).css('right', '0px');
-				$('#' + notification.options.id).css('top', '40px');
-				break;
-				
-			case 'center':
-				left	= parseInt( ($('body').width() - $('#' + notification.options.id).width() ) / 2);
-
-				$('#' + notification.options.id).css('bottom', '');
-				$('#' + notification.options.id).css('right', '');
-				$('#' + notification.options.id).css('left', left + 'px');
-				$('#' + notification.options.id).css('top', '0px');
-				
-				break;
-		}
-
-		return {'left'  : left, 'top' : top};
-	}
-
 	this.show = function(message)
 	{
-		$('#' + notification.options.id).html(message);
-		
-		notification.applyPosition();
+		this.push(message);
+	}
 
-		this.options.show();
+	this.process = function(response)
+	{
+		
+	}
+
+	this.push = function(message)
+	{
+		var item = $('<div>').addClass(notification.options.itemClass).html(message);
+
+		$(notification.options.selector).append(item);
+
+
+		$(item).animate(
+			{
+				top	: 60
+			},
+			200,
+			'easeInExpo',
+			function(){
+			}
+		);
 
 		if (notification.options.delay)
 		{
-			this.timer = setTimeout("notification.options.hide()", notification.options.delay);
+			this.timer = setTimeout(function(){
+
+
+				$(item).animate(
+					{
+						marginLeft	: 1200
+					},
+					400,
+					'easeInExpo',
+					function(){
+						$(this).remove();
+					}
+				);
+
+			}, notification.options.delay);
 		}
 	}
 
-	
 };
 
 var notification = new notificationClass;

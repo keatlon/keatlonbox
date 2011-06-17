@@ -17,6 +17,10 @@ class application
     static public       $renderer   = null;
 	static public		$layout		= 'index';
 
+	const	EVENT_BEFORE_CONTROLLER		= 0;
+	const	EVENT_BEFORE_LAYOUT			= 1;
+	const	EVENT_BEFORE_RENDER			= 2;
+
 	static public function init()
 	{
         application::$name	= APPLICATION;
@@ -56,7 +60,6 @@ class application
 
 	static public function run()
 	{
-
 		ob_start();
 
 		application::init();
@@ -66,13 +69,11 @@ class application
 			define('TS_APPLICATION_RUN', microtime(true));
         }
 
-
         try
         {
-
 			if (application::$events) foreach(application::$events as $event)
 			{
-				if ($event->beforeDispatch)
+				if ($event->position == application::EVENT_BEFORE_CONTROLLER)
 				{
 					$event->handle();
 				}
@@ -80,13 +81,16 @@ class application
 
 			application::dispatch(http::$request['module'], http::$request['action']);
 
-			if (application::$events) foreach(application::$events as $event)
-			{
-				if ($event->afterDispatch)
-				{
-					$event->handle();
-				}
-			}
+
+
+
+
+
+
+			
+
+
+
         }
 		catch (dbException $e)
 		{
@@ -104,6 +108,16 @@ class application
         catch (moduleException $e)
         {}
 
+
+		if (application::$events) foreach(application::$events as $event)
+		{
+			if ($event->position == application::EVENT_BEFORE_LAYOUT)
+			{
+				$event->handle();
+			}
+		}
+
+
 		if (self::$renderer == rendererFactory::HTML)
 		{
 			comet::init();
@@ -117,6 +131,14 @@ class application
 			$layoutController->dispatch(http::$request);
 			application::$stack->layoutController = $layoutController;
 
+			if (application::$events) foreach(application::$events as $event)
+			{
+				if ($event->position == application::EVENT_BEFORE_RENDER)
+				{
+					$event->handle();
+				}
+			}
+
 			if (application::getContext('layout'))
 			{
 				$layoutController->setView(application::getContext('layout'));
@@ -128,7 +150,7 @@ class application
 					'module'	=>	application::$context[count(application::$context)]['module'],
 					'action'	=>	application::$context[count(application::$context)]['action'],
 				),
-				
+
 				'options'	=>	application::$options
 			));
 
@@ -137,11 +159,28 @@ class application
 
 		if (self::$renderer == rendererFactory::JSON)
 		{
+
+			if (application::$events) foreach(application::$events as $event)
+			{
+				if ($event->position == application::EVENT_BEFORE_RENDER)
+				{
+					$event->handle();
+				}
+			}
+
 			application::$stack->render();
 		}
 
 		if (self::$renderer == rendererFactory::XML)
 		{
+			if (application::$events) foreach(application::$events as $event)
+			{
+				if ($event->position == application::EVENT_BEFORE_RENDER)
+				{
+					$event->handle();
+				}
+			}
+
 			echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 			application::$stack->render();
 		}
@@ -239,19 +278,11 @@ class application
         return $code;
     }
 
-    public static function registerEvent( $name, $before = false )
+    public static function registerEvent( $name, $position = application::EVENT_BEFORE_CONTROLLER )
     {
-        $eventClassName         =  $name . 'Event';
-        self::$events[ $name ]   = new $eventClassName;
-
-		if ($before)
-		{
-			self::$events[ $name ]->beforeDispatch = true;
-		}
-		else
-		{
-			self::$events[ $name ]->afterDispatch = true;
-		}
+        $eventClassName			=	$name . 'Event';
+        self::$events[ $name ]	=	new $eventClassName;
+		self::$events[ $name ]->position = $position;
     }
 
 
