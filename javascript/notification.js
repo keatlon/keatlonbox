@@ -4,6 +4,8 @@ var notificationClass = function()
 
 	this.options =
 	{
+		parent			:	'.footer .container',
+
 		selector		:	'.notifications',
 
 		itemClass		:	'notification',
@@ -25,13 +27,17 @@ var notificationClass = function()
 		delay			:	2500
 	}
 
-	this.init = function()
+	this.init = function(options)
 	{
+		notification.options		=	$.extend(notification.options, options);
+
 		$('body').append($('<div>').addClass('notifications').css({
 			position	:	'fixed'
 		}));
 
-		var left	=	0;
+		var parentPosition	=	$(notification.options.parent).position();
+
+		var left	=	parentPosition.left;
 
 		switch(notification.options.position)
 		{
@@ -51,6 +57,16 @@ var notificationClass = function()
 				$(notification.options.selector).css('top', '0px');
 
 				break;
+
+			case 'bottom':
+				
+				$(notification.options.selector).css('bottom', '40px');
+				$(notification.options.selector).css('right', '');
+				$(notification.options.selector).css('left', left + 'px');
+				$(notification.options.selector).css('top', '');
+
+				break;
+
 		}
 	}
 
@@ -76,37 +92,21 @@ var notificationClass = function()
 
 	this.push = function(message)
 	{
-		var item = $('<div>').addClass(notification.options.itemClass).html(message);
+		var item = $('<div>').addClass(notification.options.itemClass).html(message).css( {marginLeft : -2500} );
 
 		$(notification.options.selector).append(item);
 
-
 		$(item).animate(
 			{
-				top	: 60
+				marginLeft: 0
 			},
-			200,
-			'easeInExpo',
-			function(){
-			}
+			400
 		);
 
 		if (notification.options.delay)
 		{
 			this.timer = setTimeout(function(){
-
-
-				$(item).animate(
-					{
-						marginLeft	: 1200
-					},
-					400,
-					'easeInExpo',
-					function(){
-						$(this).remove();
-					}
-				);
-
+			$(item).fadeOut(300);
 			}, notification.options.delay);
 		}
 	}
