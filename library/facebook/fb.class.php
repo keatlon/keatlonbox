@@ -36,6 +36,21 @@ class fb
 		return self::i()->api('/me');
 	}
 
+	static function getLoginUrl($permission = 'email')
+	{
+		return self::i()->getLoginUrl(array(
+			'redirect_uri'	=>	conf::i()->domains['web'] . '/account/signin',
+			'scope'			=>	$permissions
+		));
+	}
+
+	static function getLogoutUrl()
+	{
+		return self::i()->getLogoutUrl(array(
+			'next'	=>	conf::i()->domains['web'] . '/account/signout',
+		));
+	}
+
 	static function friends()
 	{
 		return self::i()->api('/me/friends');
