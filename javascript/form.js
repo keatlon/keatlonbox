@@ -56,7 +56,7 @@ var Form = function(f)
 		return method;
 	}
 
-	this.init = function ()
+	this.bind = function ()
 	{
 		var thisForm		=	this;
 		var errorSelector	=	false;
@@ -223,18 +223,5 @@ var Form = function(f)
 		return r[1];
 	};
 
-	this.init();
+	this.bind();
 };
-
-
-function autobindForms(selector)
-{
-	if (typeof selector == 'undefined')
-	{
-		selector	=	'form[action]';
-	}
-
-	$(selector).each(function(){
-		new Form($(this));
-	});
-}

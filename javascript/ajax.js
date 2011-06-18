@@ -1,6 +1,6 @@
 var ajaxClass = function()
 {
-	this.init = function ()
+	this.init = function (config)
 	{
 		$('body').ajaxStart(function()
 		{
@@ -17,7 +17,7 @@ var ajaxClass = function()
 
 			if(typeof response.jsonredirect != 'undefined')
 			{
-				if (typeof enableAjaxNavigation != 'undefined' && enableAjaxNavigation)
+				if (application.enableAjaxNavigation)
 				{
 					if ($.address)
 					{
@@ -56,7 +56,8 @@ var ajaxClass = function()
 
 		});
 
-		$("body").ajaxError(function(event, request, settings){
+		$("body").ajaxError(function(event, request, settings)
+		{
             ajax.errorHandler(request.responseText);
 		});
 	};

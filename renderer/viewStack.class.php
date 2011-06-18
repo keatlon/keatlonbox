@@ -81,7 +81,7 @@ class viewStack
 		$item['value']		= $value;
 		$item['useKeys']	= $useKeys;
 
-        $this->javascript[] = $item;
+        $this->javascript[$variable] = $item;
     }
 
     public function renderJavascript()
@@ -95,6 +95,24 @@ class viewStack
         {
             echo 'var ' . $item['name'] . ' = ' . javascriptHelper::get($item['value'], $item['useKeys']) . ';';
         }
+    }
+
+    public function renderVar($varname, $asParam = false)
+    {
+        if(!$this->javascript[$varname])
+        {
+			echo '{}';
+            return ;
+        }
+
+		if ($asParam)
+		{
+            echo javascriptHelper::get($this->javascript[$varname]['value'], $this->javascript[$varname]['useKeys']);
+		}
+		else
+		{
+            echo 'var ' . $varname . ' = ' . javascriptHelper::get($this->javascript[$varname]['value'], $this->javascript[$varname]['useKeys']) . ';';
+		}
     }
 
     public function addJavascriptFile($file)

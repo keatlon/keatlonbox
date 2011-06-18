@@ -2,10 +2,11 @@ var dialogClass = function()
 {
 	var contentContainer = 'dialog';
 
-	this.init = function()
+	this.init = function(config)
 	{
 		$('body').append('<div id="dialog"></div>');
-		$('#dialog').dialog({
+		$('#dialog').dialog(
+		{
 			width		:	'auto',
 			autoOpen	:	false,
 			bgiframe	:	true,
@@ -25,7 +26,7 @@ var dialogClass = function()
 		ajax.get(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			boot_page(response, '#' + contentContainer);
+			application.dispatch(response, $('#' + contentContainer));
 		})
 	}
 
@@ -34,7 +35,7 @@ var dialogClass = function()
 		ajax.url(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			boot_page(response, '#' + contentContainer);
+			application.dispatch(response, $('#' + contentContainer));
 		})
 	}
 

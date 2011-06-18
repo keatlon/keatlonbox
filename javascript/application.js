@@ -1,27 +1,63 @@
 var applicationClass = function ()
 {
-	this.context = {
+	this.config	=
+	{
+		ajax			:	{},
+		facebook		:	{},
+		comet			:	{},
+		dialog			:	{},
+		form			:	{},
+		notification	:
+		{
+			position	:	'bottom'
+		}
+
+	};
+
+	this.context =
+	{
 		module: null,
 		action: null
 	};
 	
-	var _loadedJavaScript = {};
+	this.isPageLoading		=	false;
+	this.loadedJavaScript	=	{};
 
-	this.execute = function(response)
+	this.run = function(config)
+	{
+		this.context.module = config.context.module;
+		this.context.action = config.context.action;
+
+		if (typeof application.configure != 'undefined')
+		{
+			application.configure();
+		}
+		
+		ajax.init(this.config.ajax);
+		facebook.init(this.config.facebook);
+		dialog.init(this.config.dialog);
+		notification.init(this.config.notification);
+		comet.init(this.config.comet);
+		
+		this.dispatch();
+	}
+
+	this.dispatch = function(response, parent)
 	{
 		if (typeof response != 'undefined')
 		{
-			app.context	=	response.context;
+			application.context	=	response.context;
 		}
 		else
 		{
 			response	=	{};
 		}
 
-		this.init();
 		this.processAction(this.context.module, this.context.action, response);
+
+		this.initUi(parent);
 	}
-	
+
 	this.addContext = function( variables )
 	{
 		for ( var name in variables )
@@ -30,12 +66,97 @@ var applicationClass = function ()
 		}
 	}
 	
-	this.init = function()
+	this.initUi = function(parent)
 	{
-		this.context.module = app.context.module;
-		this.context.action = app.context.action;
+		if (typeof parent == 'undefined')
+		{
+			parent	=	$('body');
+		}
+
+		this.initForms(parent);
+		this.initSlicers(parent);
+
+		if (typeof this.init != 'undefined')
+		{
+			this.init(parent);
+		}
 	}
-	
+
+	this.initForms = function(parent)
+	{
+		if (typeof parent == 'undefined')
+		{
+			parent	=	$('body');
+		}
+
+		$('form[action]', parent).each(function()
+		{
+			new Form($(this));
+		});
+	}
+
+	this.initSlicers = function(parent)
+	{
+		for(l in slicers)
+		{
+			slicers[l].obj = new slicer( slicers[l]);
+			slicers[l].obj.init();
+		}
+	}
+
+	function initAjaxNavigation()
+	{
+
+		if (application.enableAjaxNavigation)
+		{
+			if (window.location.pathname != '/')
+			{
+				application.backAjaxNavigation = true;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		$.address.change(function(event) {
+
+			application.log('$.address.change value: ' + event.value);
+
+			if (event.value == '~')
+			{
+				application.isPageLoading = false;
+				application.log('$.address.change ignoring hash');
+				return true;
+			}
+
+			if (window.location.pathname != '/' && application.isPageLoading)
+			{
+				application.isPageLoading = false;
+				application.log('$.address.change ignoring page loading');
+				return true;
+			}
+
+			if (application.backAjaxNavigation)
+			{
+				application.log('$.address.change back ajax');
+				location.href= '/#' + event.value;
+				return false;
+			}
+
+			$.get(event.value, {}, function (response){
+				$('#content').hide();
+				$('#content').html(response.body);
+				$('#content').fadeIn(300);
+
+				boot_page(response);
+			}, 'json');
+
+			application.isPageLoading = false;
+		});
+	}
+
+
 	this.processAction = function( module, action, response )
 	{
 		action = action.substring(0, 1).toUpperCase() + action.substring(1, action.length);
@@ -69,12 +190,12 @@ var applicationClass = function ()
 	
 	this.addJavaScript = function( js, callback )
 	{
-		if ( _loadedJavaScript[js] )
+		if ( application.loadedJavaScript[js] )
 		{
 			return;
 		}
 		
-		_loadedJavaScript[js] = true;
+		application.loadedJavaScript[js] = true;
 		$.getScript( js, callback );
 	}
 

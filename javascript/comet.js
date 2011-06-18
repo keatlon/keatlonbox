@@ -11,10 +11,6 @@ var cometClass = function()
 
 	this.init = function ()
 	{
-		if(typeof app.comet != 'undefined')
-		{
-			this.options = app.comet;
-		}
 	};
 
 	this.errorHandler = function (data)
