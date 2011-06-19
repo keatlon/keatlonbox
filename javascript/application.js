@@ -39,7 +39,9 @@ var applicationClass = function ()
 		notification.init(this.config.notification);
 		comet.init(this.config.comet);
 		
-		this.dispatch();
+		this.dispatch({
+			context	:	application.context
+		});
 	}
 
 	this.dispatch = function(response, parent)
@@ -47,13 +49,8 @@ var applicationClass = function ()
 		if (typeof response != 'undefined' && response)
 		{
 			application.context	=	response.context;
+			this.processAction(this.context.module, this.context.action, response);
 		}
-		else
-		{
-			response	=	{};
-		}
-
-		this.processAction(this.context.module, this.context.action, response);
 
 		this.initUi(parent);
 	}
