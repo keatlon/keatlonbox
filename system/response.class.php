@@ -34,7 +34,7 @@ class response
 
 	static function redirect($url, $direct = false)
 	{
-		if(application::getContext('controller')->renderer == 'json')
+		if(request::isJson())
 		{
 			if ($direct)
 			{

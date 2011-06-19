@@ -80,5 +80,21 @@ class request
 		}
 	}
 
+	static function isHtml()
+	{
+		return (request::accept() == 'text/html');
+	}
+
+	static function isJson()
+	{
+		return (request::accept() == 'application/json');
+	}
+
+	static function isXml()
+	{
+		return (request::accept() == 'application/xml');
+	}
+
+
 }
 ?>
