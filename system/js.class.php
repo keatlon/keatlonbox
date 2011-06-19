@@ -3,6 +3,17 @@ class	js
 {
 	static private $commands	=	array();
 	static private $vars		=	array();
+	static private $context		=	'body';
+
+	static function context($context = false)
+	{
+		if ($context)
+		{
+			self::$context	=	$context;
+		}
+
+        return self::$context;
+	}
 
 	static function getCommands()
 	{
@@ -30,17 +41,17 @@ class	js
 		);
 	}
 
-
-	static function set($selector, $html)
+	static function set($selector, $html, $context = false)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'set',
 			'selector'	=>	$selector,
-			'html'		=>	$html
+			'html'		=>	$html,
+			'context'	=>	$context
 		);
 	}
 
-	static function append($selector, $html)
+	static function append($selector, $html, $context = false)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'append',
@@ -49,7 +60,7 @@ class	js
 		);
 	}
 
-	static function remove($selector)
+	static function remove($selector, $context = false)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'remove',
@@ -57,16 +68,7 @@ class	js
 		);
 	}
 
-	static function replace($selector, $html)
-	{
-		self::$commands[]	=	array(
-			'command'	=>	'replace',
-			'selector'	=>	$selector,
-			'html'		=>	$html
-		);
-	}
-
-	static function insert($selector, $html)
+	static function insert($selector, $html, $context = false)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'insert',

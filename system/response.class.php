@@ -25,8 +25,9 @@ class response
 			'action'	=>	$action->actionName
 		);
 
-		self::$response['commands']		=	js::getCommands();
-		self::$response['vars']			=	js::getVariables();
+		self::$response['js']['context']		=	js::context();
+		self::$response['js']['commands']		=	js::getCommands();
+		self::$response['js']['vars']			=	js::getVariables();
 
 		return self::$response;
 	}

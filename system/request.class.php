@@ -38,9 +38,15 @@ class request
 		self::$data = $data;
 	}
 
-	static function get($key)
+	static function get($key = false)
 	{
-		return self::$data['params'][$key];
+		if($key)
+		{
+			return self::$data['params'][$key];
+		}
+
+		return self::$data['params'];
+
 	}
 
 	static function module()

@@ -43,6 +43,7 @@ class application
 	static public function run()
 	{
 		ob_start();
+		
 		application::init();
 
         try
@@ -71,6 +72,7 @@ class application
 		switch(request::accept())
 		{
 			case	'text/html':
+				js::context('body');
 				$layoutController  = actionControllerFactory::create('layout', 'index');
 				$layoutController->dispatch(request::get());
 				$layoutController->render();

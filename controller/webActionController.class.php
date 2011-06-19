@@ -44,17 +44,17 @@ abstract class webActionController extends actionController
 
 			if (request::method() == request::POST)
 			{
-				$this->put($data);
+				$code = $this->put($data);
 			}
 
 			if (request::method() == request::GET)
 			{
-				$this->get($data);
+				$code = $this->get($data);
 			}
 
-			if ($response['code'])
+			if ($code)
 			{
-				$this->response['code'] = $response['code'];
+				$this->response['code'] = $code;
 			}
 
 			$this->afterExecute();
@@ -145,8 +145,8 @@ abstract class webActionController extends actionController
 
 	function setErrors($errors)
 	{
-		response::set('code', self::ERROR);
 		response::set('errors', $errors);
+		return self::ERROR;
 	}
 
 	function setError($field, $message)
@@ -154,7 +154,7 @@ abstract class webActionController extends actionController
 		$errors	=	response::get('errors');
 		$errors[$field]	=	$message;
 		response::set('errors', $errors);
-		response::set('code', self::ERROR);
+		return self::ERROR;
 	}
 
 	function forward($module , $action = 'index')

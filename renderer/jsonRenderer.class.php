@@ -5,6 +5,7 @@ class jsonRenderer extends baseRenderer
 	{
 		$__action->beforeRender();
 
+		$data	=	array();
 		response::set('status', $__action->response['code']);
 		
 		if (request::method() == request::POST)

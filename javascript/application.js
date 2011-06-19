@@ -19,18 +19,30 @@ var applicationClass = function ()
 	this.dispatch = function(response)
 	{
 		application.response	=	response;
+		var currentContext		=	response.js.context;
 
-		for (var l in response.commands)
+		for (var l in response.js.commands)
 		{
-			switch(response.commands[l].command)
+			currentContext = response.js.commands[l].context ? response.js.commands[l].context : response.js.context;
+
+			switch(response.js.commands[l].command)
 			{
 				case 'init':
-					eval ("$('" + response.commands[l].selector + "')." + response.commands[l].plugin + "(response.commands[l].params);");
+					eval ("$('" + response.js.commands[l].selector + "', $(' " + currentContext +  " ') )." + response.js.commands[l].plugin + "(response.js.commands[l].params);");
 					break;
+
+				case 'set':
+					$(response.js.commands[l].selector, $(currentContext)).html(response.js.commands[l].html);
+					break;
+
+				case 'remove':
+					$(response.js.commands[l].selector, $(currentContext)).remove();
+					break;
+
 			}
 		}
 
-		this.initUi(parent);
+		this.initUi($(response.js.context));
 	}
 
 	this.initUi = function(parent)
