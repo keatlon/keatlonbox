@@ -2,7 +2,7 @@ var twitterClass = function ()
 {
 	this.OAuthWindow = false;
 
-	this.init = function()
+	this.configure = function()
 	{
 	}
 

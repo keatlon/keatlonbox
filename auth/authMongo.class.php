@@ -22,7 +22,7 @@ class authMongo extends authBase
 	function clearCredentials()
 	{
 		parent::clearCredentials();
-		http::redirect('/');
+		response::redirect('/');
 	}
 
 	function me($id)

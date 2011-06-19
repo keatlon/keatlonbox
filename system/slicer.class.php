@@ -47,9 +47,9 @@ class slicer
 		
 		$this->perPage	= 20;
 		
-		if (http::$request['page'])
+		if (request::get('page'))
 		{
-			$this->page	= http::$request['page'];
+			$this->page	= request::get('page');
 		}
 		else
 		{

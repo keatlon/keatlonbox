@@ -9,7 +9,7 @@ var cometClass = function()
 	this.subscribers	= new Array();
 	this.statuses		= new Array();
 
-	this.init = function ()
+	this.configure = function ()
 	{
 	};
 

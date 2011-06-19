@@ -2,7 +2,7 @@ var dialogClass = function()
 {
 	var contentContainer = 'dialog';
 
-	this.init = function(config)
+	this.configure = function(config)
 	{
 		$('body').append('<div id="dialog"></div>');
 		$('#dialog').dialog(

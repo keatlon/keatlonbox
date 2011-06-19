@@ -9,12 +9,6 @@ class viewStack
     public  $javascriptSnippets = array();
     public  $javascriptOnload   = array();
 
-	/**
-	 *
-	 * @var actionController
-	 */
-	public  $lastController		= false;
-
     public function push(actionController $controller, $stackName = 'wide', $view = false, $priority = 10, $renderer = false)
     {
         if ($this->state[$stackName] == 'locked')
@@ -22,19 +16,13 @@ class viewStack
             return false;
         }
 
-		if (!$renderer)
+		if ($renderer)
 		{
-			$renderer = $controller->renderer;
+			$controller->renderer	=	$renderer;
 		}
 
-		if ($controller->moduleName != 'layout')
-		{
-			$this->lastController		= $controller;
-		}
-		
         $stackItem['controller']    = $controller;
         $stackItem['view']          = $view;
-        $stackItem['renderer']      = $renderer;
         
         $this->stack[$stackName][$priority][] = $stackItem;
         $this->state[$stackName] = 'opened';
@@ -75,59 +63,5 @@ class viewStack
         $this->state[$stackName] = 'locked';
     }
 
-    public function javascript($variable, $value, $useKeys = false)
-    {
-		$item['name']		= $variable;
-		$item['value']		= $value;
-		$item['useKeys']	= $useKeys;
-
-        $this->javascript[$variable] = $item;
-    }
-
-    public function renderJavascript()
-    {
-        if(!$this->javascript)
-        {
-            return;
-        }
-
-        foreach($this->javascript as $item)
-        {
-            echo 'var ' . $item['name'] . ' = ' . javascriptHelper::get($item['value'], $item['useKeys']) . ';';
-        }
-    }
-
-    public function renderVar($varname, $asParam = false)
-    {
-        if(!$this->javascript[$varname])
-        {
-			echo '{}';
-            return ;
-        }
-
-		if ($asParam)
-		{
-            echo javascriptHelper::get($this->javascript[$varname]['value'], $this->javascript[$varname]['useKeys']);
-		}
-		else
-		{
-            echo 'var ' . $varname . ' = ' . javascriptHelper::get($this->javascript[$varname]['value'], $this->javascript[$varname]['useKeys']) . ';';
-		}
-    }
-
-    public function addJavascriptFile($file)
-    {
-        $this->javascriptFiles[] = $file;
-    }
-
-    public function addJavascriptSnippet($snippet)
-    {
-        $this->javascriptSnippets[] = $snippet;
-    }
-
-    public function addJavascriptOnload($snippet)
-    {
-        $this->javascriptOnload[] = $snippet;
-    }
 }
 ?>

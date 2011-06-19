@@ -1,6 +1,6 @@
 var ajaxClass = function()
 {
-	this.init = function (config)
+	this.configure = function (config)
 	{
 		$('body').ajaxStart(function()
 		{
@@ -10,28 +10,11 @@ var ajaxClass = function()
 
 		$("body").ajaxComplete(function(e, xhr, settings)
 		{
-            $('#ajax_loading').hide();
-			$('#ajax_wrapper').hide(100);
-
 			var response	=	jQuery.parseJSON(xhr.responseText);
 
 			if(typeof response.jsonredirect != 'undefined')
 			{
-				if (application.enableAjaxNavigation)
-				{
-					if ($.address)
-					{
-						$.address.value(response.jsonredirect);
-					}
-					else
-					{
-						location.href = response.jsonredirect;
-					}
-				}
-				else
-				{
-					location.href = response.jsonredirect;
-				}
+				location.href = response.jsonredirect;
 			}
 
 			if(typeof response.redirect != 'undefined')
@@ -80,11 +63,8 @@ var ajaxClass = function()
 			{
 				callback(response);
 			}
-
-			if (datatype == 'json' && response.status == 'exception')
-			{
-				 console.log('Exception', response.errors);
-			}
+			
+			application.dispatch(response);
 
 		}, datatype);
 	}
@@ -103,10 +83,7 @@ var ajaxClass = function()
 				callback(response);
 			}
 			
-			if (datatype == 'json' && response.status == 'exception')
-			{
-				   console.log('Exception', response.errors);
-			}
+			application.dispatch(response);
 
 		}, datatype);
 	}
@@ -124,6 +101,8 @@ var ajaxClass = function()
 			{
 				callback(response);
 			}
+
+			application.dispatch(response);
 
 		}, datatype);
 	}

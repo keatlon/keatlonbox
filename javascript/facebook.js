@@ -1,6 +1,6 @@
 var facebookClass = function ()
 {
-	this.init = function(config)
+	this.configure = function(config)
 	{
 	}
 

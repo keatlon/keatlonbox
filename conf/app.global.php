@@ -249,5 +249,22 @@ return array
 		'secret'	=> 	'',
     ),
 
+	/***********************************************************
+     * 			CLIENT (JS)
+     ***********************************************************/
+
+	'client'	=>	array
+	(
+		'ajax'			=>	array(),
+		'facebook'		=>	array(),
+		'comet'			=>	array(),
+		'dialog'		=>	array(),
+		'form'			=>	array(),
+		'notification'	=>	array
+		(
+			'position'	=>	'bottom'
+		)
+	)
+
 
 );

@@ -19,7 +19,7 @@ var slicer = function(options)
 
 	instance.options.possiblePage = instance.options.page;
 
-	this.init = function()
+	this.configure = function(config)
 	{
 		if (!instance.options.page)
 		{

@@ -3,7 +3,7 @@ class fileImageValidator extends baseValidator
 {
 	function isValid($value, $fieldname = false)
 	{
-		if (!http::$files[$fieldname]['name'])
+		if (!request::file($fieldname))
         {
             return true;
         }

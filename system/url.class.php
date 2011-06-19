@@ -73,13 +73,13 @@ class url
 
 			for ($l = 0; $l < $pairs; $l++)
 			{
-				$result[$parts[ $l * 2]] 	= $parts[ $l * 2 + 1 ];
+				$result['params'][$parts[ $l * 2]] 	= $parts[ $l * 2 + 1 ];
 			}
 		}
 
         if ($_REQUEST) foreach($_REQUEST as $name => $value)
         {
-            $result[$name] = $value;
+            $result['params'][$name] = $value;
         }
 
         return $result;

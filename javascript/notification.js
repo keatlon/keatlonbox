@@ -27,7 +27,7 @@ var notificationClass = function()
 		delay			:	2500
 	}
 
-	this.init = function(options)
+	this.configure = function(options)
 	{
 		notification.options		=	$.extend(notification.options, options);
 

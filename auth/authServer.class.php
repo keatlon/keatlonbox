@@ -23,7 +23,7 @@ class authServer extends authBase
 	function clearCredentials()
 	{
 		parent::clearCredentials();
-		http::redirect('/');
+		response::redirect('/');
 	}
 }
 ?>

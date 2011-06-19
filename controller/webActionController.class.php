@@ -3,8 +3,6 @@ abstract class webActionController extends actionController
 {
 	public		$renderer		=	rendererFactory::HTML;
 	public		$response		=	false;
-	public		$jsonMode		=	http::GET;
-
 	public		$loginRequired	=	true;
 	private		$viewName		=	false;
 
@@ -19,17 +17,17 @@ abstract class webActionController extends actionController
 			elseif ($this->renderer == rendererFactory::HTML)
 			{
 				
-				if ( http::$response['accept'] == 'text/html')
+				if ( request::accept() == 'text/html')
 				{
 					$this->renderer	= rendererFactory::HTML;
 				}
 
-				if ( http::$response['accept'] == 'application/json')
+				if ( request::accept() == 'application/json')
 				{
 					$this->renderer	= rendererFactory::JSON;
 				}
 
-				if ( http::$response['accept'] == 'application/xml')
+				if ( request::accept() == 'application/xml')
 				{
 					$this->renderer	= rendererFactory::XML;
 				}
@@ -42,14 +40,14 @@ abstract class webActionController extends actionController
 
 			$this->beforeExecute();
 
-			$this->response['method'] = http::$method;
+			$this->response['method'] = request::method();
 
-			if (http::$method == http::POST)
+			if (request::method() == request::POST)
 			{
 				$this->put($data);
 			}
 
-			if (http::$method == http::GET)
+			if (request::method() == request::GET)
 			{
 				$this->get($data);
 			}
@@ -78,26 +76,22 @@ abstract class webActionController extends actionController
 		}
 		catch (badResourceException $e)
 		{
-			$this->response['errors']       = $e->getMessage();
 			application::dispatch('exception', 'badResource', $e);
 			return self::EXCEPTION;
 		}
 		catch (loginRequiredException $e)
 		{
-			$this->response['errors']       = $e->getMessage();
 			application::dispatch('exception', 'loginRequired', $e);
 			return self::EXCEPTION;
 		}
 		catch (accessDeniedException $e)
 		{
-			$this->response['errors']       = $e->getMessage();
 			application::dispatch('exception', 'accessDenied', $e);
 			return self::EXCEPTION;
 		}
 		catch (Exception $e)
 		{
 			log::exception($e);
-			$this->response['errors']       = $e->getMessage();
 			application::dispatch('exception', 'application', $e);
 			return self::EXCEPTION;
 		}
@@ -107,23 +101,6 @@ abstract class webActionController extends actionController
 
     public function afterExecute()
     {
-		application::$stack->push($this, 'wide', $this->viewName);
-	}
-
-	public function forward($module , $action = 'index')
-	{
-		throw new forwardException($module, $action, $data);
-	}
-
-	public function push($view = false, $stackName = 'wide', $priority = 10, $renderer = false)
-	{
-		application::$stack->push($this, $stackName, $view, $priority, $renderer);
-	}
-
-	public function render($view = false)
-	{
-		$renderer = rendererFactory::create($this->renderer);
-		$renderer->render($this, $view);
 	}
 
 	public function beforeRender()
@@ -151,19 +128,14 @@ abstract class webActionController extends actionController
 
 	}
 
-	public function javascript($variable, $value, $useKeys = false)
-	{
-		return application::$stack->javascript($variable, $value, $useKeys);
-	}
-
 	function setTitle($title)
 	{
-		$this->response['title'] = $title;
+		response::set('title', $title);
 	}
 
 	function setNotice($notice)
 	{
-		$this->response['notice'] = $notice;
+		response::set('notice', $notice);
 	}
 
 	function setRenderer($renderer)
@@ -171,26 +143,30 @@ abstract class webActionController extends actionController
 		$this->renderer = $renderer;
 	}
 
-	function setLayout($layout = 'index')
-	{
-		application::setContext('layout', $layout);
-	}
-
 	function setErrors($errors)
 	{
-		$this->response['errors']	=	$errors;
-		$this->response['code']		=	self::ERROR;
+		response::set('code', self::ERROR);
+		response::set('errors', $errors);
 	}
 
 	function setError($field, $message)
 	{
-		$this->response['errors'][$field]	=	$message;
-		$this->response['code']		=	self::ERROR;
+		$errors	=	response::get('errors');
+		$errors[$field]	=	$message;
+		response::set('errors', $errors);
+		response::set('code', self::ERROR);
 	}
 
-	function setJsonMode($mode = false)
+	function forward($module , $action = 'index')
 	{
-		$this->jsonMode = $mode;
+		throw new forwardException($module, $action, $data);
 	}
+
+	function render($view = false)
+	{
+		$renderer = rendererFactory::create($this->renderer);
+		$renderer->render($this, $view);
+	}
+
 }
 ?>

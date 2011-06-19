@@ -7,11 +7,19 @@ class baseRenderer
     {
     }
 
+    static public function getTemplateByAction($action)
+    {
+		$module		=	$action->moduleName;
+		$template	=	$action->actionName;
+
+		return self::getTemplatePath($template, $module);
+	}
+
     static public function getTemplatePath($template, $module = false)
     {
         if (!$module)
         {
-            $module = application::$stack->currentController->moduleName;
+			$module = application::getLastAction()->moduleName;
         }
 
         if ( substr($template, 0, 2) == '//')

@@ -27,7 +27,7 @@ class htmlRenderer extends baseRenderer
             }
         }
 
-        $path = baseRenderer::getTemplatePath($__view);
+        $path = baseRenderer::getTemplateByAction($__action);
 
         if (!file_exists($path))
         {

@@ -1,68 +1,38 @@
 var applicationClass = function ()
 {
-	this.config	=
-	{
-		ajax			:	{},
-		facebook		:	{},
-		comet			:	{},
-		dialog			:	{},
-		form			:	{},
-		notification	:
-		{
-			position	:	'bottom'
-		}
-
-	};
-
-	this.context =
-	{
-		module: null,
-		action: null
-	};
+	this.config			=	{}
+	this.response		=	{};
 	
 	this.isPageLoading		=	false;
 	this.loadedJavaScript	=	{};
 
-	this.run = function(config)
+	this.configure = function(config)
 	{
-		this.context.module = config.context.module;
-		this.context.action = config.context.action;
-
-		if (typeof application.configure != 'undefined')
-		{
-			application.configure();
-		}
-		
-		ajax.init(this.config.ajax);
-		facebook.init(this.config.facebook);
-		dialog.init(this.config.dialog);
-		notification.init(this.config.notification);
-		comet.init(this.config.comet);
-		
-		this.dispatch({
-			context	:	application.context
-		});
+		this.config = config;
+		ajax.configure(config.ajax);
+		facebook.configure(config.facebook);
+		dialog.configure(config.dialog);
+		notification.configure(config.notification);
+		comet.configure(config.comet);
 	}
 
-	this.dispatch = function(response, parent)
+	this.dispatch = function(response)
 	{
-		if (typeof response != 'undefined' && response)
+		application.response	=	response;
+
+		for (var l in response.commands)
 		{
-			application.context	=	response.context;
-			this.processAction(this.context.module, this.context.action, response);
+			switch(response.commands[l].command)
+			{
+				case 'init':
+					eval ("$('" + response.commands[l].selector + "')." + response.commands[l].plugin + "(response.commands[l].params);");
+					break;
+			}
 		}
 
 		this.initUi(parent);
 	}
 
-	this.addContext = function( variables )
-	{
-		for ( var name in variables )
-		{
-			this.context[name] = variables[name];
-		}
-	}
-	
 	this.initUi = function(parent)
 	{
 		if (typeof parent == 'undefined')

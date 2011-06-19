@@ -98,6 +98,36 @@ class auth
 		return self::$gateway;
 	}
 
+	static function init()
+	{
+		if (!conf::i()->application[APPLICATION]['auth'])
+		{
+			conf::i()->application[APPLICATION]['auth'] = array('server');
+		}
+
+		foreach(conf::i()->application[APPLICATION]['auth'] as $authEngine)
+		{
+			if (auth::i($authEngine)->getCredentials())
+			{
+				auth::setGateway($authEngine);
+			}
+		}
+
+		if (!auth::getGateway())
+		{
+			if (is_array(conf::i()->application[APPLICATION]['auth']))
+			{
+				auth::setGateway(conf::i()->application[APPLICATION]['auth'][0]);
+			}
+			else
+			{
+				auth::setGateway('server');
+			}
+		}
+		
+	}
+
+
 }
 
 ?>
