@@ -44,7 +44,7 @@ var applicationClass = function ()
 
 	this.dispatch = function(response, parent)
 	{
-		if (typeof response != 'undefined')
+		if (typeof response != 'undefined' && response)
 		{
 			application.context	=	response.context;
 		}
@@ -75,11 +75,42 @@ var applicationClass = function ()
 
 		this.initForms(parent);
 		this.initSlicers(parent);
+		this.initUrl(parent);
 
 		if (typeof this.init != 'undefined')
 		{
 			this.init(parent);
 		}
+
+	}
+
+	this.initUrl	=	function(parent)
+	{
+		$('a:not(.sf-usual)', $(parent)).click(function() {
+
+			if ($(this).attr('target') == 'dialog')
+			{
+				dialog.url($(this).attr('href'));
+				return false;
+			}
+
+			if ($(this).attr('target') == 'put')
+			{
+				ajax.put($(this).attr('href'));
+				return false;
+			}
+
+			if ($(this).attr('href') == '#' || $(this).attr('href') == 'javascript:;')
+			{
+				return false;
+			}
+
+			if (application.enableAjaxNavigation)
+			{
+				$.address.value($(this).attr('href'));
+				return false;
+			}
+		});
 	}
 
 	this.initForms = function(parent)
