@@ -30,7 +30,7 @@ class	js
         self::$vars[$variable] = $value;
 	}
 
-	static static function init($selector, $plugin, $params)
+	static function init($selector, $plugin, $params = array())
 	{
 		self::$commands[]	=	array
 		(

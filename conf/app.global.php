@@ -54,7 +54,8 @@ return array
      ***********************************************************/
 
     'application'    =>   array(
-        'frontend' => array(
+		'timezone'	=>	'Europe/Helsinki',
+        'frontend'	=> array(
 			
             'auth'  => array('server'),
 			

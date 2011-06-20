@@ -12,6 +12,7 @@ class application
 
 	static public function init()
 	{
+		date_default_timezone_set(conf::i()->application['timezone']);
         application::$name	= APPLICATION;
 
 		session	::init();
@@ -20,6 +21,7 @@ class application
 		i18n	::init();
 		auth	::init();
 		request	::init();
+
 	}
 
     public static function registerEvent( $name, $position = application::EVENT_BEFORE_CONTROLLER )
@@ -101,6 +103,8 @@ class application
 
     static public function execute($module, $task, $data = false)
     {
+		date_default_timezone_set(conf::i()->application['timezone']);
+
         try
         {
             $context['controller']  = actionControllerFactory::create($module, $task);
@@ -118,8 +122,6 @@ class application
             $context['action'] = $task;
 
             $code = $context['controller']->dispatch($context['data']);
-			
-            self::$context[] = $context;
         }
         catch (controllerException $e)
         {
