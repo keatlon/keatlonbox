@@ -1,227 +1,216 @@
-var errorRenderer = function()
+(function($)
 {
-	this.ER_SUPPRESED   = 0;
-	this.ER_CONTAINER   = 1;
-	this.ER_FIELDS      = 2;
-};
-
-var Form = function(f)
-{
-	this.f			=	f;
-	this.multipart  =	$(':file', this.f).length > 0;
-	this.method		=	$(this.f).attr('method');
-
-	if (this.method == '')
+	$.fn.form = function(method)
 	{
-		this.method = 'post';
-	}
-
-	this.lastResponseData	=	null;
-	this.onBeforeSubmit		=	null;
-	this.onSuccess			=	null;
-	this.onError			=	null;
-
-	var errRenderer = new errorRenderer();
-
-	this.errorRendererType = errRenderer.ER_FIELDS;
-	this.errorRendererContainer = 'error_container';
-
-	this.setErrorRenderer = function (rendererType, container)
-	{
-		this.errorRendererType = rendererType;
-		this.errorRendererContainer = typeof ( container == 'undefined') ? this.errorRendererContainer : container;
-	}
-
-	this.url2key = function (url)
-	{
-		return this.url2method(url);
-	}
-
-	this.url2method = function (url)
-	{
-		var parts	=	url.substring(1).split('/');
-		var method	=	'';
-		
-		for (var l in parts)
+		var methods	=
 		{
-			if (l == 0)
+			init				:	function (settings)
 			{
-				method = parts[l];
-				continue;
-			}
-
-			method = method + parts[l].substring(0, 1).toUpperCase() + parts[l].substring(1, parts[l].length);
-		}
-
-		return method;
-	}
-
-	this.bind = function ()
-	{
-		var thisForm		=	this;
-		var errorSelector	=	false;
-		var useIframe		=	($(':file,', this.f).length > 0) ? true : false
-
-		$(':input,:file,', this.f).not('[type=submit],[type=hidden]').each(function(){
-
-			errorSelector	=	thisForm.url2key(thisForm.f.attr('action')) + '_' + thisForm.exractFieldName($(this).attr('name')) + '_error';
-
-			if (!$('#' + errorSelector).length)
-			{
-				$('<div class="error"></div>').attr('id', errorSelector).insertAfter(this);
-			}
-		});
-
-        this.f.ajaxForm( {
-            url         : $(thisForm).attr('action'),
-            dataType    : 'json',
-            type        : thisForm.method,
-            iframe      : useIframe,
-
-            beforeSubmit: function (data, jobj, opt)
-			{
-
-                if ( typeof thisForm.onBeforeSubmit == 'function')
-                {
-                    if (!thisForm.onBeforeSubmit())
-					{
-						return false;
-					}
-                }
-
-				/*
-				* Remove default value for input text
-				* */
-				for(var l in data)
+				return this.each(function()
 				{
-					var obj = $('input[type=text][name="' + data[l].name + '"]');
-					if (obj.length > 0)
+					var data	=	$(this).data('form');
+
+					if (data)
 					{
-						if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
+						return;
+					}
+
+					var element	=	$(this);
+
+					var defaults	=
+					{
+						multipart		:	$(':file', element).length > 0,
+						method			:	$(element).attr('method') ? $(element).attr('method') : 'POST',
+						action			:	$(element).attr('action'),
+						response		:	null,
+						onBeforeSubmit	:	null,
+						onSuccess		:	null,
+						onError			:	null
+					};
+
+					var options		=	$.extend(defaults, settings);
+					
+					$(':input,:file', element).not('[type=submit],[type=hidden]').each(function(){
+
+						errorSelector	=	application.getErrorSelector(options.action, application.exractFieldName($(this).attr('name')));
+
+						if (!$('#' + errorSelector).length)
 						{
-							data[l].value = '';
+							$('<div class="error"></div>').attr('id', errorSelector).insertAfter(this);
+						}
+					});
+
+					$(element).ajaxForm( {
+						url         :	options.action,
+						type        :	options.method,
+						iframe      :	options.multipart,
+						dataType    :	'json',
+
+						beforeSubmit: function (data, jobj, opt)
+						{
+							if ( typeof $(element).data('form').onBeforeSubmit == 'function')
+							{
+								if (!$(element).data('form').onBeforeSubmit())
+								{
+									return false;
+								}
+							}
+
+							/*
+							* Remove default value for input text
+							* */
+							for(var l in data)
+							{
+								var obj = $('input[type=text][name="' + data[l].name + '"]');
+
+								if (obj.length > 0)
+								{
+									if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
+									{
+										data[l].value = '';
+									}
+								}
+							}
+
+							if (options.method == 'get')
+							{
+								var url = '';
+
+								for(l in data)
+								{
+									url = url + '/' + data[l].name + '/' + data[l].value;
+								}
+
+								this.url = opt.url + url;
+
+									location.href = this.url;
+
+								return false;
+							}
+
+							$(element).form('disableSubmit');
+						},
+
+						success: function ( response )
+						{
+							$(element).form('hideErrors');
+
+							if (typeof response != 'object')
+							{
+								ajax.errorHandler(response.toString());
+								$(element).form('enableSubmit');
+								return;
+							}
+
+							if ( response.status == 'success')
+							{
+								if ($(element).data('form').onSuccess)
+								{
+									$(element).data('form').onSuccess(response);
+								}
+							}
+
+							if ( response.status == 'error')
+							{
+								$(element).form('showErrors', response);
+
+								if ($(element).data('form').onError)
+								{
+									$(element).data('form').onError(response);
+								}
+							}
+
+							$(element).form('enableSubmit');
+						}
+					} );
+
+					$(element).data('form', options);
+				});
+				
+
+			},
+
+			options				:	function (settings)
+			{
+				return this.each(function()
+				{
+					$(this).data('form', $.extend($(this).data('form'), settings));
+				});
+			},
+
+			disableSubmit		:	function()
+			{
+				return this.each(function()
+				{
+					$('input:submit', $(this)).attr('disabled', true);
+					$('button:submit', $(this)).attr('disabled', true);
+				});
+			},
+
+
+			enableSubmit		:	function()
+			{
+				return this.each(function()
+				{
+					$('input:submit', $(this)).attr('disabled', false);
+					$('button:submit', $(this)).attr('disabled', false);
+				});
+			},
+
+
+			showErrors			:	function(response)
+			{
+				return this.each(function()
+				{
+					$(this).data().form.response = response;
+
+					var errors = '';
+
+					if ( typeof response.errors != 'undefined' )
+					{
+						for ( var fieldName in response.errors )
+						{
+							$('#' + application.getErrorSelector($(this).data().form.action, fieldName)).html(response.errors[fieldName]).show();
+						}
+
+						return;
+					}
+				});
+			},
+
+			hideErrors		:	function()
+			{
+				
+				return this.each(function()
+				{
+					if ( $(this).data().form.response == null) return;
+
+					if ( typeof $(this).data().form.response.errors != 'undefined')
+					{
+						for ( var fieldName in $(this).data().form.response.errors )
+						{
+							$('#' + application.getErrorSelector($(this).data().form.action, fieldName)).hide();
 						}
 					}
-				}
-
-                if ($(thisForm).method == 'get')
-                {
-                    var url = '';
-                    for(l in data)
-                    {
-                        url = url + '/' + data[l].name + '/' + data[l].value;
-                    }
-
-                    this.url = opt.url + url;
-                    location.href = this.url;
-                    return false;
-                }
-
-                thisForm.disableSubmit();
-            },
-
-            success: function ( response )
-            {
-        		thisForm.hideErrors();
-
-                if (typeof response != 'object')
-                {
-                    ajax.errorHandler(response.toString());
-                    thisForm.enableSubmit();
-                    return;
-                }
-
-				var successMethod	=	thisForm.url2method(thisForm.f.attr('action')) + 'Success';
-				var errorMethod		=	thisForm.url2method(thisForm.f.attr('action')) + 'Error';
-
-                if ( response.status == 'success')
-                {
-                    if (thisForm.onSuccess)
-					{
-						thisForm.onSuccess(response);
-					}
-					else
-					{
-	                    eval( ' if (typeof ' + successMethod + ' == "function") ' + successMethod + '( response )');
-					}
-                }
-
-                if ( response.status == 'error')
-                {
-                    thisForm.showErrors(response);
-
-                    if (thisForm.onError)
-					{
-						thisForm.onError(response);
-					}
-					else
-					{
-	                    eval( ' if (typeof ' + errorMethod + ' == "function") ' + errorMethod + '( response )');
-					}
-                }
-
-                thisForm.enableSubmit();
-            }
-        } );
-	}
-
-	this.disableSubmit = function()
-	{
-		$('input:submit', this.f).attr('disabled', true);
-		$('button:submit', this.f).attr('disabled', true);
-	};
-
-	this.enableSubmit = function()
-	{
-		$('input:submit', this.f).attr('disabled', false);
-		$('button:submit', this.f).attr('disabled', false);
-	};
-
-	this.showErrors = function(response)
-	{
-		this.lastResponseData = response;
-
-		var errors = '';
-		
-		var eRenderer = new errorRenderer();
-
-		if ( typeof response.errors != 'undefined' )
-		{
-			for ( var fieldName in response.errors )
-			{
-				$('#' + this.url2key(this.f.attr('action')) + '_' + fieldName + '_error').html(response.errors[fieldName]);
-				$('#' + this.url2key(this.f.attr('action')) + '_' + fieldName + '_error').show();
+				});
 			}
 
-			return;
-		}
-	};
+		};
 
-	this.hideErrors = function()
-	{
-		if ( this.lastResponseData == null) return;
-		
-		var eRenderer = new errorRenderer();
 
-		if ( typeof this.lastResponseData.errors != 'undefined')
+		if ( methods[method] )
 		{
-			for ( var fieldName in this.lastResponseData.errors )
-			{
-				$('#' + this.url2key(this.f.attr('action')) + '_' + fieldName + '_error').hide();
-			}
+			return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
 		}
-	};
-
-	this.exractFieldName = function(n)
-	{
-		var r = new RegExp(/\[(.*)\]/g).exec(n);
-		if (r == null)
+			else if ( typeof method === 'object' || ! method )
 		{
-			return n;
+			return methods.init.apply( this, arguments );
+		}
+		else
+		{
+			$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
 		}
 
-		return r[1];
 	};
 
-	this.bind();
-};
+})(jQuery);

@@ -99,10 +99,7 @@ var applicationClass = function ()
 			parent	=	$('body');
 		}
 
-		$('form[action]', parent).each(function()
-		{
-			new Form($(this));
-		});
+		$('form[action]', parent).form();
 	}
 
 	this.initSlicers = function(parent)
@@ -213,7 +210,49 @@ var applicationClass = function ()
 	{
 		$('#jsdebug').append('<div class="sf-debug-item">' + message + '</div>');
 	}
-	
+
+	this.url2key = function (url)
+	{
+		return this.url2method(url);
+	}
+
+	this.url2method = function (url)
+	{
+		var parts	=	url.substring(1).split('/');
+		var method	=	'';
+
+		for (var l in parts)
+		{
+			if (l == 0)
+			{
+				method = parts[l];
+				continue;
+			}
+
+			method = method + parts[l].substring(0, 1).toUpperCase() + parts[l].substring(1, parts[l].length);
+		}
+
+		return method;
+	}
+
+	this.exractFieldName = function(n)
+	{
+		var r = new RegExp(/\[(.*)\]/g).exec(n);
+		if (r == null)
+		{
+			return n;
+		}
+
+		return r[1];
+	}
+
+	this.getErrorSelector	=	function(action, fieldName)
+	{
+
+		var id = application.url2key(action)	+ '_' + application.exractFieldName(fieldName) + '_error';
+		return id;
+	}
+
 };
 
 var application = new applicationClass();
