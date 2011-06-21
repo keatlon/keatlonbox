@@ -235,24 +235,6 @@ var applicationClass = function ()
 		return method;
 	}
 
-	this.exractFieldName = function(n)
-	{
-		var r = new RegExp(/\[(.*)\]/g).exec(n);
-		if (r == null)
-		{
-			return n;
-		}
-
-		return r[1];
-	}
-
-	this.getErrorSelector	=	function(action, fieldName)
-	{
-
-		var id = application.url2key(action)	+ '_' + application.exractFieldName(fieldName) + '_error';
-		return id;
-	}
-
 };
 
 var application = new applicationClass();
