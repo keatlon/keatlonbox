@@ -6,5 +6,3 @@ abstract class baseTranslation
     static function update($id, $phrase, $timestamp) {}
     static function remove($id) {}
 }
-
-?>

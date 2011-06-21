@@ -127,7 +127,6 @@ class %BASECLASSNAME% extends dbPeer
 
 }
 
-
 ]]>
     </body>
 </definition>

@@ -455,6 +455,3 @@ class redis
 		return false;
 	}
 }   
-
-
-?>

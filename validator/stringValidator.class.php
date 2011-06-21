@@ -28,4 +28,3 @@ class stringValidator extends baseValidator
 		return false;
 	}
 }
-?>

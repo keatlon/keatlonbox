@@ -1,4 +1,5 @@
 <?php
+
 abstract class actionController
 {
 	const		SUCCESS		= 'success';
@@ -67,4 +68,4 @@ abstract class actionController
 		return $this->actionName;
 	}
 }
-?>
+

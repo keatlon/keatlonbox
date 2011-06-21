@@ -1,7 +1,6 @@
 <?php
 abstract class webActionController extends actionController
 {
-	public		$renderer		=	rendererFactory::HTML;
 	public		$response		=	false;
 	public		$loginRequired	=	true;
 	private		$viewName		=	false;
@@ -10,36 +9,12 @@ abstract class webActionController extends actionController
 	{
 		try
 		{
-			if ($this->renderer == rendererFactory::BASE && conf::i()->application[application::$name]['renderer'])
-			{
-				$this->renderer	= conf::i()->application[application::$name]['renderer'];
-			}
-			elseif ($this->renderer == rendererFactory::HTML)
-			{
-				
-				if ( request::accept() == 'text/html')
-				{
-					$this->renderer	= rendererFactory::HTML;
-				}
-
-				if ( request::accept() == 'application/json')
-				{
-					$this->renderer	= rendererFactory::JSON;
-				}
-
-				if ( request::accept() == 'application/xml')
-				{
-					$this->renderer	= rendererFactory::XML;
-				}
-			}
-			
 			if ($this->loginRequired && !auth::hasCredentials())
 			{
 				throw new loginRequiredException;
 			}
 
 			$this->beforeExecute();
-
 			$this->response['method'] = request::method();
 
 			if (request::method() == request::POST)
@@ -51,7 +26,7 @@ abstract class webActionController extends actionController
 			{
 				$code = $this->get($data);
 			}
-
+			
 			if ($code)
 			{
 				$this->response['code'] = $code;
@@ -138,11 +113,6 @@ abstract class webActionController extends actionController
 		response::set('notice', $notice);
 	}
 
-	function setRenderer($renderer)
-	{
-		$this->renderer = $renderer;
-	}
-
 	function setErrors($errors)
 	{
 		response::set('errors', $errors);
@@ -164,9 +134,7 @@ abstract class webActionController extends actionController
 
 	function render($view = false)
 	{
-		$renderer = rendererFactory::create($this->renderer);
-		$renderer->render($this, $view);
+		rendererFactory::create(request::accept())->render($this, $view);
 	}
 
 }
-?>

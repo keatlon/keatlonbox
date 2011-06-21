@@ -6,5 +6,3 @@ class javascriptHelper
 		return json_encode($value);
 	}
 }
-
-?>

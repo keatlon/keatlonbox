@@ -106,4 +106,3 @@ class mongoTranslation extends baseTranslation
     static function remove($id) {}
 
 }
-?>

@@ -33,5 +33,3 @@ class _mongo
 		return ($id instanceof MongoId) ? $id : new MongoId($id);
 	}
 }
-
-?>

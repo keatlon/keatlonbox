@@ -2,4 +2,3 @@
 class emailRenderer extends htmlRenderer
 {
 }
-?>

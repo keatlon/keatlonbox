@@ -12,4 +12,4 @@ class maxValidator extends baseValidator
 		return (count($value) <= $this->count);
 	}
 }
-?>
+

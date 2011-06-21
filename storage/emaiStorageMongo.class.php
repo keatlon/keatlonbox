@@ -3,5 +3,3 @@ class emailStorageMongo extends emailStorage
 {
 
 }
-
-?>

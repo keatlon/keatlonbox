@@ -26,4 +26,4 @@ class setValidator extends baseValidator
 		return true;
 	}
 }
-?>
+

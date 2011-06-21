@@ -2,4 +2,3 @@
 class mysqlTranslation extends baseTranslation
 {
 }
-?>

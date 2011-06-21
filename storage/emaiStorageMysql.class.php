@@ -3,5 +3,3 @@ class emailStorageMysql extends emailStorage
 {
 
 }
-
-?>

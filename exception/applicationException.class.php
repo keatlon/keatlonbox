@@ -1,4 +1,5 @@
 <?php
+
 class applicationException extends Exception
 {
 	public function __construct( $message = false )
@@ -13,4 +14,3 @@ class applicationException extends Exception
 	}
 	
 }
-?>

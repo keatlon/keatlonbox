@@ -252,5 +252,3 @@ class i18n
 		echo file_get_contents(self::getFilename($application));
 	}
 }
-
-?>

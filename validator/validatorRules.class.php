@@ -5,4 +5,3 @@ class validatorRules
 	const NAME		= '/^[а-яА-ЯёЁЇїІіЄєҐґ’\- ]{2,15}$/u';
 	const URL		 = '/^[a-zA-Z]+[:\/\/]+[A-Za-z0-9\-_~]+\\.+[A-Za-z0-9\.\/%&=\?\-_~*]+$/i';
 }
-?>

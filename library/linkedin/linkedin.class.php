@@ -7,4 +7,4 @@ class linkedin
 		require_once conf::i()->rootdir . '/core/library/oauth/OAuth.php';
 	}
 }
-?>
+

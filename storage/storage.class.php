@@ -69,4 +69,4 @@ class storage
 		return substr(md5( $size . conf::i()->supersalt . $id), 0, 12);
 	}
 }
-?>
+

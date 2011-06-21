@@ -1,4 +1,5 @@
 <?php
+
 class controllerException extends applicationException
 {
     public function __construct()
@@ -7,4 +8,3 @@ class controllerException extends applicationException
         parent::__construct();
     }
 }
-?>

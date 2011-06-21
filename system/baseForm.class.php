@@ -90,4 +90,3 @@ abstract class baseForm
 		return $this->errors;
 	}
 }
-?>

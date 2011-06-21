@@ -6,6 +6,5 @@ class %CLASSNAME% extends %BASECLASSNAME%
 {
 }
 
-?>
 ]]></body>
 </definition>

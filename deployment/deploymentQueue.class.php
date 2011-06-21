@@ -165,4 +165,3 @@ class deploymentQueue
 		file_put_contents($queueFilename, self::$completed->asXML());
 	}
 }
-?>

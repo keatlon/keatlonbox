@@ -13,4 +13,3 @@ class equalValidator extends baseValidator
 	}
 }
 
-?>

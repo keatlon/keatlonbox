@@ -266,6 +266,4 @@ return array
 			'position'	=>	'bottom'
 		)
 	)
-
-
 );

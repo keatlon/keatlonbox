@@ -29,5 +29,3 @@ class router
         return self::$classRoutes[$className];
     }
 }
-
-?>

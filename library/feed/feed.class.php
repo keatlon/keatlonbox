@@ -7,4 +7,3 @@ class feed
 		require_once conf::i()->rootdir . '/core/library/feed/FeedItem.php';
 	}
 }
-?>

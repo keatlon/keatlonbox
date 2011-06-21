@@ -262,4 +262,3 @@ class slicer
 		return '<p id="' . $slicer->name . 'slicer" class="slicer">' . $prevPage . ' <span>' . $htmlPages . '</span> ' . $nextPage . '</p>';
 	}
 }
-?>

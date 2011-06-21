@@ -1,4 +1,5 @@
 <?php
+
 class actionControllerFactory
 {
 	/**
@@ -15,6 +16,7 @@ class actionControllerFactory
     	}
 
         $actionClassName = $action . ucfirst($module) . 'Controller';
+
         return new $actionClassName($module, $action);
     }
 	
@@ -23,4 +25,3 @@ class actionControllerFactory
         return router::get($action . ucfirst($module) . 'Controller');
     }
 }
-?>

@@ -97,4 +97,3 @@ class profiler
 		return self::$firephp;
 	}
 }
-?>

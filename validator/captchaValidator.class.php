@@ -14,5 +14,3 @@ class captchaValidator extends baseValidator
         return true;
 	}
 }
-
-?>

@@ -79,5 +79,3 @@ if (!function_exists('symlink'))
 	}
 
 }
-
-?>

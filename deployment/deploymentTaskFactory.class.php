@@ -13,4 +13,3 @@ class deploymentTaskFactory
 		return new $className($task, $space, $plan, $release);
 	}
 }
-?>

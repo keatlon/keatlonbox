@@ -7,4 +7,4 @@ class requiredValidator extends baseValidator
 		return		!empty($value);
 	}
 }
-?>
+

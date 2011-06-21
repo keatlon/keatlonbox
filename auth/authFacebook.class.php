@@ -90,5 +90,3 @@ class authFacebook extends authBase
 	}
 
 }
-?>
-

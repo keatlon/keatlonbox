@@ -16,4 +16,4 @@ class requireCutValidator extends baseValidator
         return false;
 	}
 }
-?>
+

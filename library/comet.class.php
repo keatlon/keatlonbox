@@ -24,6 +24,3 @@ class comet
 		curl_close($ch);
 	}
 }
-
-
-?>

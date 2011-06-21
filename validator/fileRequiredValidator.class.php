@@ -6,4 +6,3 @@ class fileRequiredValidator extends baseValidator
 		return !request::file($fieldname) ? true : false;
 	}
 }
-?>

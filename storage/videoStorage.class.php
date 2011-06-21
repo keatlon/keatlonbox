@@ -36,4 +36,4 @@ class videoStorage extends storage
 		return conf::i()->domains['video'] . self::subpath($id) . self::getFilename($id, $size) . '.flv';
 	}
 }
-?>
+

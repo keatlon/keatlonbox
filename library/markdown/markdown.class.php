@@ -9,4 +9,4 @@ class markdown
 		return nl2br(markdown(htmlspecialchars($text)));
 	}
 }
-?>
+

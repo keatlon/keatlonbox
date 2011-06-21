@@ -1,4 +1,5 @@
 <?php
+
 class authServer extends authBase
 {
     function authorize($data)
@@ -26,4 +27,3 @@ class authServer extends authBase
 		response::redirect('/');
 	}
 }
-?>

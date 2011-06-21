@@ -12,4 +12,4 @@ class minValidator extends baseValidator
 		return (count($value) >= $this->count);
 	}
 }
-?>
+

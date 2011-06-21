@@ -13,6 +13,7 @@ class application
 	static public function init()
 	{
 		date_default_timezone_set(conf::i()->application['timezone']);
+		
         application::$name	= APPLICATION;
 
 		session	::init();
@@ -71,20 +72,23 @@ class application
 
 		application::processEvent(application::EVENT_BEFORE_RENDER);
 
+
 		switch(request::accept())
 		{
-			case	'text/html':
+			case	rendererFactory::HTML:
 				js::context('body');
 				$layoutController  = actionControllerFactory::create('layout', 'index');
 				$layoutController->dispatch(request::get());
 				$layoutController->render();
 				break;
 
-			case	'application/json':
+			case	rendererFactory::JSON:
 				application::render();
 				break;
 
-			case	'application/xml':
+			case	rendererFactory::XML:
+				header ("Content-Type:text/xml");
+				echo '<?xml version="1.0" encoding="UTF-8" ?>';
 				application::render();
 				break;
 		}
@@ -145,4 +149,3 @@ class application
 
 }
 
-?>

@@ -1,4 +1,5 @@
 <?php
+
 class emailActionController extends actionController
 {
     const HANDLER_SENDMAIL      =	'sendmail';
@@ -113,4 +114,3 @@ class emailActionController extends actionController
 	}
 
 }
-?>

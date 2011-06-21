@@ -1,4 +1,5 @@
 <?php
+
 class authMongo extends authBase
 {
     function authorize($data)
@@ -30,4 +31,3 @@ class authMongo extends authBase
 		return (_mongo::id($id) == auth::id());
 	}
 }
-?>

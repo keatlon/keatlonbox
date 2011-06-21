@@ -16,4 +16,3 @@ class dateValidator extends baseValidator
         return checkdate( $month, $day, $year );
 	}
 }
-?>

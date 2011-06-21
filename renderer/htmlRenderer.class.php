@@ -40,4 +40,3 @@ class htmlRenderer extends baseRenderer
         $__action->afterRender($__action);
     }
 }
-?>

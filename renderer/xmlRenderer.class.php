@@ -40,4 +40,3 @@ class xmlRenderer extends baseRenderer
         $__action->afterRender();
 	}
 }
-?>

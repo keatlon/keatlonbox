@@ -34,5 +34,3 @@ class email
         return '=?' . $send_charset . '?B?' . base64_encode($str) . '?=';
     }
 }
-
-?>

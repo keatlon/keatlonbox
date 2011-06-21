@@ -35,4 +35,3 @@ class jsonRenderer extends baseRenderer
 		$__action->afterRender();
 	}
 }
-?>

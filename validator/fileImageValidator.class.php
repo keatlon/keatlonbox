@@ -11,4 +11,3 @@ class fileImageValidator extends baseValidator
 		return true;
 	}
 }
-?>

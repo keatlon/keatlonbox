@@ -12,4 +12,4 @@ class urlValidator extends baseValidator
 		return true;
 	}
 }
-?>
+

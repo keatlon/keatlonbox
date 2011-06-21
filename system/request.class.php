@@ -33,7 +33,12 @@ class request
 		return self::$accept;
 	}
 
-	protected static function set($data)
+	protected static function set($key, $value)
+	{
+		self::$data['params'][$key] = $value;
+	}
+
+	protected static function data($data)
 	{
 		self::$data = $data;
 	}
@@ -62,39 +67,38 @@ class request
 	static public function init()
 	{
 		request::method($_SERVER['REQUEST_METHOD']);
-		request::set(url::parse($_SERVER['REQUEST_URI']));
+		request::data(url::parse($_SERVER['REQUEST_URI']));
 
 		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') !== false)
 		{
-			request::accept('application/xml');
+			request::accept(rendererFactory::XML);
 		}
 
 		if (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false || strpos($_SERVER['HTTP_ACCEPT'], '*/*') !== false)
 		{
-			request::accept('text/html');
+			request::accept(rendererFactory::HTML);
 		}
 		
 		if ($_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
 		{
-			request::accept('application/json');
+			request::accept(rendererFactory::JSON);
 		}
 	}
 
 	static function isHtml()
 	{
-		return (request::accept() == 'text/html');
+		return (request::accept() == rendererFactory::HTML);
 	}
 
 	static function isJson()
 	{
-		return (request::accept() == 'application/json');
+		return (request::accept() == rendererFactory::JSON);
 	}
 
 	static function isXml()
 	{
-		return (request::accept() == 'application/xml');
+		return (request::accept() == rendererFactory::XML);
 	}
 
 
 }
-?>
