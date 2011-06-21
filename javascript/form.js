@@ -4,6 +4,7 @@
 
 		options	:
 		{
+			context			:	false,
 			method			:	'POST',
 			multipart		:	false,
 			action			:	false,
@@ -13,17 +14,85 @@
 			onError			:	function (response){}
 		},
 
+		_beforeSubmit		:	function(data)
+		{
+			return true;
+
+			if (!self.options.onBeforeSubmit())
+			{
+				return false;
+			}
+
+			/*
+			* Remove default value for input text
+			* */
+			for(var l in data)
+			{
+				var obj = $('input[type=text][name="' + data[l].name + '"]');
+
+				if (obj.length > 0)
+				{
+					if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
+					{
+						data[l].value = '';
+					}
+				}
+			}
+
+			if (self.options.method == 'get')
+			{
+				var url = '';
+
+				for(l in data)
+				{
+					url = url + '/' + data[l].name + '/' + data[l].value;
+				}
+
+				this.url = opt.url + url;
+
+				location.href = this.url;
+
+				return false;
+			}
+
+			self._disableSubmit();
+
+		},
+
+		_success			: function(response) {
+
+			if (typeof response != 'object')
+			{
+				ajax.errorHandler(response.toString());
+				this._enableSubmit();
+				return;
+			}
+
+			if ( response.status == 'success')
+			{
+				this.options.onSuccess.apply(this.options.context, [response]);
+			}
+
+			if ( response.status == 'error')
+			{
+				this._showErrors(response);
+				this.options.onError.apply(this.options.context, [response]);
+			}
+
+			this._enableSubmit();
+		},
+
 		_create	: function() {
 
 			this.options.multipart		=	$(':file', this.element).length > 0;
 			this.options.method			=	$(this.element).attr('method') ? $(this.element).attr('method') : 'POST';
 			this.options.action			=	$(this.element).attr('action');
 
-			$this						=	this;
+			self						=	this;
 
 			$(':input,:file', this.element).not('[type=submit],[type=hidden]').each(function(){
 
-				errorSelector	=	$this._getErrorSelector($this.options.action, $this._exractFieldName($(this).attr('name')));
+				errorSelector	=	self._getErrorSelector(self.options.action, self._exractFieldName($(this).attr('name')));
 
 				if (!$('#' + errorSelector).length)
 				{
@@ -32,79 +101,13 @@
 			});
 
 			this.element.ajaxForm( {
-				url         :	$this.options.action,
-				type        :	$this.options.method,
-				iframe      :	$this.options.multipart,
-				dataType    :	'json',
-
-				beforeSubmit: function (data, jobj, opt)
-				{
-					if (!$this.options.onBeforeSubmit($this.element))
-					{
-						return false;
-					}
-
-					/*
-					* Remove default value for input text
-					* */
-					for(var l in data)
-					{
-						var obj = $('input[type=text][name="' + data[l].name + '"]');
-
-						if (obj.length > 0)
-						{
-							if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
-							{
-								data[l].value = '';
-							}
-						}
-					}
-
-					if ($this.options.method == 'get')
-					{
-						var url = '';
-
-						for(l in data)
-						{
-							url = url + '/' + data[l].name + '/' + data[l].value;
-						}
-
-						this.url = opt.url + url;
-
-						location.href = this.url;
-
-						return false;
-					}
-
-					$this._disableSubmit();
-				},
-
-				success: function ( response )
-				{
-					$this._hideErrors();
-
-					if (typeof response != 'object')
-					{
-						ajax.errorHandler(response.toString());
-						$this._enableSubmit();
-						return;
-					}
-
-					if ( response.status == 'success')
-					{
-						$this.options.onSuccess(response, $this.element);
-					}
-
-					if ( response.status == 'error')
-					{
-
-						$this._showErrors(response);
-						$this.options.onError(response, $this.element);
-					}
-
-					$this._enableSubmit();
-				}
-			} );
+				url				:	this.options.action,
+				type			:	this.options.method,
+				iframe			:	this.options.multipart,
+				dataType		:	'json',
+				success			:	this._success,
+				beforeSubmit	:	this._beforeSubmit
+			});
 
 		},
 
