@@ -8,7 +8,7 @@
 			multipart		:	false,
 			action			:	false,
 			response		:	null,
-			onBeforeSubmit	:	function () {return true;},
+			onBeforeSubmit	:	function (form) {return true;},
 			onSuccess		:	function (response){},
 			onError			:	function (response){}
 		},
@@ -31,7 +31,7 @@
 				}
 			});
 
-			$(this.element).ajaxForm( {
+			this.element.ajaxForm( {
 				url         :	$this.options.action,
 				type        :	$this.options.method,
 				iframe      :	$this.options.multipart,
@@ -39,7 +39,7 @@
 
 				beforeSubmit: function (data, jobj, opt)
 				{
-					if (!$this.options.onBeforeSubmit())
+					if (!$this.options.onBeforeSubmit($this.element))
 					{
 						return false;
 					}
@@ -92,14 +92,14 @@
 
 					if ( response.status == 'success')
 					{
-						$this.options.onSuccess(response);
+						$this.options.onSuccess(response, $this.element);
 					}
 
 					if ( response.status == 'error')
 					{
 
 						$this._showErrors(response);
-						$this.options.onError(response);
+						$this.options.onError(response, $this.element);
 					}
 
 					$this._enableSubmit();
