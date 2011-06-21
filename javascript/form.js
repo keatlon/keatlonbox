@@ -14,52 +14,8 @@
 			onError			:	function (response){}
 		},
 
-		_beforeSubmit		:	function(data)
+		_success			: function(response)
 		{
-			return true;
-
-			if (!self.options.onBeforeSubmit())
-			{
-				return false;
-			}
-
-			/*
-			* Remove default value for input text
-			* */
-			for(var l in data)
-			{
-				var obj = $('input[type=text][name="' + data[l].name + '"]');
-
-				if (obj.length > 0)
-				{
-					if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
-					{
-						data[l].value = '';
-					}
-				}
-			}
-
-			if (self.options.method == 'get')
-			{
-				var url = '';
-
-				for(l in data)
-				{
-					url = url + '/' + data[l].name + '/' + data[l].value;
-				}
-
-				this.url = opt.url + url;
-
-				location.href = this.url;
-
-				return false;
-			}
-
-			self._disableSubmit();
-
-		},
-
-		_success			: function(response) {
 
 			if (typeof response != 'object')
 			{
@@ -100,13 +56,57 @@
 				}
 			});
 
-			this.element.ajaxForm( {
-				url				:	this.options.action,
-				type			:	this.options.method,
-				iframe			:	this.options.multipart,
+			$(this.element).ajaxForm( {
+				url				:	self.options.action,
+				type			:	self.options.method,
+				iframe			:	self.options.multipart,
 				dataType		:	'json',
-				success			:	this._success,
-				beforeSubmit	:	this._beforeSubmit
+				context			:	self,
+				success			:	self._success,
+				beforeSubmit	:	function(data, a, params)
+				{
+					var check = params.context.options.onBeforeSubmit.apply(params.context.options.context, [data, a, params]);
+
+					if (!check)
+					{
+						return false;
+					}
+
+					/*
+					* Remove default value for input text
+					* */
+					for(var l in data)
+					{
+						var obj = $('input[type=text][name="' + data[l].name + '"]');
+
+						if (obj.length > 0)
+						{
+							if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
+							{
+								data[l].value = '';
+							}
+						}
+					}
+
+					if (params.context.options.method == 'get')
+					{
+						var url = '';
+
+						for(l in data)
+						{
+							url = url + '/' + data[l].name + '/' + data[l].value;
+						}
+
+						this.url = opt.url + url;
+
+						location.href = this.url;
+
+						return false;
+					}
+
+					params.context._disableSubmit();
+					return true;
+				}
 			});
 
 		},

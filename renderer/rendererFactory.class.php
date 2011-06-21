@@ -21,7 +21,7 @@ class rendererFactory
 				$class	=	'xmlRenderer';
 				break;
 
-			case	jsonFactory::XML:
+			case	rendererFactory::JSON:
 				$class	=	'jsonRenderer';
 				break;
 
