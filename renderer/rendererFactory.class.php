@@ -15,15 +15,19 @@ class rendererFactory
 		{
 			case	rendererFactory::HTML :
 				$class	=	'htmlRenderer';
+				break;
 
 			case	rendererFactory::XML:
 				$class	=	'xmlRenderer';
+				break;
 
 			case	jsonFactory::XML:
 				$class	=	'jsonRenderer';
+				break;
 
 			default:
 				$class	=	'baseRenderer';
+				break;
 		}
 
         return new $class;
