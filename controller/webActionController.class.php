@@ -132,9 +132,14 @@ abstract class webActionController extends actionController
 		throw new forwardException($module, $action, $data);
 	}
 
-	function render($view = false)
+	function render($view = false, $renderer = false)
 	{
-		rendererFactory::create(request::accept())->render($this, $view);
+		if (!$renderer)
+		{
+			$renderer	=	request::accept();
+		}
+
+		rendererFactory::create($renderer)->render($this, $view);
 	}
 
 }

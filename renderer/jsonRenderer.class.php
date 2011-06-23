@@ -24,8 +24,7 @@ class jsonRenderer extends baseRenderer
 		if (request::method() == request::GET)
 		{
 			ob_start();
-			$__action->renderer = rendererFactory::HTML;
-			$__action->render($__view);
+			$__action->render($__view, rendererFactory::HTML);
 			response::set('body', ob_get_contents());
 			ob_end_clean();
 		}

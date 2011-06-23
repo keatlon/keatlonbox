@@ -37,12 +37,15 @@ var ajaxClass = function()
 				console.log('Error', response.errors);
 			}
 
+			application.dispatch(response);
+
 		});
 
 		$("body").ajaxError(function(event, request, settings)
 		{
             ajax.errorHandler(request.responseText);
 		});
+
 	};
 
 	this.errorHandler = function (data)
@@ -63,8 +66,6 @@ var ajaxClass = function()
 			{
 				callback(response);
 			}
-			
-			application.dispatch(response);
 
 		}, datatype);
 	}
@@ -101,8 +102,6 @@ var ajaxClass = function()
 			{
 				callback(response);
 			}
-
-			application.dispatch(response);
 
 		}, datatype);
 	}

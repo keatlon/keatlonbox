@@ -1,7 +1,8 @@
 var applicationClass = function ()
 {
-	this.config			=	{}
+	this.config			=	{};
 	this.response		=	{};
+	this.vars			=	{};
 	
 	this.isPageLoading		=	false;
 	this.loadedJavaScript	=	{};
@@ -18,65 +19,78 @@ var applicationClass = function ()
 
 	this.dispatch = function(response)
 	{
-		application.response	=	response;
+		this.vars		=	$.extend(this.vars, response.vars);
+		this.response	=	response;
 
-		for (var l in response.js.commands)
+		for (var l in response.application.js.commands)
 		{
-			switch(response.js.commands[l].command)
+			switch(response.application.js.commands[l].command)
 			{
 				case 'init':
-					eval ("$('" + response.js.commands[l].selector + "')." + response.js.commands[l].plugin + "(response.js.commands[l].params);");
+					eval ("$('" + response.application.js.commands[l].selector + "')." + response.application.js.commands[l].plugin + "(response.application.js.commands[l].params);");
 					break;
 
 				case 'set':
-					$(response.js.commands[l].selector).html(response.js.commands[l].html);
+					$(response.application.js.commands[l].selector).html(response.application.js.commands[l].html);
 					break;
 
 				case 'remove':
-					$(response.js.commands[l].selector).remove();
+					$(response.application.js.commands[l].selector).remove();
+					break;
+
+				case 'attr':
+					$(response.application.js.commands[l].selector).attr(response.application.js.commands[l].attr, response.application.js.commands[l].value);
+					break;
+
+				case 'raw':
+					eval (response.application.js.commands[l].value + ";");
 					break;
 
 			}
 		}
 
-		for( var c in response.js.contexts)
+		for( var c in response.application.js.contexts)
 		{
-			this.initUi(response.js.contexts[c]);
+			this.initUi(response.application.js.contexts[c].context, response.application.js.contexts[c].init);
 		}
 
-		// 
 	}
 
-	this.initUi = function(parent)
+	this.getElements = function(selector, context, init)
 	{
-		if (typeof parent == 'undefined' || !parent)
+		if (init == 1)
 		{
-			return false;
+			return $(context);
 		}
-
-		parent	=	$(parent);
-
-		this.initForms(parent);
-		this.initSlicers(parent);
-		this.initUrl(parent);
-
-		if (typeof this.init != 'undefined')
+		
+		if (init == 2)
 		{
-			this.init(parent);
+			return $(selector, $(context));
 		}
+	}
 
-		$('[data-plugin]', parent).each(function(){
-			eval ("$(this, parent )." + $(this).data('plugin') + "();");
-			$(this, parent ).data();
+	this.initUi = function(context, init)
+	{
+		this.initForms(context, init);
+
+		this.initSlicers(context, init);
+		this.initUrl(context, init);
+
+		this.getElements('[data-plugin]', context, init).each(function(){
+
+			if ($(this).data('plugin'))
+			{
+				eval ("$(this)." + $(this).data('plugin') + "();");
+			}
 		});
 
-		$('input[title],textarea[title]', parent).hint();
+		this.getElements('input[title],textarea[title]', context, init).hint();
 		
-		$('.elastic', parent).elastic();
+		this.getElements('.elastic', context, init).elastic();
 		
-		$('.focused', parent).eq(0).focus();
+		this.getElements('.focused', context, init).eq(0).focus();
 
-		$(".tooltip", parent).tooltip({
+		this.getElements('.tooltip', context, init).tooltip({
 			position	:	"top center",
 			effect		:	'slide',
 			delay		:	200
@@ -85,9 +99,9 @@ var applicationClass = function ()
 
 	}
 
-	this.initUrl	=	function(parent)
+	this.initUrl	=	function(context, init)
 	{
-		$('a:not(.sf-usual)', $(parent)).click(function() {
+		this.getElements('a:not(.sf-usual)', context, init).click(function() {
 
 			if ($(this).attr('target') == 'dialog')
 			{
@@ -114,17 +128,12 @@ var applicationClass = function ()
 		});
 	}
 
-	this.initForms = function(parent)
+	this.initForms = function(context, init)
 	{
-		if (typeof parent == 'undefined')
-		{
-			parent	=	$('body');
-		}
-
-		$('form[action]', parent).form();
+		this.getElements('form[action]', context, init).form();
 	}
 
-	this.initSlicers = function(parent)
+	this.initSlicers = function(context, init)
 	{
 		for(l in slicers)
 		{
@@ -264,11 +273,16 @@ var applicationClass = function ()
 		{
 			if (element.attr('data-' + a))
 			{
-				options[a]	=	element.attr('data-' + a);
+				options[a]	=	element.data(a);
 			}
 		}
 
 		return options;
+	}
+
+	this.getVar	=	function(name)
+	{
+		return this.vars[name];
 	}
 
 };

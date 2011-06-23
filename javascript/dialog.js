@@ -26,7 +26,13 @@ var dialogClass = function()
 		ajax.get(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			application.dispatch(response, $('#' + contentContainer));
+
+			response.application.js.contexts.push({
+				'context'	:	'#' + contentContainer,
+				'init'		:	2
+			});
+
+			application.dispatch(response);
 		})
 	}
 

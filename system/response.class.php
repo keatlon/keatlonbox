@@ -22,12 +22,15 @@ class response
 		self::$response['application']	=	array
 		(
 			'module'	=>	$action->moduleName,
-			'action'	=>	$action->actionName
+			'action'	=>	$action->actionName,
+			'js'		=>	array
+			(
+				'contexts'	=>	js::getContexts(),
+				'commands'	=>	js::getCommands()
+			)
 		);
 
-		self::$response['js']['contexts']		=	js::getContexts();
-		self::$response['js']['commands']		=	js::getCommands();
-		self::$response['js']['vars']			=	js::getVariables();
+		self::$response['vars']				=	js::getVariables();
 
 		return self::$response;
 	}
