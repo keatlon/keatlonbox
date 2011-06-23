@@ -19,38 +19,42 @@ var applicationClass = function ()
 	this.dispatch = function(response)
 	{
 		application.response	=	response;
-		var currentContext		=	response.js.context;
 
 		for (var l in response.js.commands)
 		{
-			currentContext = response.js.commands[l].context ? response.js.commands[l].context : response.js.context;
-
 			switch(response.js.commands[l].command)
 			{
 				case 'init':
-					eval ("$('" + response.js.commands[l].selector + "', $(' " + currentContext +  " ') )." + response.js.commands[l].plugin + "(response.js.commands[l].params);");
+					eval ("$('" + response.js.commands[l].selector + "')." + response.js.commands[l].plugin + "(response.js.commands[l].params);");
 					break;
 
 				case 'set':
-					$(response.js.commands[l].selector, $(currentContext)).html(response.js.commands[l].html);
+					$(response.js.commands[l].selector).html(response.js.commands[l].html);
 					break;
 
 				case 'remove':
-					$(response.js.commands[l].selector, $(currentContext)).remove();
+					$(response.js.commands[l].selector).remove();
 					break;
 
 			}
 		}
 
-		this.initUi($(response.js.context));
+		for( var c in response.js.contexts)
+		{
+			this.initUi(response.js.contexts[c]);
+		}
+
+		// 
 	}
 
 	this.initUi = function(parent)
 	{
-		if (typeof parent == 'undefined')
+		if (typeof parent == 'undefined' || !parent)
 		{
-			parent	=	$('body');
+			return false;
 		}
+
+		parent	=	$(parent);
 
 		this.initForms(parent);
 		this.initSlicers(parent);
@@ -60,6 +64,24 @@ var applicationClass = function ()
 		{
 			this.init(parent);
 		}
+
+		$('[data-plugin]', parent).each(function(){
+			eval ("$(this, parent )." + $(this).data('plugin') + "();");
+			$(this, parent ).data();
+		});
+
+		$('input[title],textarea[title]', parent).hint();
+		
+		$('.elastic', parent).elastic();
+		
+		$('.focused', parent).eq(0).focus();
+
+		$(".tooltip", parent).tooltip({
+			position	:	"top center",
+			effect		:	'slide',
+			delay		:	200
+		});
+
 
 	}
 
@@ -163,7 +185,6 @@ var applicationClass = function ()
 		});
 	}
 
-
 	this.processAction = function( module, action, response )
 	{
 		action = action.substring(0, 1).toUpperCase() + action.substring(1, action.length);
@@ -233,6 +254,21 @@ var applicationClass = function ()
 		}
 
 		return method;
+	}
+
+	this.options = function (element)
+	{
+		var options	=	{};
+
+		for (var a in element.data())
+		{
+			if (element.attr('data-' + a))
+			{
+				options[a]	=	element.attr('data-' + a);
+			}
+		}
+
+		return options;
 	}
 
 };

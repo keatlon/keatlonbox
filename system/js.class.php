@@ -3,16 +3,16 @@ class	js
 {
 	static private $commands	=	array();
 	static private $vars		=	array();
-	static private $context		=	'body';
+	static private $contexts	=	array();
 
-	static function context($context = false)
+	static function context($context)
 	{
-		if ($context)
-		{
-			self::$context	=	$context;
-		}
+		self::$contexts[]	=	$context;
+	}
 
-        return self::$context;
+	static function getContexts()
+	{
+		return self::$contexts;
 	}
 
 	static function getCommands()
