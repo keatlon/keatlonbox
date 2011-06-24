@@ -60,6 +60,20 @@ class	js
 		}
 	}
 
+	static function animate($selector, $method, $init  = js::INIT_SELF)
+	{
+		self::$commands[]	=	array(
+			'command'	=>	'animate',
+			'selector'	=>	$selector,
+			'method'	=>	$method
+		);
+
+		if ($init)
+		{
+			js::context($selector, $init);
+		}
+	}
+
 	static function append($selector, $template, $params, $init  = js::INIT_CHILDREN)
 	{
 		self::$commands[]	=	array(

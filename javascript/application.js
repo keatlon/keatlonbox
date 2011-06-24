@@ -46,6 +46,10 @@ var applicationClass = function ()
 					eval (response.application.js.commands[l].value + ";");
 					break;
 
+				case 'animate':
+					eval (response.application.js.commands[l].method + "($('" + response.application.js.commands[l].selector + "'));");
+					break;
+
 			}
 		}
 
