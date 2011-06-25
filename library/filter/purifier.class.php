@@ -14,7 +14,7 @@ class purifier
             self::$config->set('HTML', 'DefinitionID', 'enduser-customize.html tutorial');
             self::$config->set('HTML', 'DefinitionRev', 1);
             self::$config->set('Cache', 'DefinitionImpl', null); // remove this later!
-            self::$config->set('HTML', 'AllowedElements', 'a,em,b,strong,i,img,youtube,h1,h2,h3,ul,li,ol,quote,cut');
+            self::$config->set('HTML', 'AllowedElements', 'a,em,b,strong,i,img,youtube,h2,ul,li,ol,quote,cut,br');
             self::$config->set('HTML', 'AllowedAttributes', 'a.href,a.title,img.src,img.alt,img.align,img.class');
             self::$config->set('Filter', 'YouTube', true);
             self::$config->set('Cache', 'SerializerPath', conf::i()->rootdir . '/~cache');
