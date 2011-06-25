@@ -53,18 +53,18 @@ abstract class baseForm
 
 	function validate()
 	{
-		if ($this->rules) foreach($this->rules as $field => $validators)
+		if ($this->rules) foreach($this->rules as $rule)
 		{
-			if (!$validators)
+			if (!$rule['validators'])
 			{
 				continue;
 			}
 
-			foreach($validators as $validator)
+			foreach($rule['validators'] as $validator)
 			{
-				if (!$validator->isValid($this->data[$field], $field))
+				if (!$validator->isValid($this->data[$rule['field']], $rule['field']))
 				{
-					$this->errors[$field] = $validator->getErrorMessage();
+					$this->errors[$rule['field']] = $validator->getErrorMessage();
 					break;
 				}
 			}
@@ -76,13 +76,16 @@ abstract class baseForm
 	/**
 	 * Add fields to be validated
 	 *
-	 * @param string $name
+	 * @param string $field
 	 * @param array $validators
-	 * @param integer $step
 	 */
-	function addRule($name, $validators = array())
+	function addRule($field, $validators = array())
 	{
-		$this->rules[$name] = $validators;
+		$this->rules[]	=	array
+		(
+			'field'			=>	$field,
+			'validators'	=>	$validators
+		);
 	}
 
 	function getErrors()

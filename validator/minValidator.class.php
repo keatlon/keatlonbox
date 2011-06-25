@@ -6,9 +6,14 @@ class minValidator extends baseValidator
 		$this->count = $count;
 		parent::__construct($message);
 	}
-
+	
 	function isValid($value, $fieldname = false)
 	{
+		if (!is_array($value))
+		{
+			return false;
+		}
+
 		return (count($value) >= $this->count);
 	}
 }

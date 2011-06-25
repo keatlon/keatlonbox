@@ -125,6 +125,7 @@
 
 		_showErrors			:	function(response)
 		{
+			this._hideErrors();
 			this.options.response = response;
 
 			if ( typeof response.errors != 'undefined' )
