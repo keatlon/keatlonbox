@@ -34,6 +34,10 @@ var applicationClass = function ()
 					$(response.application.js.commands[l].selector).html(response.application.js.commands[l].html);
 					break;
 
+				case 'append':
+					$(response.application.js.commands[l].selector).append(response.application.js.commands[l].html);
+					break;
+
 				case 'remove':
 					$(response.application.js.commands[l].selector).remove();
 					break;

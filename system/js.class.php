@@ -78,8 +78,8 @@ class	js
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'append',
-			'selector'	=>	partialHelper::render($template, $params, true),
-			'html'		=>	$html
+			'selector'	=>	$selector,
+			'html'		=>	partialHelper::render($template, $params, true)
 		);
 		
 		if ($init)

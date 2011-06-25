@@ -1,7 +1,7 @@
 <?php
 class partialHelper
 {
-    public static function render($templateRnD1983001, $variablesRnD1983001 = array(), $returnRnD1983001 = false)
+    public static function render($templateRnD1983001, $variablesRnD1983001 = array(), $returnRnD1983001 = true)
     {
         if ($variablesRnD1983001) foreach ($variablesRnD1983001 as $nameRnD1983001 => $valueRnD1983001)
         {
