@@ -101,5 +101,10 @@ class fb
 
 		return $token;
 	}
+
+	static function getAccessToken()
+	{
+		return self::i()->getAccessToken();
+	}
 }
 

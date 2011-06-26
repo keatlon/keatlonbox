@@ -13,29 +13,21 @@ class slicer
 	public $nextUrl			= false;
 	public $prevUrl			= false;
     public $enableKeys		= false;
-	public $bound			= 2;
+	public $bound			= 4;
 	public $showPageFrom	= false;
 	public $showPageTo		= false;
 
 	protected $list = false;
 
-	public $lbEntity = false;
-	public $lbFrom	= false;
-
 	protected static $instances = array();
 
 	/**
-	 *
-	 * @param integer $perPage
 	 * @param string $url
-	 * @param string $name
 	 *
 	 * @return slicer
 	 */
 	public function init($url = false)
 	{
-		$this->lbEntity = 'стр';
-
 		if (!$url)
 		{
 			$this->baseUrl = $_SERVER['REQUEST_URI'];
@@ -44,8 +36,6 @@ class slicer
 		{
 			$this->baseUrl = $url;
 		}
-		
-		$this->perPage	= 20;
 		
 		if (request::get('page'))
 		{
@@ -102,14 +92,14 @@ class slicer
 		return array_slice($list, $start, $count);
 	}
 
-	public function build($count = false, $perPage = 20, $page = false)
+	public function build($count = false, $perPage = false, $page = false)
 	{
-		if (!$this->perPage)
+		if ($perPage)
 		{
 			$this->perPage	= $perPage;
 		}
 
-		if (!$this->page && $page)
+		if ($page)
 		{
 			$this->page	= $page;
 		}
@@ -259,6 +249,6 @@ class slicer
 			}
 		}
 
-		return '<p id="' . $slicer->name . 'slicer" class="slicer">' . $prevPage . ' <span>' . $htmlPages . '</span> ' . $nextPage . '</p>';
+		return '<p id="' . $slicer->name . 'slicer" class="slicer">' . $prevPage . $htmlPages . $nextPage . '</p>';
 	}
 }

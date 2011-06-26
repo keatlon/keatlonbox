@@ -50,6 +50,13 @@ class tools
         return $result;
     }
 
+    static public function extract($array, $conditions = array())
+    {
+        $result = array();
+
+		dd($array);
+    }
+
     static public function shift($array)
     {
         if (!$array)
