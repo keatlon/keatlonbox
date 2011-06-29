@@ -72,7 +72,6 @@ class application
 
 		application::processEvent(application::EVENT_BEFORE_RENDER);
 
-
 		switch(request::accept())
 		{
 			case	rendererFactory::HTML:

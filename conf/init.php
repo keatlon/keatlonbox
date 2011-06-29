@@ -2,24 +2,34 @@
 
 define(TS_APPLICATION_GLOBAL, microtime(true));
 
-if (!defined('PRODUCT') && !$_SERVER['PRODUCT'])
+if (!defined('PRODUCT'))
 {
-	$_SERVER['PRODUCT'] = 'default';
+	if ($_SERVER['PRODUCT'])
+	{
+		define('PRODUCT',   $_SERVER['PRODUCT']);
+	}
+	else
+	{
+		define('PRODUCT',   'default');
+	}
 }
 
 if (!defined('ENVIRONMENT'))
 {
-	define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
+
+	if ($_SERVER['ENVIRONMENT'])
+	{
+		define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
+	}
+	else
+	{
+		die('ENVIRONMENT is not defined');
+	}
 }
 
 if (!defined('APPLICATION'))
 {
 	define('APPLICATION',   $_SERVER['APPLICATION']);
-}
-
-if (!defined('PRODUCT'))
-{
-	define('PRODUCT',		$_SERVER['PRODUCT']);
 }
 
 if ($_SERVER['CONFDIR'])
@@ -103,18 +113,19 @@ class conf
 }
 
 $globalConfig		= include dirname(__FILE__) . '/app.global.php';
-$productConfig		= include $confDir . '/' . PRODUCT . ".all.php";
-$environmentConfig	= include $confDir . '/' . PRODUCT . '.' . ENVIRONMENT . ".php";
+$productConfig		=	include $confDir . '/' . PRODUCT . ".all.php";
+$environmentConfig	=	include $confDir . '/' . PRODUCT . '.' . ENVIRONMENT . ".php";
+$applicationConfig	=	_amr($globalConfig, $productConfig);
+$applicationConfig	=	_amr($applicationConfig, $environmentConfig);
 
-$conf  = array_merge_recursive_distinct(array_merge_recursive_distinct($globalConfig, $productConfig) , $environmentConfig);
-
-foreach($conf as $key => $value)
+foreach($applicationConfig as $key => $value)
 {
 	conf::i()->$key = $value;
 }
 
 include conf::i()->rootdir . "/core/system/sys.php";
 include conf::i()->rootdir . "/core/system/router.class.php";
+
 
 if (!$_SERVER['CONFDIR'])
 {
@@ -125,21 +136,19 @@ define('CONFDIR', $confDir);
 
 router::init(APPLICATION);
 
-function array_merge_recursive_distinct ( array &$array1, array &$array2 )
+function _amr($a, $b)
 {
-  $merged = $array1;
+	foreach($b as $key => $value)
+	{
+		if(array_key_exists($key, $a) && is_array($value))
+		{
+			$a[$key] = _amr($a[$key], $b[$key]);
+		}
+		else
+		{
+			$a[$key] = $value;
+		}
+	}
 
-  foreach ( $array2 as $key => &$value )
-  {
-    if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
-    {
-      $merged [$key] = array_merge_recursive_distinct ( $merged [$key], $value );
-    }
-    else
-    {
-      $merged [$key] = $value;
-    }
-  }
-
-  return $merged;
+	return $a;
 }
