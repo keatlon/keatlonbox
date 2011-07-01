@@ -16,7 +16,6 @@
 
 		_success			: function(response)
 		{
-
 			if (typeof response != 'object')
 			{
 				ajax.errorHandler(response.toString());

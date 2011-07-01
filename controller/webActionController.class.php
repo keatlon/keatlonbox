@@ -15,11 +15,10 @@ abstract class webActionController extends actionController
 			}
 
 			$this->beforeExecute();
-			$this->response['method'] = request::method();
-
+			
 			if (request::method() == request::POST)
 			{
-				$code = $this->put($data);
+				$code = $this->post($data);
 			}
 
 			if (request::method() == request::GET)
@@ -98,7 +97,7 @@ abstract class webActionController extends actionController
 
 	}
 
-	public function put($request)
+	public function post($request)
 	{
 
 	}

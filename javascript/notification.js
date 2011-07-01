@@ -4,7 +4,7 @@ var notificationClass = function()
 
 	this.options =
 	{
-		parent			:	'.footer .container',
+		parent			:	'body',
 
 		selector		:	'.notifications',
 

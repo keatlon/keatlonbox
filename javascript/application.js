@@ -10,11 +10,32 @@ var applicationClass = function ()
 	this.configure = function(config)
 	{
 		this.config = config;
-		ajax.configure(config.ajax);
-		facebook.configure(config.facebook);
-		dialog.configure(config.dialog);
-		notification.configure(config.notification);
-		comet.configure(config.comet);
+
+		if (typeof ajax != 'undefined')
+		{
+			ajax.configure(config.ajax);
+		}
+
+		if (typeof dialog != 'undefined')
+		{
+			dialog.configure(config.dialog);
+		}
+
+		if (typeof notification != 'undefined')
+		{
+			notification.configure(config.notification);
+		}
+
+		if (typeof facebook != 'undefined')
+		{
+			facebook.configure(config.facebook);
+		}
+
+		if (typeof comet != 'undefined')
+		{
+			comet.configure(config.comet);
+		}
+
 	}
 
 	this.dispatch = function(response)
@@ -62,6 +83,7 @@ var applicationClass = function ()
 			this.initUi(response.application.js.contexts[c].context, response.application.js.contexts[c].init);
 		}
 
+		eval( "if ( typeof " + response.application.js.dispatcher + " == 'function' ) { " + response.application.js.dispatcher + "(response) }; " );
 	}
 
 	this.getElements = function(selector, context, init)
@@ -93,17 +115,23 @@ var applicationClass = function ()
 		});
 
 		this.getElements('input[title],textarea[title]', context, init).hint();
-		
-		this.getElements('.elastic', context, init).elastic();
-		
+
 		this.getElements('.focused', context, init).eq(0).focus();
 
-		this.getElements('.tooltip', context, init).tooltip({
-			position	:	"top center",
-			effect		:	'slide',
-			delay		:	200
-		});
+		if( typeof $.tooltip != 'undefined')
+		{
 
+			this.getElements('.tooltip', context, init).tooltip({
+				position	:	"top center",
+				effect		:	'slide',
+				delay		:	200
+			});
+		}
+
+		if( typeof $.elastic != 'undefined')
+		{
+			this.getElements('.elastic', context, init).elastic();
+		}
 
 	}
 

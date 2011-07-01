@@ -8,7 +8,7 @@ class %ACTION%%MODULE%Controller extends webActionController
     {
     }
 
-    public function put($request)
+    public function post($request)
     {
     }
 }

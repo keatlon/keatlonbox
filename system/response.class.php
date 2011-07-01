@@ -17,7 +17,12 @@ class response
 			return self::$response[$key];
 		}
 
-		$action	=	application::getLastAction();
+		$action			=	application::getLastAction();
+
+		$jsDispatcher	=	$action->actionName . 
+							ucfirst($action->moduleName) .
+							'Controller' .
+							ucfirst(strtolower(request::method()));
 
 		self::$response['application']	=	array
 		(
@@ -25,8 +30,9 @@ class response
 			'action'	=>	$action->actionName,
 			'js'		=>	array
 			(
-				'contexts'	=>	js::getContexts(),
-				'commands'	=>	js::getCommands()
+				'dispatcher'	=>	$jsDispatcher,
+				'contexts'		=>	js::getContexts(),
+				'commands'		=>	js::getCommands()
 			)
 		);
 
