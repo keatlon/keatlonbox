@@ -145,7 +145,7 @@ var applicationClass = function ()
 				return false;
 			}
 
-			if ($(this).attr('target') == 'put')
+			if ($(this).attr('target') == 'post')
 			{
 				ajax.put($(this).attr('href'));
 				return false;
