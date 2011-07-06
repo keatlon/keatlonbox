@@ -47,7 +47,7 @@
 
 			$(':input,:file', this.element).not('[type=submit],[type=hidden]').each(function(){
 
-				errorSelector	=	self._getErrorSelector(self.options.action, self._exractFieldName($(this).attr('name')));
+				var	errorSelector	=	self._getErrorSelector(self.options.action, self._exractFieldName($(this).attr('name')));
 
 				if (!$('#' + errorSelector).length)
 				{
