@@ -8,6 +8,11 @@ class tools
 			$keys = explode(',', $keys);
 		}
 
+		if (!is_array($array))
+		{
+			$array	=	array_flip((array)$array);
+		}
+
 		return array_intersect_key($array, array_flip($keys));
     }
 

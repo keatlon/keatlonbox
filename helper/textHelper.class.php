@@ -67,7 +67,7 @@ class textHelper
         return 3;
 	}
 
-	static function pasrseLinks($text)
+	static function parseLinks($text)
 	{
         
 	}
