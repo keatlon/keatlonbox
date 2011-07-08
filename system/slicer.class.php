@@ -251,4 +251,10 @@ class slicer
 
 		return '<p id="' . $slicer->name . 'slicer" class="slicer">' . $prevPage . $htmlPages . $nextPage . '</p>';
 	}
+
+	static function offset($page, $perPage)
+	{
+		$page	=	($page <= 1) ? 0 : $page - 1;
+		return $page * $perPage;
+	}
 }
