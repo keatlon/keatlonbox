@@ -10,6 +10,11 @@ Minify_Logger::setLogger(new log);
 
 class minifier
 {
+    static function js($alias)
+    {
+		return '<script type="text/javascript" src="' . conf::i()->domains['static'] . minifier::build($alias)->uri('/' . $alias . '.js') . '"></script>';
+    }
+
     static function serve($controller, $options)
     {
         Minify::setCache(conf::i()->rootdir . '/~cache/');
