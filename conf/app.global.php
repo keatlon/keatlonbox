@@ -66,9 +66,18 @@ return array
             'startSession'  => true
         ),
 
-        'image' => array(
+        'image' => array
+		(
             'startSession'  => false
-        )
+        ),
+
+		'url'	=>	array
+		(
+			'parser'	=>	array('url', '_parse'),
+			'builder'	=>	array('url', '_build'),
+		)
+
+
     ),
 
     /***********************************************************

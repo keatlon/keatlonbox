@@ -67,7 +67,6 @@ class request
 	static public function init()
 	{
 		request::method($_SERVER['REQUEST_METHOD']);
-		request::data(url::parse($_SERVER['REQUEST_URI']));
 
 		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') !== false)
 		{
@@ -83,6 +82,8 @@ class request
 		{
 			request::accept(rendererFactory::JSON);
 		}
+
+		request::data(url::parse($_SERVER['REQUEST_URI']));
 	}
 
 	static function isHtml()

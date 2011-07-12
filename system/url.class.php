@@ -3,6 +3,16 @@ class url
 {
     static function parse($url)
     {
+		return call_user_func(conf::i()->application['url']['parser'], $_SERVER['REQUEST_URI']);
+	}
+
+    static function build($module, $action, $params)
+    {
+		return call_user_func(conf::i()->application['url']['builder'], $module, $action, $params);
+	}
+
+    static function _parse($url)
+    {
 		if (conf::i()->application[application::$name]['rewrite'])
 		foreach(conf::i()->application[application::$name]['rewrite'] as $pattern => $replacement)
 		{
@@ -84,4 +94,24 @@ class url
 
         return $result;
     }
+
+    static function _build($module, $action, $params)
+    {
+		$chunks	=	array();
+		
+		foreach($params as $key => $param)
+		{
+			$chunks[]	=	'/' . $key . '/' . $param;
+		}
+
+		$base	=	'/' . $module . '/' . $action;
+		
+		if ($chunks)
+		{
+			return $base . implode('', $chunks);
+		}
+
+		return $base;
+	}
+
 }
