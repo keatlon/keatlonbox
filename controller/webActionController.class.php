@@ -112,6 +112,11 @@ abstract class webActionController extends actionController
 		response::set('notice', $notice);
 	}
 
+	function setWarning($warning)
+	{
+		response::set('warning', $warning);
+	}
+
 	function setErrors($errors)
 	{
 		response::set('errors', $errors);

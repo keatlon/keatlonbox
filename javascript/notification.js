@@ -70,29 +70,29 @@ var notificationClass = function()
 		}
 	}
 
-	this.success = function (message, params)
+	this.success = function (message)
 	{
-		this.show(message);
+		this.show(message, 'notice');
 	}
 
-	this.error = function (message, params)
+	this.warning = function (message)
 	{
-		this.show(message);
+		this.show(message, 'warning', 4000);
 	}
 
-	this.show = function(message)
+	this.error = function (message)
 	{
-		this.push(message);
+		this.show(message, 'error');
 	}
 
-	this.process = function(response)
+	this.show = function(message, type, delay)
 	{
-		
+		this.push(message, type, delay);
 	}
 
-	this.push = function(message)
+	this.push = function(message, type, delay)
 	{
-		var item = $('<div>').addClass(notification.options.itemClass).html(message).css( {marginLeft : -2500} );
+		var item = $('<div>').addClass(notification.options.itemClass).addClass(notification.options.itemClass + '-' + type).html(message).css( {marginLeft : -2500} );
 
 		$(notification.options.selector).append(item);
 
@@ -103,12 +103,17 @@ var notificationClass = function()
 			400
 		);
 
-		if (notification.options.delay)
+		if (typeof delay == 'undefined')
 		{
-			this.timer = setTimeout(function(){
-			$(item).fadeOut(300);
-			}, notification.options.delay);
+			delay	=	notification.options.delay;
 		}
+
+
+		this.timer = setTimeout(function()
+		{
+			$(item).fadeOut(300);
+			
+		}, delay);
 	}
 
 };

@@ -27,6 +27,11 @@ var ajaxClass = function()
 				notification.success(response.notice);
 			}
 
+			if (response.warning)
+			{
+				notification.warning(response.warning);
+			}
+
 			if (response.status == 'exception')
 			{
 				console.log('Exception', response.errors);
