@@ -114,7 +114,10 @@ var applicationClass = function ()
 			}
 		});
 
-		this.getElements('input[title],textarea[title]', context, init).hint();
+		if(typeof $.hint == 'function')
+		{
+			this.getElements('input[title],textarea[title]', context, init).hint();
+		}
 
 		this.getElements('.focused', context, init).eq(0).focus();
 

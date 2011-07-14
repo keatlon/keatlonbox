@@ -22,12 +22,26 @@ class emailActionController extends actionController
         try
         {
             $handler = $this->compose($data);
+
 			if ($handler)
 			{
 				$this->handler = $handler;
 			}
 
-			$this->process();
+    		if ($this->handler == self::HANDLER_IGNORE)
+			{
+		       return $this->response['code'];
+			}
+
+			$v = new stringValidator(validatorRules::EMAIL, '');
+
+			if (!$this->email || !$v->isValid($this->email))
+			{
+	            $this->response['code'] = self::EXCEPTION;
+				return $this->response['code'];
+			}
+
+			$this->render();
         }
         catch (dbException $e)
         {
@@ -45,34 +59,12 @@ class emailActionController extends actionController
        return $this->response['code'];
     }
 
-    public function process()
-    {
-		if ($this->handler == self::HANDLER_IGNORE)
-		{
-			return true;
-		}
-
-		$v = new stringValidator(validatorRules::EMAIL, '');
-		if (!$this->email || !$v->isValid($this->email))
-		{
-			return false;
-		}
-
-        $renderer = rendererFactory::create('email');
-        $result = $renderer->render($this);
-
-        if (!$result)
-        {
-            $this->response['code'] = emailActionController::ERROR;
-        }
-    }
-
     public function setName($value)
     {
         $this->name = $value;
     }
 
-    public function setSubject($value)
+    function setSubject($value)
     {
         $this->subject = $value;
     }
@@ -85,6 +77,11 @@ class emailActionController extends actionController
 	function beforeRender()
 	{
 		ob_start();
+	}
+
+	function render($view = false, $renderer = rendererFactory::HTML)
+	{
+		rendererFactory::create($renderer)->render($this, $view);
 	}
 
 	function afterRender()

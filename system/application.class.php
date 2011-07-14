@@ -72,7 +72,6 @@ class application
 
 		application::processEvent(application::EVENT_BEFORE_RENDER);
 
-
 		switch(request::accept())
 		{
 			case	rendererFactory::HTML:
@@ -101,7 +100,11 @@ class application
 
 	static function push(actionController $actionController)
 	{
-		self::$queue[] = $actionController;
+		if ($actionController instanceof webActionController)
+		{
+			self::$queue[] = $actionController;
+		}
+
 		return $actionController;
 	}
 

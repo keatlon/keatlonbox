@@ -103,6 +103,11 @@ class i18n
 
     static function load($application = false)
     {
+		if (!file_exists(self::getFilename($application)))
+		{
+			return false;
+		}
+
         self::$phrases[$application]  =	simplexml_load_file(self::getFilename($application));
     }
 
