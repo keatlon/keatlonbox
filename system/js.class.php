@@ -88,6 +88,34 @@ class	js
 		}
 	}
 
+	static function prepend($selector, $template, $params, $init  = js::INIT_CHILDREN)
+	{
+		self::$commands[]	=	array(
+			'command'	=>	'prepend',
+			'selector'	=>	$selector,
+			'html'		=>	partialHelper::render($template, $params, true)
+		);
+
+		if ($init)
+		{
+			js::context($selector, $init);
+		}
+	}
+
+	static function replace($selector, $template, $params, $init  = js::INIT_CHILDREN)
+	{
+		self::$commands[]	=	array(
+			'command'	=>	'replace',
+			'selector'	=>	$selector,
+			'html'		=>	partialHelper::render($template, $params, true)
+		);
+
+		if ($init)
+		{
+			js::context($selector, $init);
+		}
+	}
+
 	static function remove($selector)
 	{
 		self::$commands[]	=	array(
