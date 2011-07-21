@@ -122,10 +122,7 @@ var applicationClass = function ()
 			}
 		});
 
-		if(typeof $.hint == 'function')
-		{
-			this.getElements('input[title],textarea[title]', context, init).hint();
-		}
+		this.getElements('input[title],textarea[title]', context, init).hint();
 
 		this.getElements('.focused', context, init).eq(0).focus();
 
@@ -148,7 +145,7 @@ var applicationClass = function ()
 
 	this.initUrl	=	function(context, init)
 	{
-		this.getElements('a:not(.sf-usual)', context, init).click(function() {
+		this.getElements('a:not(.sf-usual),input[type="button"]', context, init).click(function() {
 
 			if ($(this).attr('target') == 'dialog')
 			{
