@@ -28,10 +28,11 @@ class response
 		(
 			'module'	=>	$action->moduleName,
 			'action'	=>	$action->actionName,
+			'renderer'	=>	request::accept(),
 			'js'		=>	array
 			(
 				'dispatcher'	=>	$jsDispatcher,
-				'contexts'		=>	js::getContexts(),
+				'selectors'		=>	js::getSelectors(),
 				'commands'		=>	js::getCommands()
 			)
 		);

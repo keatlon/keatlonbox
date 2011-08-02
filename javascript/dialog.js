@@ -27,8 +27,8 @@ var dialogClass = function()
 		{
 			dialog.show(response.title, response.body);
 
-			response.application.js.contexts.push({
-				'context'	:	'#' + contentContainer,
+			response.application.js.selectors.push({
+				'selector'	:	'#' + contentContainer,
 				'init'		:	2
 			});
 
@@ -41,8 +41,8 @@ var dialogClass = function()
 		ajax.url(url, params, function( response )
 		{
 			dialog.show(response.title, response.body);
-			response.application.js.contexts.push({
-				'context'	:	'#' + contentContainer,
+			response.application.js.selectors.push({
+				'selector'	:	'#' + contentContainer,
 				'init'		:	2
 			});
 			application.dispatch(response);

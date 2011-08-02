@@ -3,6 +3,7 @@ var applicationClass = function ()
 	this.config			=	{};
 	this.response		=	{};
 	this.vars			=	{};
+	this.contexts		=	{};
 	
 	this.isPageLoading		=	false;
 	this.loadedJavaScript	=	{};
@@ -38,10 +39,32 @@ var applicationClass = function ()
 
 	}
 
+	this.getGlobalContext	=	function()
+	{
+		return this.contexts.global;
+	}
+
+	this.getContext	=	function()
+	{
+		return this.contexts.current;
+	}
+
+
 	this.dispatch = function(response)
 	{
 		this.vars		=	$.extend(this.vars, response.vars);
 		this.response	=	response;
+
+		switch(response.application.renderer)
+		{
+			case	'text/html':
+				this.contexts.global	=	response.application.module + response.application.action;
+				break;
+
+			case	'application/json':
+				this.contexts.current	=	response.application.module + response.application.action;
+				break;
+		}
 
 		for (var l in response.application.js.commands)
 		{
@@ -86,35 +109,35 @@ var applicationClass = function ()
 			}
 		}
 
-		for( var c in response.application.js.contexts)
+		for( var c in response.application.js.selectors)
 		{
-			this.initUi(response.application.js.contexts[c].context, response.application.js.contexts[c].init);
+			this.initUi(response.application.js.selectors[c].selector, response.application.js.selectors[c].init);
 		}
 
 		eval( "if ( typeof " + response.application.js.dispatcher + " == 'function' ) { " + response.application.js.dispatcher + "(response) }; " );
 	}
 
-	this.getElements = function(selector, context, init)
+	this.getElements = function(selector, parentSelector, init)
 	{
 		if (init == 1)
 		{
-			return $(context);
+			return $(parentSelector);
 		}
 		
 		if (init == 2)
 		{
-			return $(selector, $(context));
+			return $(selector, $(parentSelector));
 		}
 	}
 
-	this.initUi = function(context, init)
+	this.initUi = function(selector, init)
 	{
-		this.initForms(context, init);
+		this.initForms(selector, init);
 
-		this.initSlicers(context, init);
-		this.initUrl(context, init);
+		this.initSlicers(selector, init);
+		this.initUrl(selector, init);
 
-		this.getElements('[data-plugin]', context, init).each(function(){
+		this.getElements('[data-plugin]', selector, init).each(function(){
 
 			if ($(this).data('plugin'))
 			{
@@ -122,26 +145,26 @@ var applicationClass = function ()
 			}
 		});
 
-		this.getElements('input[title],textarea[title]', context, init).hint();
+		this.getElements('input[title],textarea[title]', selector, init).hint();
 
-		this.getElements('.focused', context, init).eq(0).focus();
+		this.getElements('.focused', selector, init).eq(0).focus();
 
 		if( typeof $.tooltip != 'undefined')
 		{
 
-			this.getElements('.tooltip', context, init).tooltip({
+			this.getElements('.tooltip', selector, init).tooltip({
 				position	:	"top center",
 				effect		:	'slide',
 				delay		:	200
 			});
 		}
 
-		this.getElements('.elastic', context, init).elastic();
+		this.getElements('.elastic', selector, init).elastic();
 	}
 
-	this.initUrl	=	function(context, init)
+	this.initUrl	=	function(selector, init)
 	{
-		this.getElements('a:not(.sf-usual),input[type="button"]', context, init).click(function() {
+		this.getElements('a:not(.sf-usual),input[type="button"]', selector, init).click(function() {
 
 			if ($(this).attr('target') == 'dialog')
 			{
@@ -168,12 +191,12 @@ var applicationClass = function ()
 		});
 	}
 
-	this.initForms = function(context, init)
+	this.initForms = function(selector, init)
 	{
-		this.getElements('form[action]', context, init).form();
+		this.getElements('form[action]', selector, init).form();
 	}
 
-	this.initSlicers = function(context, init)
+	this.initSlicers = function(selector, init)
 	{
 		for(l in slicers)
 		{

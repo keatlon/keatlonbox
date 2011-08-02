@@ -101,6 +101,13 @@ var ajaxClass = function()
 			datatype = 'json';
 		}
 
+		if (typeof params == 'undefined')
+		{
+			params	=	{};
+		}
+		
+		params.context = application.getGlobalContext();
+
 		$.post(url, params, function(response){
 
 			if ( typeof callback == 'function')

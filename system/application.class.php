@@ -75,7 +75,7 @@ class application
 		switch(request::accept())
 		{
 			case	rendererFactory::HTML:
-				js::context('html');
+				js::init('html');
 				$layoutController  = actionControllerFactory::create('layout', 'index');
 				$layoutController->dispatch(request::get());
 				$layoutController->render();

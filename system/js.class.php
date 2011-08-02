@@ -7,16 +7,16 @@ class	js
 
 	static private $commands	=	array();
 	static private $vars		=	array();
-	static private $contexts	=	array();
+	static private $selectors	=	array();
 
-	static function context($selector, $init = js::INIT_CHILDREN)
+	static function init($selector, $init = js::INIT_CHILDREN)
 	{
-		self::$contexts[]	=	array('context' => $selector, 'init' => $init);
+		self::$selectors[]	=	array('selector' => $selector, 'init' => $init);
 	}
 
-	static function getContexts()
+	static function getSelectors()
 	{
-		return self::$contexts;
+		return self::$selectors;
 	}
 
 	static function getCommands()
@@ -34,18 +34,6 @@ class	js
         self::$vars[$name] = $value;
 	}
 
-	static function init($selector, $plugin, $params = array(), $context  = js::INIT_CHILDREN)
-	{
-		self::$commands[]	=	array
-		(
-			'command'	=>	'init',
-			'selector'	=>	$selector,
-			'plugin'	=>	$plugin,
-			'params'	=>	$params,
-			'context'	=>	$context
-		);
-	}
-
 	static function set($selector, $template, $params, $init  = js::INIT_CHILDREN)
 	{
 		self::$commands[]	=	array(
@@ -56,7 +44,7 @@ class	js
 
 		if ($init)
 		{
-			js::context($selector, $init);
+			js::init($selector, $init);
 		}
 	}
 
@@ -70,7 +58,7 @@ class	js
 
 		if ($init)
 		{
-			js::context($selector, $init);
+			js::init($selector, $init);
 		}
 	}
 
@@ -84,7 +72,7 @@ class	js
 		
 		if ($init)
 		{
-			js::context($selector, $init);
+			js::init($selector, $init);
 		}
 	}
 
@@ -98,7 +86,7 @@ class	js
 
 		if ($init)
 		{
-			js::context($selector, $init);
+			js::init($selector, $init);
 		}
 	}
 
@@ -112,7 +100,7 @@ class	js
 
 		if ($init)
 		{
-			js::context($selector, $init);
+			js::init($selector, $init);
 		}
 	}
 
@@ -134,7 +122,7 @@ class	js
 
 		if ($init)
 		{
-			js::context($selector, $init);
+			js::init($selector, $init);
 		}
 	}
 
