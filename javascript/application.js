@@ -136,11 +136,7 @@ var applicationClass = function ()
 			});
 		}
 
-		if( typeof $.elastic != 'undefined')
-		{
-			this.getElements('.elastic', context, init).elastic();
-		}
-
+		this.getElements('.elastic', context, init).elastic();
 	}
 
 	this.initUrl	=	function(context, init)
