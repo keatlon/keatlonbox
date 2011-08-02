@@ -143,6 +143,14 @@ select.w200 {width:210px;}
 .l40 {line-height:40px;}
 .l40 {line-height:50px;}
 
+.l110 {line-height:110%;}
+.l120 {line-height:120%;}
+.l130 {line-height:130%;}
+.l140 {line-height:140%;}
+.l150 {line-height:150%;}
+.l160 {line-height:160%;}
+.l170 {line-height:170%;}
+
 .dashed { text-decoration:none; border-bottom:1px dashed #aaa;}
 .dashed:hover { text-decoration:none;}
 
