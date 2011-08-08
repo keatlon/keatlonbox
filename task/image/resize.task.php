@@ -24,7 +24,8 @@ class resizeImageController extends taskActionController
         if (!file_exists($cachePath))
         {
             $options		= conf::i()->image['sizes'][$image['size']];
-			if (conf::i()->image['source'])
+			
+			if (conf::i()->image['source'] && !in_array($image['size'], (array)conf::i()->image['ignoresource']))
 			{
 	            $storagePath	= imageStorage::cachePath($image['id'], conf::i()->image['source']);
 				if (!file_exists($storagePath))
