@@ -8,31 +8,26 @@ class imageHelper
 		return imageStorage::webPath($imageId, $size, $fullPath, $suffix);
 	}
 
-	static function profile($userId, $size = false, $extra = array())
+	static function profile($userId, $userData = false, $size = false, $fullPath = true, $suffix = false)
 	{
-		$image = userDataPeer::getItem($userId);
-		$imageId = $image['image_id'];
-
-		if (!self::$imagePeer)
+		if (!$userData)
 		{
-			self::$imagePeer = new imagePeer;
+			$userData	=	userDataPeer::getItem($userId);
 		}
-
+		
+		$imageId	=	$userData['image_id'];
 
 		if (!$imageId)
 		{
-			$imageId = 0;
+			if ($fullPath)
+			{
+				$prefix	=	conf::i()->domains['image'];
+			}
+
+			return $prefix . '/default/user-' . $size . '.png';
 		}
 
-		$imagePath = imageStorage::webPath($imageId, $size);
-
-		$attrs = '';
-		foreach($extra as $key => $value)
-		{
-			$attrs .= ' ' . $key . '="'.$value.'"';
-		}
-
-		return '<img src="' . $imagePath . '" '.$attrs.' />';
+		return imageStorage::webPath($imageId, $size, $fullPath, $suffix);
 	}
 
 
