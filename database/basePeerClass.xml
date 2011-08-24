@@ -84,9 +84,9 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return integer
      */
-    public static function  insert( $data )
+    public static function  insert( $data, $multi = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data );
+        return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data, $multi );
     }
 
 

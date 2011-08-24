@@ -203,8 +203,37 @@ abstract class dbPeer
 	 * @param array $data
 	 * @return integer
 	 */
-	public function doInsert($data)
+	public function doInsert($data, $multi = false)
 	{
+
+		if ($multi)
+		{
+			$columns = array();
+
+			foreach ($data as $row)
+			{
+				if (!$columns)
+				{
+					$columns	=	array_keys($row);
+				}
+				
+				$values		=	array_values($row);
+				$values[]	=	time();
+
+				foreach ($values as &$value)
+				{
+					$value	=	"'" . addslashes($value) . "'";
+				}
+
+				$sqlValues[]	=	"(" . implode(",", $values) . ")";
+			}
+
+			$columns[]	=	'created';
+			$sqlColumns	=	implode(",", $columns);
+
+			return db::exec('INSERT INTO ' . $this->tableName . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $this->connectionName);
+		}
+
 		$data['created'] = time();
 
 		$insert_data = array();
