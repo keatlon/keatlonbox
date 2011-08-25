@@ -15,6 +15,7 @@ class log
         set_error_handler(array('log', 'php_error_handler'), E_ALL & ~E_NOTICE);
     }
 
+
     static public function exception(Exception $e)
     {
         if (!conf::i()->debug['log_exceptions'])
@@ -22,15 +23,20 @@ class log
             return true;
         }
 
-		$traceLines = $e->getTrace();
-		foreach ($traceLines as $traceLine)
+
+		$output[]	=	get_class($e) . ': ' . $e->getMessage();
+		$output[]	=	$divider;
+
+		$trace	=	$e->getTrace();
+
+		foreach ($trace as $traceItem)
 		{
-			$trace[] = trim($traceLine['class'] . $traceLine['type'] . $traceLine['function'] . "\n" . $traceLine['file'] . ' line ' . $traceLine['line']);
+			$output[]	=	"\t" . $traceItem['file'] . '(line ' . $traceItem['line'] . ')';
+			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'] . json_encode($traceItem['args']);
+			$output[]	=	$divider;
 		}
 
-        $message = get_class($e) . " " .	$e->getMessage() .  "\n\n" . implode("\n\n", $trace);
-		
-        log::push(log::E_EXCEPTION, false, $message);
+        log::push(log::E_EXCEPTION, false, implode("\n", $output));
     }
 
     static public function php_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
@@ -101,9 +107,8 @@ class log
         $fh = fopen($filename, 'a+');
 
 		$line = array(
-			"********************************************************************************",
-			'[' . date('d-m-Y H:i:s') . '] ' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REQUEST_URI'],
-			"********************************************************************************",
+			"",
+			'on ' . date('d-m-Y H:i:s') . '] ' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REQUEST_URI'],
 			$msg
 		);
 
