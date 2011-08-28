@@ -5,60 +5,27 @@ class aql
 	const	SORT_ACSENDANT	=	1;
 	const	SORT_DESCENDANT	=	2;
 
-
-	static function get($list, $filters = array())
+	static function get($array, $patterns)
 	{
-		$params	=	array
-		(
-			'filters'	=>	$filters,
-		);
+		$matches	=	array();
 
-		aql::walkGet($list, false, false, $params);
-
-		/*
-		 * clean modified lists
-		 */
-		foreach ($filters as $filter => $value)
+		foreach ($patterns as $pattern => $value)
 		{
-			if (is_int($filter))
-			{
-				$filter = $value;
-			}
+			$results	=	aql::fetch($array, $pattern);
 
-			$parts			=	explode('.', $filter);
-								array_pop($parts);
-			$removeFilter	=	implode('.', $parts);
-
-			if ($removeFilter)
+			if ($results)
 			{
-				$list			=	aql::remove($list, array($removeFilter));
-			}
-			else
-			{
-				$list	=	array();
-				break;
-			}
-		}
-
-		/*
-		 * apply filtered lists
-		 */
-		foreach ($params['results'] as $filter => $results)
-		{
-			foreach($results as $result)
-			{
-				if (!$list)
+				foreach($results as $result)
 				{
-					$list	=	$result;
-				}
-				else
-				{
-					$list	= array_merge_recursive($list, $result);
+					if ($result	==	$value)
+					{
+						$matches[]	=	$result;
+					}
 				}
 			}
 		}
 
-		return $list;
+		return $matches;
 	}
 
 	static function remove($list, $filters)
@@ -76,18 +43,6 @@ class aql
 	static function set($list, $key, $value)
 	{
 
-	}
-
-	static function column($list, $filter)
-	{
-		$params	=	array
-		(
-			'filters'	=>	array($filter)
-		);
-
-		aql::walkColumn($list, false, false, $params);
-
-		return $params['result'];
 	}
 
 	static function sort($key, $sort = aql::SORT_ACSENDANT)
@@ -186,31 +141,71 @@ class aql
 		return false;
 	}
 
-	static function walkColumn($list, $path, $fpath, &$params)
-	{
 
+
+	
+	static function fetch($array, $pattern)
+	{
+		aql::rfetch($array, self::prepare($pattern), array(), $output);
+		return $output['result'];
+	}
+
+	protected static function rfetch($list, $pattern, $path = array(), &$output = array())
+	{
 		foreach($list as $key => $value)
 		{
-			$fullPath		=	$fpath ? $fpath . '.' . $key : $key;
-			$currentPath	=	is_int($key) ? $path : ($path ? $path . '.' . $key : $key);
+			$keypath	= array_merge($path, array($key)) ;
+
+
+			if (self::match($keypath, $pattern))
+			{
+				$output['result'][]	=	$value;
+			}
 
 			if (is_array($value))
 			{
-				aql::walkColumn($list[$key], $currentPath, $fullPath, $params);
-			}
-
-			if ($params['filters']) foreach($params['filters'] as $filter)
-			{
-				if ($filter == $currentPath && $value)
-				{
-					$params['result'][]	=	$value;
-				}
+				aql::rfetch($list[$key], $pattern, $keypath, $output);
 			}
 		}
 
 		return false;
 	}
 
+
+
+	protected static function prepare($pattern)
+	{
+		$chunks	=	explode('.', $pattern);
+
+		return array
+		(
+			'chunks'	=>	$chunks,
+			'length'	=>	count($chunks)
+		);
+	}
+
+	protected static function match($path, $pattern)
+	{
+
+		if (count($path) != $pattern['length'])
+		{
+			return false;
+		}
+
+		$offset	=	0;
+		
+		foreach ($pattern['chunks'] as $chunk)
+		{
+			if ($chunk == '*')
+			{
+				$path[$offset]	=	'*';
+			}
+
+			$offset++;
+		}
+
+		return (bool)($pattern['chunks'] == $path);
+	}
 
 	static function push($value, $path, $level = 0)
 	{
