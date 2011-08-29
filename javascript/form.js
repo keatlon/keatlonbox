@@ -19,22 +19,22 @@
 			if (typeof response != 'object')
 			{
 				ajax.errorHandler(response.toString());
-				this._enableSubmit();
+				this.context._enableSubmit();
 				return;
 			}
 
 			if ( response.status == 'success')
 			{
-				this.options.onSuccess.apply(this.options.context, [response]);
+				this.context.options.onSuccess.apply(this.context.options.context, [response]);
 			}
 
 			if ( response.status == 'error')
 			{
 				this._showErrors(response);
-				this.options.onError.apply(this.options.context, [response]);
+				this.context.options.onError.apply(this.context.options.context, [response]);
 			}
 
-			this._enableSubmit();
+			this.context._enableSubmit();
 		},
 
 		_create	: function() {
@@ -54,8 +54,8 @@
 					$('<div class="error"></div>').attr('id', errorSelector).insertAfter($(this));
 				}
 			});
-
-			$(this.element).ajaxForm( {
+			
+			$(self.element).ajaxForm( {
 				url				:	self.options.action,
 				type			:	self.options.method,
 				iframe			:	self.options.multipart,
