@@ -133,7 +133,6 @@ var applicationClass = function ()
 	this.initUi = function(selector, init)
 	{
 		this.initForms(selector, init);
-
 		this.initSlicers(selector, init);
 		this.initUrl(selector, init);
 
@@ -145,13 +144,15 @@ var applicationClass = function ()
 			}
 		});
 
-		this.getElements('input[title],textarea[title]', selector, init).hint();
+		if (typeof $.fn.hint != 'undefined')
+		{
+			this.getElements('input[title],textarea[title]', selector, init).hint();
+		}
 
 		this.getElements('.focused', selector, init).eq(0).focus();
 
 		if( typeof $.tooltip != 'undefined')
 		{
-
 			this.getElements('.tooltip', selector, init).tooltip({
 				position	:	"top center",
 				effect		:	'slide',
@@ -159,7 +160,10 @@ var applicationClass = function ()
 			});
 		}
 
-		this.getElements('.elastic', selector, init).elastic();
+		if (typeof $.fn.elastic != 'undefined')
+		{
+			this.getElements('.elastic', selector, init).elastic();
+		}
 	}
 
 	this.initUrl	=	function(selector, init)
