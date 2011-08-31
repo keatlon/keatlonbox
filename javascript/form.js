@@ -19,22 +19,22 @@
 			if (typeof response != 'object')
 			{
 				ajax.errorHandler(response.toString());
-				this.context._enableSubmit();
+				this._enableSubmit();
 				return;
 			}
 
 			if ( response.status == 'success')
 			{
-				this.context.options.onSuccess.apply(this.context.options.context, [response]);
+				this.options.onSuccess.apply(this.options.context, [response]);
 			}
 
 			if ( response.status == 'error')
 			{
 				this._showErrors(response);
-				this.context.options.onError.apply(this.context.options.context, [response]);
+				this.options.onError.apply(this.options.context, [response]);
 			}
 
-			this.context._enableSubmit();
+			this._enableSubmit();
 		},
 
 		_create	: function() {
