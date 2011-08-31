@@ -68,19 +68,26 @@ class request
 	{
 		request::method($_SERVER['REQUEST_METHOD']);
 
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') !== false)
+		if (conf::i()->application[application::$name]['renderer'])
 		{
-			request::accept(rendererFactory::XML);
+			request::accept(conf::i()->application[application::$name]['renderer']);
 		}
+		else
+		{
+			if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') !== false)
+			{
+				request::accept(rendererFactory::XML);
+			}
 
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false || strpos($_SERVER['HTTP_ACCEPT'], '*/*') !== false)
-		{
-			request::accept(rendererFactory::HTML);
-		}
-		
-		if ($_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-		{
-			request::accept(rendererFactory::JSON);
+			if (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false || strpos($_SERVER['HTTP_ACCEPT'], '*/*') !== false)
+			{
+				request::accept(rendererFactory::HTML);
+			}
+
+			if ($_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+			{
+				request::accept(rendererFactory::JSON);
+			}
 		}
 
 		request::data(url::parse($_SERVER['REQUEST_URI']));

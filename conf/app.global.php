@@ -53,13 +53,15 @@ return array
      *                      APPLICATION
      ***********************************************************/
 
-    'application'    =>   array(
+    'application'    =>   array
+	(
 		'timezone'	=>	'Europe/Helsinki',
-        'frontend'	=> array(
-			
+        'frontend'	=> array
+		(
             'auth'  => array('server'),
 			
-            'default'   => array(
+            'default'   => array
+			(
                 'signedin'  => array('start', 'index'),
                 'signedout' => array('start', 'index'),
             ),

@@ -16,7 +16,7 @@ class actionControllerFactory
     	}
 
         $actionClassName = $action . ucfirst($module) . 'Controller';
-
+		
         return new $actionClassName($module, $action);
     }
 	
