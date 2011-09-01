@@ -24,7 +24,7 @@ class imageHelper
 				$prefix	=	conf::i()->domains['image'];
 			}
 
-			return $prefix . '/default/user-' . $size . '.png';
+			return $prefix . '/images/default/user-' . $size . '.png';
 		}
 
 		return imageStorage::webPath($imageId, $size, $fullPath, $suffix);
