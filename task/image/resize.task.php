@@ -3,6 +3,14 @@ class resizeImageController extends taskActionController
 {
     function execute($params)
     {
+		$staticFile	= realpath(conf::i()->image['cache'] . '/' . $params['req']);
+		
+		if( file_exists($staticFile))
+		{
+			$this->out($staticFile);
+			return;
+		}
+
         $info   = pathinfo($params['req']);
 
         list($image['id'], $image['size'], $image['salt'], $image['extra']) = explode('_', $info['filename']) ;
@@ -99,6 +107,18 @@ class resizeImageController extends taskActionController
 			echo $content;
 		}
     }
+
+	function out($filename)
+	{
+		$content = file_get_contents($filename);
+
+		header('Content-Type: image/jpeg');
+		header("Last-Modified: Tue, 12 Dec 2006 03:03:59 GMT");
+		header("Expires: Mon, 7 Dec 2010 05:00:00 GMT");
+		header("Cache-Control: max-age=86400");
+
+		echo $content;
+	}
 }
 
 ?>
