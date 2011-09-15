@@ -108,42 +108,41 @@ abstract class dbPeer
 		if (is_array($where))
 			foreach ($where as $key => $value)
 			{
+				if (strpos($key, ' ') !== false)
+				{
+					list($key, $operand)	=	explode(' ', $key);
+					$operand				=	strtolower($operand);
+				}
+
 				$bindKey = str_replace('.', '_', $key);
 
-				switch ($key[0])
+				switch ($operand)
 				{
+					case 'in':
+						$where_clause[] = "{$key} IN (:{$bindKey})";
+						break;
+					
 					case '!':
-						$key = substr($key, 1);
-						$bindKey = str_replace('.', '_', $key);
 						$where_clause[] = "{$key} <> :{$bindKey}";
 						break;
 
 					case '>':
+						$where_clause[] = "{$key} > :{$bindKey}";
+						break;
 
-						if ($key[1] == '=')
-						{
-							$key = substr($key, 2);
-							$bindKey = str_replace('.', '_', $key);
-							$where_clause[] = "{$key} >= :{$bindKey}";
-						}
-						else
-						{
-							$key = substr($key, 1);
-							$bindKey = str_replace('.', '_', $key);
-							$where_clause[] = "{$key} > :{$bindKey}";
-						}
-
+					case '>=':
+						$where_clause[] = "{$key} >= :{$bindKey}";
 						break;
 
 					case '<':
-						$key = substr($key, 1);
-						$bindKey = str_replace('.', '_', $key);
 						$where_clause[] = "{$key} < :{$bindKey}";
 						break;
 
+					case '<=':
+						$where_clause[] = "{$key} <= :{$bindKey}";
+						break;
+
 					case '%':
-						$key = substr($key, 1);
-						$bindKey = str_replace('.', '_', $key);
 						$where_clause[] = "{$key} LIKE :{$bindKey}";
 						$value = '%' . $value . '%';
 						break;

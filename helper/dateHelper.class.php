@@ -107,4 +107,38 @@ class dateHelper
         return floor( (time() - $timestamp) / 86400);
 	}
 
+	static function diff($ts)
+    {
+
+		$current	=	time();
+
+		$weeks		=	floor(($current - $ts) / 604800);
+		if ($weeks)
+		{
+			return $weeks . 'w';
+		}
+		
+		$days		=	floor(($current - $ts) / 86400);
+		if ($days)
+		{
+			return $days . 'd';
+		}
+
+		
+		$hours		=	floor(($current - $ts) / 3600);
+		if ($hours)
+		{
+			return $hours . 'h';
+		}
+		
+		$minutes	=	floor(($current - $ts) / 60);
+		if ($minutes)
+		{
+			return $minutes . 'm';
+		}
+
+		$seconds	=	$current - $ts;
+		return $seconds . 's';
+	}
+
 }
