@@ -69,9 +69,9 @@ abstract class dbPeer
 		$fromTables[]	= $this->tableName;
 
 		if ($join)
+
 			foreach ($join as $table => $conditions)
 			{
-
 				$joinType = '';
 				$joinCondition = $condition;
 
@@ -108,6 +108,8 @@ abstract class dbPeer
 		if (is_array($where))
 			foreach ($where as $key => $value)
 			{
+				$operand	=	false;
+				
 				if (strpos($key, ' ') !== false)
 				{
 					list($key, $operand)	=	explode(' ', $key);
@@ -115,7 +117,6 @@ abstract class dbPeer
 				}
 
 				$bindKey = str_replace('.', '_', $key);
-
 				switch ($operand)
 				{
 					case 'in':
