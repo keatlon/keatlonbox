@@ -129,8 +129,8 @@ class auth
 
 	static function role()
 	{
-		$role	=	auth::getExtraCredentials('role');
-		return ($role ? $role : 'guest');
+		$extra	=	auth::getExtraCredentials();
+		return ($extra['role'] ? $extra['role'] : 'guest');
 	}
 
 }

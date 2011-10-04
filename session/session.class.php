@@ -16,8 +16,9 @@ class session
 		{
 			session_id($sid);
 		}
+
         session_start();
-        cookie::set(session_name(), session_id(), time() + 86400 * 14);
+        cookie::set(session_name(), session_id(), time() + 86400 * 14, conf::i()->domain['cookie'] );
     }
 
     public static function restart($sid)
