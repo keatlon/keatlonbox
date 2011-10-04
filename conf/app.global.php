@@ -68,19 +68,20 @@ return array
 		'timezone'	=>	'Europe/Helsinki',
         'frontend'	=> array
 		(
-            'auth'  => array('server'),
+            'auth'  => array('mysql'),
 			
             'default'   => array
 			(
                 'signedin'  => array('start', 'index'),
                 'signedout' => array('start', 'index'),
             ),
-            'startSession'  => true
+			
+            'session'  => true
         ),
 
         'image' => array
 		(
-            'startSession'  => false
+            'session'  => false
         ),
 
 		'url'	=>	array

@@ -1,6 +1,6 @@
 <?php
 
-class authServer extends authBase
+class authMysql extends authBase
 {
     function authorize($data)
 	{

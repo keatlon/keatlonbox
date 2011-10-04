@@ -64,6 +64,7 @@ class acl
 								(($aclItem['action'] == '*') ? '*' :	$current['action'])	. '.' .
 								(($aclItem['role'] == '*')	? '*' :	$current['role']);
 
+
 			if ($currentPattern == $currentPath)
 			{
 				$permission	=	$aclItem['operation'];

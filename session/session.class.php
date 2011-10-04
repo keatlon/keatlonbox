@@ -4,7 +4,7 @@ class session
 {
     public static function init()
     {
-        if (conf::i()->application[application::$name]['startSession'])
+        if (conf::i()->application[application::$name]['session'])
 		{
 			session::start();
 		}
