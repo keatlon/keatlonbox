@@ -36,18 +36,28 @@ class fb
 		return self::i()->api('/me');
 	}
 
-	static function getLoginUrl($permission = 'email')
+	static function getLoginUrl($permission = 'email', $url = false)
 	{
+		if (!$url)
+		{
+			$url	=	conf::i()->domains['web'] . '/account/signin';
+		}
+
 		return self::i()->getLoginUrl(array(
-			'redirect_uri'	=>	conf::i()->domains['web'] . '/account/signin',
+			'redirect_uri'	=>	$url,
 			'scope'			=>	$permissions
 		));
 	}
 
-	static function getLogoutUrl()
+	static function getLogoutUrl($url = false)
 	{
+		if (!$url)
+		{
+			$url	=	conf::i()->domains['web'] . '/account/signout';
+		}
+		
 		return self::i()->getLogoutUrl(array(
-			'next'	=>	conf::i()->domains['web'] . '/account/signout',
+			'next'	=>	$url,
 		));
 	}
 

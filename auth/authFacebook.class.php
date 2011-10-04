@@ -44,7 +44,6 @@ class authFacebook extends authBase
     function clearCredentials()
 	{
 		parent::clearCredentials();
-		// self::i()->logout( conf::i()->domains['web'] . $_SERVER['REQUEST_URI'] );
 	}
 
 	function createUser($fbUserId)

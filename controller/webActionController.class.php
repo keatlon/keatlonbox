@@ -2,18 +2,12 @@
 abstract class webActionController extends actionController
 {
 	public		$response		=	false;
-	public		$loginRequired	=	true;
 	private		$viewName		=	false;
 
 	public function dispatch($data)
 	{
 		try
 		{
-			if ($this->loginRequired && !auth::hasCredentials())
-			{
-				throw new loginRequiredException;
-			}
-
 			$this->beforeExecute();
 			
 			if (request::method() == request::POST)
@@ -51,11 +45,6 @@ abstract class webActionController extends actionController
 		catch (badResourceException $e)
 		{
 			application::dispatch('exception', 'badResource', $e);
-			return self::EXCEPTION;
-		}
-		catch (loginRequiredException $e)
-		{
-			application::dispatch('exception', 'loginRequired', $e);
 			return self::EXCEPTION;
 		}
 		catch (accessDeniedException $e)

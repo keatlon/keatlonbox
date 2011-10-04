@@ -16,7 +16,7 @@ class authServer extends authBase
             return false;
         }
 
-		$this->setCredentials($user['id']);
+		$this->setCredentials($user['id'], $user['role']);
 
         return $user['id'];
     }

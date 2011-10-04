@@ -11,19 +11,13 @@ class authMongo extends authBase
             return false;
         }
 
-		$this->setCredentials((string)$user['_id']);
-		$this->setExtraCredentials(array
-		(
-			'email'			=>	$user['email']
-		));
-
+		$this->setCredentials((string)$user['_id'], $user['role']);
         return (string)$user['_id'];
     }
 
 	function clearCredentials()
 	{
 		parent::clearCredentials();
-		response::redirect('/');
 	}
 
 	function me($id)

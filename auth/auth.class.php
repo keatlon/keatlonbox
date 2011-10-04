@@ -62,9 +62,9 @@ class auth
 		return self::i()->createUser($data);
 	}
 
-	static function setCredentials($userId)
+	static function setCredentials($userId, $role = 'member')
 	{
-		return self::i()->setCredentials($userId);
+		return self::i()->setCredentials($userId, $role);
 	}
 
 	static function setExtraCredentials($data)
@@ -127,6 +127,11 @@ class auth
 		
 	}
 
+	static function role()
+	{
+		$role	=	auth::getExtraCredentials('role');
+		return ($role ? $role : 'guest');
+	}
 
 }
 

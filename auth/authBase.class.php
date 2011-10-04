@@ -16,8 +16,9 @@ abstract class authBase
 
     function createUser($data) {}
 
-    function setCredentials($userId) 
+    function setCredentials($userId, $role = 'member')
     {
+		$this->setExtraCredentials(array('role' => $role));
         $_SESSION['c'][get_class($this)]    = $userId;
     }
 

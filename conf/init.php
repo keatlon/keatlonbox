@@ -83,7 +83,7 @@ class conf
     public $counter			= false;
     public $i18n			= false;
     public $application		= false;
-    public $access			= false;
+    public $acl				= false;
     public $ad				= false;
 	public $email			= false;
     public $memcache		= false;

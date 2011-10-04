@@ -16,13 +16,13 @@ class application
 		
         application::$name	= APPLICATION;
 
-		session	::init();
-        log		::init();
-        mc		::init();
-		i18n	::init();
-		auth	::init();
-		request	::init();
-
+		session	::	init();
+        log		::	init();
+        mc		::	init();
+		i18n	::	init();
+		auth	::	init();
+		request	::	init();
+		acl		::	init();
 	}
 
     public static function registerEvent( $name, $position = application::EVENT_BEFORE_CONTROLLER )
@@ -51,8 +51,11 @@ class application
 
         try
         {
+			acl::check();
 			application::processEvent(application::EVENT_BEFORE_CONTROLLER);
 			application::dispatch(request::module(), request::action());
+
+			application::processEvent(application::EVENT_BEFORE_RENDER);
         }
 		catch (dbException $e)
 		{
@@ -70,7 +73,6 @@ class application
         catch (moduleException $e)
         {}
 
-		application::processEvent(application::EVENT_BEFORE_RENDER);
 
 		switch(request::accept())
 		{
