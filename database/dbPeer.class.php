@@ -123,7 +123,7 @@ abstract class dbPeer
 						$where_clause[] = "{$key} IN (:{$bindKey})";
 						break;
 					
-					case '!':
+					case '!=':
 						$where_clause[] = "{$key} <> :{$bindKey}";
 						break;
 

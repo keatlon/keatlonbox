@@ -151,7 +151,7 @@ var applicationClass = function ()
 
 		this.getElements('.focused', selector, init).eq(0).focus();
 
-		if( typeof $.tooltip != 'undefined')
+		if(typeof $.fn.tooltip != 'undefined')
 		{
 			this.getElements('.tooltip', selector, init).tooltip({
 				position	:	"top center",
