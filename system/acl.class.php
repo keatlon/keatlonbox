@@ -21,25 +21,30 @@ class acl
 
 	static function parse()
 	{
-		foreach (self::$acl as $pattern => $rule)
+		foreach (self::$acl as $pattern => $plainRules)
 		{
-			list($app, $module, $action)	=	explode('.', $pattern);
-			list($operation, $role)			=	explode('.', $rule);
+			$rules	=	explode(',', $plainRules);
 
-			$app	=	$app ? $app : '*';
-			$role	=	$role ? $role : '*';
-			$module	=	$module ? $module : '*';
-			$action	=	$action ? $action : '*';
+			foreach ($rules as $rule)
+			{
+				list($app, $module, $action)	=	explode('.', $pattern);
+				list($operation, $role)			=	explode('.', $rule);
 
-			$acl[]	=	array
-			(
-				'app'			=>	$app,
-				'module'		=>	$module,
-				'action'		=>	$action,
+				$app	=	$app ? $app : '*';
+				$role	=	$role ? $role : '*';
+				$module	=	$module ? $module : '*';
+				$action	=	$action ? $action : '*';
 
-				'operation'		=>	$operation,
-				'role'			=>	$role
-			);
+				$acl[]	=	array
+				(
+					'app'			=>	$app,
+					'module'		=>	$module,
+					'action'		=>	$action,
+
+					'operation'		=>	$operation,
+					'role'			=>	$role
+				);
+			}
 		}
 
 		$current	=	array
@@ -64,6 +69,11 @@ class acl
 								(($aclItem['action'] == '*') ? '*' :	$current['action'])	. '.' .
 								(($aclItem['role'] == '*')	? '*' :	$current['role']);
 
+
+			if (false)
+			{
+				d($currentPattern . ' == ' . $currentPath);
+			}
 
 			if ($currentPattern == $currentPath)
 			{
