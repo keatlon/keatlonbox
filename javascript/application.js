@@ -94,6 +94,14 @@ var applicationClass = function ()
 					$(response.application.js.commands[l].selector).remove();
 					break;
 
+				case 'hide':
+					$(response.application.js.commands[l].selector).hide();
+					break;
+
+				case 'show':
+					$(response.application.js.commands[l].selector).show();
+					break;
+
 				case 'attr':
 					$(response.application.js.commands[l].selector).attr(response.application.js.commands[l].attr, response.application.js.commands[l].value);
 					break;

@@ -144,4 +144,19 @@ class	js
 		);
 	}
 
+	static function hide($selector)
+	{
+		self::$commands[]	=	array(
+			'command'	=>	'hide',
+			'selector'	=>	$selector
+		);
+	}
+
+	static function show($selector)
+	{
+		self::$commands[]	=	array(
+			'command'	=>	'show',
+			'selector'	=>	$selector
+		);
+	}
 }
