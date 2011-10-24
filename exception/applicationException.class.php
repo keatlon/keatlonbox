@@ -2,10 +2,10 @@
 
 class applicationException extends Exception
 {
-	public function __construct( $message = '', $code = 0, Exception $previous = null )
+	public function __construct( $message = '', $code = 0)
 	{
 		log::exception($this);
-		parent::__construct($message, $code, $previous);
+		parent::__construct($message, $code);
 	}
 
 	public function __toString()
