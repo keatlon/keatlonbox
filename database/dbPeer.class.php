@@ -281,7 +281,27 @@ abstract class dbPeer
 	{
 		foreach ($data as $column => $value)
 		{
-			$update_data[] = "{$column} = :{$column}";
+			$operand	=	false;
+
+			if (strpos($column, ' ') !== false)
+			{
+				list($column, $operand)	=	explode(' ', $column);
+				$operand				=	strtolower($operand);
+			}
+
+			switch ($operand)
+			{
+				case '+=':
+					unset($data[$column . ' ' . $operand]);
+					$data[$column]	=	$value;
+					$update_data[]	=	"{$column} = {$column} + :{$column}";
+					break;
+
+				default:
+					$update_data[] = "{$column} = :{$column}";
+					break;
+			}
+
 		}
 
 		$data = $this->doBindPrimaryKey($primaryKey, $data);
