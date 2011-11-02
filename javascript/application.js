@@ -161,7 +161,7 @@ var applicationClass = function ()
 
 		if(typeof $.fn.tooltip != 'undefined')
 		{
-			this.getElements('.tooltip', selector, init).tooltip({
+			this.getElements('[tooltip]', selector, init).tooltip({
 				position	:	"top center",
 				effect		:	'slide',
 				delay		:	200
