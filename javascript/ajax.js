@@ -96,19 +96,29 @@ var ajaxClass = function()
 
 	this.put = function (url, params, callback, datatype)
 	{
+		var ajaxParams	=	jQuery.extend({}, params);
+		
 		if (typeof datatype == 'undefined')
 		{
 			datatype = 'json';
 		}
 
-		if (typeof params == 'undefined')
+		if (typeof ajaxParams == 'undefined')
 		{
-			params	=	{};
+			ajaxParams	=	{};
 		}
 		
-		params.context = application.getGlobalContext();
+		ajaxParams.context = application.getGlobalContext();
 
-		$.post(url, params, function(response){
+		for(var l in ajaxParams)
+		{
+			if (typeof ajaxParams[l] == "function")
+			{
+				delete ajaxParams[l];
+			}
+		}
+
+		$.post(url, ajaxParams, function(response){
 
 			if ( typeof callback == 'function')
 			{

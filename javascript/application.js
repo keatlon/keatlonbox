@@ -346,6 +346,11 @@ var applicationClass = function ()
 
 		for (var a in element.data())
 		{
+			if (a == "plugin")
+			{
+				continue;
+			}
+			
 			if (element.attr('data-' + a))
 			{
 				options[a]	=	element.data(a);
