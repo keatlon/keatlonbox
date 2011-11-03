@@ -46,7 +46,6 @@ class application
 	static public function run()
 	{
 		ob_start();
-		
 		application::init();
 
         try
@@ -54,12 +53,10 @@ class application
 			acl::check();
 			application::processEvent(application::EVENT_BEFORE_CONTROLLER);
 			application::dispatch(request::module(), request::action());
-
 			application::processEvent(application::EVENT_BEFORE_RENDER);
         }
 		catch (dbException $e)
 		{
-			log::exception($e);
 			application::dispatch('exception', 'database', $e);
 		}
 		catch (accessDeniedException $e)
