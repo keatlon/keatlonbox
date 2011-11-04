@@ -62,20 +62,3 @@ function __($phrase)
 {
     return i18n::get($phrase);
 }
-
-if (!function_exists('symlink'))
-{
-	function symlink( $target, $link )
-	{
-		return false;
-		exec('junction "' . $link . '" "' . $target . '"');
-	}
-
-	function readlink($path)
-	{
-		return 'f:/www/bwb/export/02-vip-2';
-		pclose($fp);
-		dd($output);
-	}
-
-}
