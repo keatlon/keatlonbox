@@ -286,17 +286,20 @@ abstract class dbPeer
 			if (strpos($column, ' ') !== false)
 			{
 				list($column, $operand)	=	explode(' ', $column);
-				$operand				=	strtolower($operand);
+				$operand				=	trim(strtolower($operand));
+				$column	=	trim($column);
 			}
 
 			switch ($operand)
 			{
+				case '-=':
 				case '+=':
+					
 					unset($data[$column . ' ' . $operand]);
-					$data[$column]	=	$value;
-					$update_data[]	=	"{$column} = {$column} + :{$column}";
+					$data[$column]	=	(int)$value;
+					$update_data[]	=	"{$column} = {$column} {$operand[0]} :{$column}";
 					break;
-
+				
 				default:
 					$update_data[] = "{$column} = :{$column}";
 					break;
@@ -305,6 +308,7 @@ abstract class dbPeer
 		}
 
 		$data = $this->doBindPrimaryKey($primaryKey, $data);
+		
 
 		return db::exec('UPDATE ' . $this->tableName . ' SET ' . implode(', ', $update_data) . " WHERE {$this->primaryBind}", $data, $this->connectionName);
 	}
