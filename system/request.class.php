@@ -83,7 +83,7 @@ class request
 			{
 				request::accept(rendererFactory::HTML);
 			}
-
+			
 			if ($_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
 			{
 				request::accept(rendererFactory::JSON);
@@ -108,5 +108,9 @@ class request
 		return (request::accept() == rendererFactory::XML);
 	}
 
+	static function raw()
+	{
+		return file_get_contents('php://input');
+	}
 
 }

@@ -1,11 +1,8 @@
 <?php
 class imageStorage extends storage
 {
-	static function save($tmpFile, $originalName = false)
+	static function save($tmpFile)
 	{
-		$data['name'] = $originalName;
-		$data['crc32'] = sprintf('%u', crc32(file_get_contents($tmpFile)));
-
 		switch(conf::i()->database['engine'])
 		{
 			case	'mysql':
