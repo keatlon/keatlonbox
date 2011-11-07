@@ -37,13 +37,32 @@
 			this._enableSubmit();
 		},
 
+		_prepareData	: function(data) 
+		{
+			for(var fieldName in data)
+			{
+				var obj = $('input[type=text][name="' + fieldName + '"]');
+
+				if (obj.length > 0)
+				{
+					if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
+					{
+						data[fieldName] = '';
+					}
+				}
+			}
+			
+			return data;
+		},
+
 		_create	: function() {
+
+			var self					=	this;
 
 			this.options.multipart		=	$(':file', this.element).length > 0;
 			this.options.method			=	$(this.element).attr('method') ? $(this.element).attr('method') : 'POST';
 			this.options.action			=	$(this.element).attr('action');
 
-			self						=	this;
 
 			$(':input,:file', this.element).not('[type=submit],[type=hidden],.ignore').each(function(){
 
@@ -55,6 +74,23 @@
 				}
 			});
 			
+			self.element.bind('submit', function (event){
+				
+				
+				self._disableSubmit();
+				
+				$.post(self.element.attr('action'), self._prepareData(self.element.serializeObject()), function (response){
+					self._enableSubmit();
+					self._showErrors(response);
+					
+				}, 'json');
+				
+
+				event.preventDefault();
+				return false;
+			});
+			
+			/*
 			$(self.element).ajaxForm( {
 				url				:	self.options.action,
 				type			:	self.options.method,
@@ -72,20 +108,6 @@
 					}
 
 					/*
-					* Remove default value for input text
-					* */
-					for(var l in data)
-					{
-						var obj = $('input[type=text][name="' + data[l].name + '"]');
-
-						if (obj.length > 0)
-						{
-							if ( $(obj).attr('title') != '' && $(obj).attr('title') == obj.val())
-							{
-								data[l].value = '';
-							}
-						}
-					}
 
 					if (params.context.options.method == 'get')
 					{
@@ -103,10 +125,10 @@
 						return false;
 					}
 
-					params.context._disableSubmit();
 					return true;
 				}
 			});
+			*/
 
 		},
 
@@ -170,3 +192,24 @@
 	});
 
 }(jQuery));
+
+
+(function($,undefined){
+  '$:nomunge'; // Used by YUI compressor.
+  
+  $.fn.serializeObject = function(){
+    var obj = {};
+    
+    $.each( this.serializeArray(), function(i,o){
+      var n = o.name,
+        v = o.value;
+        
+        obj[n] = obj[n] === undefined ? v
+          : $.isArray( obj[n] ) ? obj[n].concat( v )
+          : [ obj[n], v ];
+    });
+    
+    return obj;
+  };
+  
+})(jQuery);
