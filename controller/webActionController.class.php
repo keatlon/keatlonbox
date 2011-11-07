@@ -38,7 +38,6 @@ abstract class webActionController extends actionController
 		}
 		catch (dbException $e)
 		{
-			log::exception($e);
 			application::dispatch('exception', 'database', $e);
 			return self::EXCEPTION;
 		}

@@ -10,7 +10,7 @@ class applicationException extends Exception
 
 	public function __toString()
 	{
-            return  'Common Application Error';
+		return  'Common Application Error';
 	}
 	
 }
