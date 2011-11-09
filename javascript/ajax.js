@@ -11,7 +11,6 @@ var ajaxClass = function()
 		$("body").ajaxComplete(function(e, xhr, settings)
 		{
 			var response	=	jQuery.parseJSON(xhr.responseText);
-
 			application.dispatch(response);
 
 		});

@@ -163,6 +163,23 @@
 		{
 			this._enableSubmit();
 			this._showErrors(response);
+			
+			if (response.status == "success" && this.options.onSuccess)
+			{
+				if (this.options.context)
+				{
+					$.proxy(this.options.onSuccess, this.options.context);
+				}
+				else
+				{
+					this.options.onSuccess(response);
+				}
+			}
+			
+			if (response.status != "success" && this.options.onError)
+			{
+				this.options.onError(response);
+			}
 		},
 
 		_disableSubmit		:	function()
