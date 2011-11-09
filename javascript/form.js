@@ -14,29 +14,6 @@
 			onError			:	function (response){}
 		},
 
-		_success			: function(response)
-		{
-			if (typeof response != 'object')
-			{
-				ajax.errorHandler(response.toString());
-				this._enableSubmit();
-				return;
-			}
-
-			if ( response.status == 'success')
-			{
-				this.options.onSuccess.apply(this.options.context, [response]);
-			}
-
-			if ( response.status == 'error')
-			{
-				this._showErrors(response);
-				this.options.onError.apply(this.options.context, [response]);
-			}
-
-			this._enableSubmit();
-		},
-
 		_prepareData	: function(data) 
 		{
 			for(var fieldName in data)
@@ -97,8 +74,6 @@
 				
 				self.options.form.bind('submit', function (event){
 
-					self._disableSubmit();
-
 					self.options.iframe.bind('load', function()
 					{
 						var response	=	$.parseJSON(self.options.iframe.contents().find('body').html());
@@ -113,8 +88,6 @@
 			else
 			{
 				self.options.form.bind('submit', function (event){
-					
-					self._disableSubmit();
 					
 					ajax.put
 					(	
@@ -138,10 +111,39 @@
 			this.options.method		=	$(this.element).attr('method') ? $(this.element).attr('method') : 'POST';
 			this.options.action		=	$(this.element).attr('action');
 
+			if (this.options.context)
+			{
+				if (this.options.onSuccess)
+				{
+					this.options.onSuccess	=	$.proxy(this.options.onSuccess, this.options.context);
+				}
+
+				if (this.options.onError)
+				{
+					this.options.onError	=	$.proxy(this.options.onError, this.options.context);
+				}
+
+				if (this.options.onSubmit)
+				{
+					this.options.onSubmit	=	$.proxy(this.options.onSubmit, this.options.context);
+				}
+			}
+
 			this._markup();
 
 			self.element.bind('submit', function (event)
 			{
+				
+				if (self.options.onSubmit)
+				{
+					if (!self.options.onSubmit())
+					{
+						return false;
+					}
+				}
+				
+				self._disableSubmit();
+				
 				self._prepare();
 				
 				if (self.options.multipart)
@@ -162,18 +164,17 @@
 		_onResponse	:	function (response)
 		{
 			this._enableSubmit();
+			
 			this._showErrors(response);
+			
+			if (typeof response != 'object')
+			{
+				return	ajax.errorHandler(response.toString());
+			}
 			
 			if (response.status == "success" && this.options.onSuccess)
 			{
-				if (this.options.context)
-				{
-					$.proxy(this.options.onSuccess, this.options.context);
-				}
-				else
-				{
-					this.options.onSuccess(response);
-				}
+				this.options.onSuccess(response);
 			}
 			
 			if (response.status != "success" && this.options.onError)
