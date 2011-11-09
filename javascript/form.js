@@ -243,8 +243,6 @@
 		{
 			return application.url2key(action)	+ '_iframe';
 		}
-		
-
 
 	});
 
@@ -270,3 +268,16 @@
   };
   
 })(jQuery);
+
+(function (original) {
+  $.fn.clone = function () {
+    var result = original.apply (this, arguments),
+        my_textareas = this.find('textarea'),
+    result_textareas = result.find('textarea');
+
+    for (var i = 0, l = my_textareas.length; i < l; ++i)
+      $(result_textareas[i]).val ($(my_textareas[i]).val());
+
+    return result;
+  };
+}) ($.fn.clone);
