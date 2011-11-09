@@ -12,36 +12,6 @@ var ajaxClass = function()
 		{
 			var response	=	jQuery.parseJSON(xhr.responseText);
 
-			if(typeof response.jsonredirect != 'undefined')
-			{
-				location.href = response.jsonredirect;
-			}
-
-			if(typeof response.redirect != 'undefined')
-			{
-				location.href = response.redirect;
-			}
-
-			if (response.notice)
-			{
-				notification.success(response.notice);
-			}
-
-			if (response.warning)
-			{
-				notification.warning(response.warning);
-			}
-
-			if (response.status == 'exception')
-			{
-				console.log('Exception', response.errors);
-			}
-
-			if (response.status == 'error')
-			{
-				console.log('Error', response.errors);
-			}
-
 			application.dispatch(response);
 
 		});

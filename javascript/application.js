@@ -55,6 +55,36 @@ var applicationClass = function ()
 		this.vars		=	$.extend(this.vars, response.vars);
 		this.response	=	response;
 
+		if(typeof response.redirect != 'undefined')
+		{
+			location.href = response.redirect;
+		}
+
+		if(typeof response.jsonredirect != 'undefined')
+		{
+			location.href = response.jsonredirect;
+		}
+
+		if (response.notice)
+		{
+			notification.success(response.notice);
+		}
+
+		if (response.warning)
+		{
+			notification.warning(response.warning);
+		}
+
+		if (response.status == 'exception')
+		{
+			console.log('Exception', response.errors);
+		}
+
+		if (response.status == 'error')
+		{
+			console.log('Error', response.errors);
+		}
+
 		switch(response.application.renderer)
 		{
 			case	'text/html':
@@ -164,6 +194,7 @@ var applicationClass = function ()
 			this.getElements('[tooltip]', selector, init).tooltip({
 				position	:	"top center",
 				effect		:	'slide',
+				opacity		:	0.8,
 				delay		:	200
 			});
 		}

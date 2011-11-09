@@ -9,7 +9,7 @@
 			multipart		:	false,
 			action			:	false,
 			response		:	null,
-			onBeforeSubmit	:	function (form) {return true;},
+			onSubmit		:	function (form) {return true;},
 			onSuccess		:	function (response){},
 			onError			:	function (response){}
 		},
@@ -55,15 +55,21 @@
 			return data;
 		},
 
-		_create	: function() {
+		_createIFrame	: function() 
+		{
+			var self				=	this;
+			self.options.iframeId	=	this._getIFrameSelector(this.options.action);
+			self.options.iframe		=	$('<iframe style="display:none;"></iframe>').
+											attr("id", self.options.iframeId).
+											attr('name', self.options.iframeId);
+			
+			$('body').append(self.options.iframe);
+		},
 
+		_markup	: function() {
+			
 			var self					=	this;
-
-			this.options.multipart		=	$(':file', this.element).length > 0;
-			this.options.method			=	$(this.element).attr('method') ? $(this.element).attr('method') : 'POST';
-			this.options.action			=	$(this.element).attr('action');
-
-
+			
 			$(':input,:file', this.element).not('[type=submit],[type=hidden],.ignore').each(function(){
 
 				var	errorSelector	=	self._getErrorSelector(self.options.action, self._exractFieldName($(this).attr('name')));
@@ -74,62 +80,89 @@
 				}
 			});
 			
-			self.element.bind('submit', function (event){
-				
-				
-				self._disableSubmit();
-				
-				$.post(self.element.attr('action'), self._prepareData(self.element.serializeObject()), function (response){
-					self._enableSubmit();
-					self._showErrors(response);
-					
-				}, 'json');
-				
+			if (self.options.multipart)
+			{
+				self._createIFrame();
+			}
+		},
 
+		_prepare	:	function()
+		{
+			var self			=	this;
+			self.options.form	=	self.element.clone();
+			
+			if (this.options.multipart)
+			{
+				self.options.iframe.contents().find('body').append(self.options.form);
+				
+				self.options.form.bind('submit', function (event){
+
+					self._disableSubmit();
+
+					self.options.iframe.bind('load', function()
+					{
+						var response	=	$.parseJSON(self.options.iframe.contents().find('body').html());
+
+						self._onResponse(response);
+						self.options.iframe.unbind('load');
+						application.dispatch(response);
+					});
+				});
+				
+			}
+			else
+			{
+				self.options.form.bind('submit', function (event){
+					
+					self._disableSubmit();
+					
+					ajax.put
+					(	
+						self.options.form.attr('action'), 
+						self._prepareData(self.options.form.serializeObject()), 
+						$.proxy(self._onResponse, self)
+					);
+						
+					event.preventDefault();
+					
+					return false;
+				});
+			}
+		},
+
+		_create	: function() {
+
+			var self				=	this;
+			
+			this.options.multipart	=	$(':file', this.element).length > 0;
+			this.options.method		=	$(this.element).attr('method') ? $(this.element).attr('method') : 'POST';
+			this.options.action		=	$(this.element).attr('action');
+
+			this._markup();
+
+			self.element.bind('submit', function (event)
+			{
+				self._prepare();
+				
+				if (self.options.multipart)
+				{
+					self.options.iframe.contents().find('form').submit();
+				}
+				else
+				{
+					self.options.form.submit();
+				}
+				
 				event.preventDefault();
 				return false;
 			});
 			
-			/*
-			$(self.element).ajaxForm( {
-				url				:	self.options.action,
-				type			:	self.options.method,
-				iframe			:	self.options.multipart,
-				dataType		:	'json',
-				context			:	self,
-				success			:	self._success,
-				beforeSubmit	:	function(data, a, params)
-				{
-					var check = params.context.options.onBeforeSubmit.apply(params.context.options.context, [data, a, params]);
+		},
 
-					if (!check)
-					{
-						return false;
-					}
-
-					/*
-
-					if (params.context.options.method == 'get')
-					{
-						var url = '';
-
-						for(l in data)
-						{
-							url = url + '/' + data[l].name + '/' + data[l].value;
-						}
-
-						this.url = opt.url + url;
-
-						location.href = this.url;
-
-						return false;
-					}
-
-					return true;
-				}
-			});
-			*/
-
+		_onResponse	:	function (response)
+		{
+			this._enableSubmit();
+			this._showErrors(response);
 		},
 
 		_disableSubmit		:	function()
@@ -186,7 +219,13 @@
 		{
 			var id = application.url2key(action)	+ '_' + this._exractFieldName(fieldName) + '_error';
 			return id;
+		},
+		
+		_getIFrameSelector : function(action)
+		{
+			return application.url2key(action)	+ '_iframe';
 		}
+		
 
 
 	});
