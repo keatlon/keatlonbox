@@ -203,6 +203,12 @@ var applicationClass = function ()
 		{
 			this.getElements('.elastic', selector, init).elastic();
 		}
+		
+		if (typeof $.fn.tabby != 'undefined')
+		{
+			this.getElements('.tabby', selector, init).tabby();
+		}
+		
 	}
 
 	this.initUrl	=	function(selector, init)
