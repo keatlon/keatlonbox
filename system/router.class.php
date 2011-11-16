@@ -21,11 +21,6 @@ class router
 	
     static public function get($className)
     {
-        if ( !isset(self::$classRoutes[$className]) )
-        {
-            return false;
-        }
-		
         return self::$classRoutes[$className];
     }
 }
