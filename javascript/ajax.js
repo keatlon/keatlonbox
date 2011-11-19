@@ -8,13 +8,6 @@ var ajaxClass = function()
 			$('#ajax_loading').show();
 		});
 
-		$("body").ajaxComplete(function(e, xhr, settings)
-		{
-			var response	=	jQuery.parseJSON(xhr.responseText);
-			application.dispatch(response);
-
-		});
-
 		$("body").ajaxError(function(event, request, settings)
 		{
             ajax.errorHandler(request.responseText);
@@ -88,6 +81,8 @@ var ajaxClass = function()
 		}
 
 		$.post(url, ajaxParams, function(response){
+
+            application.dispatch(response);
 
 			if ( typeof callback == 'function')
 			{
