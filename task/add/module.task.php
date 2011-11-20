@@ -3,11 +3,13 @@ class moduleAddController extends taskActionController
 {
     public function execute($params)
     {
-		list($app, $module, $action) = explode(':', $params[4]);
+        $app    =   (string)$params[4];
+        $module =   (string)$params[5];
+        $action =   (string)$params[6];
 
 		if (!is_dir(conf::i()->rootdir . "/apps/$app"))
 		{
-			return;
+            @mkdir(conf::i()->rootdir . "/apps/$app");
 		}
 
 		if ($module)
