@@ -10,20 +10,17 @@ if (!$arguments)
 	exit (1);
 }
 
-if (!isset($arguments['product']))
-{
-	$arguments['product'] = 'default';
-}
-
 if (!isset($arguments['target']))
 {
-	$targets[]	=	'core';
+	$targets	=	array
+	(
+		'core',
+	);
 }
 else
 {
 	$targets	=	explode(',', $arguments['target']);
 }
-
 
 if (!isset($arguments['environment']))
 {
@@ -37,11 +34,6 @@ if (isset($arguments['confdir']))
 	define('CONFDIR', $arguments['confdir']);
 }
 
-if (isset($arguments['application']))
-{
-	define('APPLICATION', $arguments['application']);
-}
-
 $cacheDir = dirname(__FILE__) . '/../~cache';
 
 if (!is_dir($cacheDir))
@@ -49,27 +41,46 @@ if (!is_dir($cacheDir))
 	mkdir($cacheDir);
 }
 
-define('PRODUCT',	$arguments['product']);
+define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
 define('ENVIRONMENT', $arguments['environment']);
-
-
-if ($arguments['target']=='app' && !isset($arguments['application']))
-{
-	printError('--application not specified');
-	printUsage();
-	exit(1);
-}
-
 
 $rootdir = dirname(__FILE__) . "/..";
 
-// include dirname(__FILE__) . "/conf/init.php";
+include dirname(__FILE__) . "/conf/init.php";
 include dirname(__FILE__) . "/system/builder.class.php";
 
 foreach($targets as $target)
 {
-    include dirname(__FILE__) . "/builder/" . $arguments['target'] . ".php";
+	if (strpos($target, ':') !== false)
+	{
+		list($target, $app) = explode(':', $target);
+	}
 
+	switch($target)
+	{
+		case 'core':
+			builder::buildCore($rootdir);
+			break;
+
+		case 'apps':
+			builder::buildApplication($rootdir, $app);
+			break;
+
+		case 'app':
+			builder::buildApplication($rootdir, $app);
+			break;
+
+		case 'db':
+			builder::buildDatabase();
+			break;
+
+		case 'form':
+			builder::buildForms($rootdir, $app);
+			break;
+
+		case 'static':
+			break;
+	}
 }
 
 
@@ -97,7 +108,7 @@ USAGE: build.php options
 -----------------------------------------------------------
 possible targets
 1) core
-2) database
+2) db
 3) app:[appname]
 ";
 }
