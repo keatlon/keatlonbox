@@ -13,7 +13,6 @@ class application
 	static public function init()
 	{
 		date_default_timezone_set(conf::i()->application['timezone']);
-		
         application::$name	= APPLICATION;
 
 		session	::	init();
@@ -110,7 +109,7 @@ class application
     static public function execute($module, $task, $data = false)
     {
 		date_default_timezone_set(conf::i()->application['timezone']);
-
+        
         try
         {
             $context['controller']  = actionControllerFactory::create($module, $task);

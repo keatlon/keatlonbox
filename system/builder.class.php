@@ -263,6 +263,35 @@ class builder
         return $result;
     }
 
+    static protected function _scandirs($dir)
+    {
+        $files = array();
+        $handle = opendir($dir);
+
+        if (!$handle)
+        {
+            return false;
+        }
+
+        while (false !== ($file = readdir($handle)))
+        {
+            if ($file == '.' || $file == '..' || $file == '.svn' )
+            {
+                continue;
+            }
+
+            if (is_dir($dir . '/' .$file))
+            {
+                $files[]    =   $file;
+            }
+        }
+
+        closedir($handle);
+        return $files;
+
+
+    }
+
     static protected function _readdir($dir, $pattern)
     {
         $files = array();
@@ -304,4 +333,8 @@ class builder
         return $files;
     }
 
+    static function getApps($rootdir)
+    {
+        return self::_scandirs($rootdir . '/apps');
+    }
 }

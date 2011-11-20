@@ -22,13 +22,6 @@ else
 	$targets	=	explode(',', $arguments['target']);
 }
 
-if (!isset($arguments['environment']))
-{
-	printError('--environment not found');
-	printUsage();
-	exit(1);
-}
-
 if (isset($arguments['confdir']))
 {
 	define('CONFDIR', $arguments['confdir']);
@@ -41,12 +34,12 @@ if (!is_dir($cacheDir))
 	mkdir($cacheDir);
 }
 
-define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
-define('ENVIRONMENT', $arguments['environment']);
-
-$rootdir = dirname(__FILE__) . "/..";
+$rootdir        =   dirname(__FILE__) . "/..";
 
 include dirname(__FILE__) . "/conf/init.php";
+
+define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
+
 include dirname(__FILE__) . "/system/builder.class.php";
 
 foreach($targets as $target)
@@ -63,7 +56,12 @@ foreach($targets as $target)
 			break;
 
 		case 'apps':
-			builder::buildApplication($rootdir, $app);
+            $applist    =   builder::getApps($rootdir);
+
+            foreach ($applist as $app)
+            {
+                builder::buildApplication($rootdir, $app);
+            }
 			break;
 
 		case 'app':

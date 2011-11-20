@@ -23,7 +23,7 @@ if (!defined('ENVIRONMENT'))
 	}
 	else
 	{
-		die('ENVIRONMENT is not defined');
+        define('ENVIRONMENT', include dirname(__FILE__) . "/../../conf/environment");
 	}
 }
 
