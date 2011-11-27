@@ -21,32 +21,24 @@ var dialogClass = function()
 		$('#dialog').dialog('close');
 	}
 
-	this.load = function ( url, params )
+	this.process = function ( response )
 	{
-		ajax.get(url, params, function( response )
+		if (!response.body)
 		{
-			dialog.show(response.title, response.body);
+			return false;
+		}
 
-			response.application.js.selectors.push({
-				'selector'	:	'#' + contentContainer,
-				'init'		:	2
-			});
+		dialog.show(response.title, response.body);
 
-			application.dispatch(response);
-		})
+		response.application.js.selectors.push({
+			'selector'	:	'#' + contentContainer,
+			'init'		:	2
+		});
 	}
 
-	this.url = function ( url, params )
+	this.load = function ( url, params )
 	{
-		ajax.url(url, params, function( response )
-		{
-			dialog.show(response.title, response.body);
-			response.application.js.selectors.push({
-				'selector'	:	'#' + contentContainer,
-				'init'		:	2
-			});
-			application.dispatch(response);
-		})
+		ajax.get(url, params);
 	}
 
     this.show = function ( title, content )

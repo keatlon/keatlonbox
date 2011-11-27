@@ -119,9 +119,15 @@ abstract class webActionController extends actionController
 		return self::ERROR;
 	}
 
-	function forward($module , $action = 'index')
+	function forward($module , $action = 'index', $data = array())
 	{
 		throw new forwardException($module, $action, $data);
+	}
+
+	function dialog($module , $action = 'index')
+	{
+		request::method(request::GET);
+		return $this->forward($module , $action);
 	}
 
 	function render($view = false, $renderer = false)

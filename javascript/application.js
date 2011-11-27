@@ -93,6 +93,7 @@ var applicationClass = function ()
 
 			case	'application/json':
 				this.contexts.current	=	response.application.module + response.application.action;
+				dialog.process(response);
 				break;
 		}
 
