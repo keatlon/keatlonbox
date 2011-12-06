@@ -10,7 +10,7 @@ abstract class actionController
 	private		$moduleName		=	false;
 	private		$actionName		=	false;
 
-	private		$action_vars	=	array();
+	private		$actionVars	=	array();
 	
 	function __construct($moduleName, $actionName)
 	{
@@ -35,9 +35,9 @@ abstract class actionController
 
 	function __set($name, $value)
 	{
-		if (!isset($this->$name) || isset($this->action_vars[$name]))
+		if (!isset($this->$name) || isset($this->actionVars[$name]))
 		{
-			$this->action_vars[$name] = $value;
+			$this->actionVars[$name] = $value;
 
 		}
 		else
@@ -48,9 +48,9 @@ abstract class actionController
 
 	function & __get($name)
 	{
-		if (!isset($this->$name) || isset($this->action_vars[$name]))
+		if (!isset($this->$name) || isset($this->actionVars[$name]))
 		{
-			return $this->action_vars[$name];
+			return $this->actionVars[$name];
 		}
 		else
 		{
@@ -67,5 +67,16 @@ abstract class actionController
 	{
 		return $this->actionName;
 	}
+
+	function getActionVars()
+	{
+		return $this->actionVars;
+	}
+
+	function setActionVars($vars)
+	{
+		$this->actionVars = $vars;
+	}
+
 }
 

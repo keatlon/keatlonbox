@@ -2,6 +2,10 @@
 
 class application
 {
+	/**
+	 * @var actionController
+	 */
+	static protected	$layout		=	null;
     static protected	$queue		=	array();
     static protected	$events		=	array();
     static public		$name		=	null;
@@ -74,9 +78,10 @@ class application
 		{
 			case	rendererFactory::HTML:
 				js::init('html');
-				$layoutController  = actionControllerFactory::create('layout', 'index');
-				$layoutController->dispatch(request::get());
-				$layoutController->render();
+				self::$layout  = actionControllerFactory::create('layout', 'index');
+				self::$layout->isLayout(true);
+				self::$layout->dispatch(request::get());
+				self::$layout->render();
 				break;
 
 			case	rendererFactory::JSON:
@@ -138,9 +143,23 @@ class application
         return $code;
     }
 
+	/**
+	 *
+	 * @static
+	 * @return actionController
+	 */
 	static function getLastAction()
 	{
 		return application::$queue[count(application::$queue) - 1];
+	}
+
+	/**
+	 * @static
+	 * @return actionController
+	 */
+	static function getLayoutAction()
+	{
+		return application::$layout;
 	}
 
 	static function render($stack = 'default')

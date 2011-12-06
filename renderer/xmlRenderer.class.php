@@ -5,9 +5,9 @@ class xmlRenderer extends baseRenderer
 	{
         $__action->beforeRender();
 
-        if (!$this->assigned && $__action->action_vars)
+        if (!$this->assigned && $__action->actionVars)
         {
-            foreach($__action->action_vars as $var_name => $var_value)
+            foreach($__action->actionVars as $var_name => $var_value)
             {
                 $$var_name = $var_value;
             }
@@ -23,7 +23,7 @@ class xmlRenderer extends baseRenderer
             }
             else
             {
-                $__view = $__action->actionName;
+                $__view = $__action->getActionName();
             }
         }
 

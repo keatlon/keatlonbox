@@ -5,9 +5,20 @@ class htmlRenderer extends baseRenderer
     {
         $__action->beforeRender($__action);
 
-        if (!$this->assigned && $__action->action_vars)
+		if ($__action->isLayout())
+		{
+			$__action->setActionVars(array_merge((array)$__action->getActionVars(), (array)application::getLastAction()->getActionVars()));
+		}
+		else
+		{
+			$__action->setActionVars(array_merge((array)$__action->getActionVars(), (array)application::getLayoutAction()->getActionVars()));
+		}
+
+		$__actionVars	= $__action->getActionVars();
+
+        if (!$this->assigned && $__actionVars)
         {
-            foreach($__action->action_vars as $var_name => $var_value)
+            foreach($__actionVars as $var_name => $var_value)
             {
                 $$var_name = $var_value;
             }
@@ -23,7 +34,7 @@ class htmlRenderer extends baseRenderer
             }
             else
             {
-                $__view = $__action->actionName;
+                $__view = $__action->getActionName();
             }
         }
 

@@ -3,6 +3,7 @@ abstract class webActionController extends actionController
 {
 	public		$response		=	false;
 	private		$viewName		=	false;
+	private		$isLayout		=	false;
 
 	public function dispatch($data)
 	{
@@ -140,4 +141,13 @@ abstract class webActionController extends actionController
 		rendererFactory::create($renderer)->render($this, $view);
 	}
 
+	function isLayout($isLayout = null)
+	{
+		if (isset($isLayout))
+		{
+			$this->isLayout = $isLayout;
+		}
+
+		return $this->isLayout;
+	}
 }

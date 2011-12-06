@@ -89,9 +89,11 @@ class emailActionController extends actionController
 		$content	= ob_get_contents();
 		ob_end_clean();
 
-        if ($this->action_vars)
+		$actionVars	= $this->getActionVars();
+
+        if ($actionVars)
         {
-            foreach($this->action_vars as $var_name => $var_value)
+            foreach($actionVars as $var_name => $var_value)
             {
 				$params[$var_name] = $var_value;
             }

@@ -12,7 +12,9 @@ class jsonRenderer extends baseRenderer
 		{
 			if ($__action->response['code'] == actionController::SUCCESS)
 			{
-				if ($__action->action_vars) foreach($__action->action_vars as $var_name => $var_value)
+				$__actionVars	=	$__action->getActionVars();
+
+				if ($__actionVars) foreach($__actionVars as $var_name => $var_value)
 				{
 					$data[$var_name] = $var_value;
 				}

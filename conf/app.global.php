@@ -72,8 +72,9 @@ return array
 			
             'default'   => array
 			(
-                'signedin'  => array('start', 'index'),
-                'signedout' => array('start', 'index'),
+                'signedin'  => 	array('start', 'index'),
+                'signedout' => 	array('start', 'index'),
+				'layout'	=>	array('layout', 'index')
             ),
 			
             'session'  => true
