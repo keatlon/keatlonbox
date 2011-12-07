@@ -11,7 +11,10 @@ class htmlRenderer extends baseRenderer
 		}
 		else
 		{
-			$__action->setActionVars(array_merge((array)$__action->getActionVars(), (array)application::getLayoutAction()->getActionVars()));
+			if (application::getLayoutAction())
+			{
+				$__action->setActionVars(array_merge((array)$__action->getActionVars(), (array)application::getLayoutAction()->getActionVars()));
+			}
 		}
 
 		$__actionVars	= $__action->getActionVars();

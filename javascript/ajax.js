@@ -82,12 +82,12 @@ var ajaxClass = function()
 
 		$.post(url, ajaxParams, function(response){
 
-            application.dispatch(response);
-
 			if ( typeof callback == 'function')
 			{
 				callback(response);
 			}
+			
+			application.dispatch(response);
 
 		}, datatype);
 	}
