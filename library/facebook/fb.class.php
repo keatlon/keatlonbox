@@ -36,7 +36,7 @@ class fb
 		return self::i()->api('/me');
 	}
 
-	static function getLoginUrl($permission = 'email', $url = false)
+	static function getLoginUrl($permissions = 'email', $url = false)
 	{
 		if (!$url)
 		{

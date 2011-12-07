@@ -9,6 +9,7 @@ abstract class actionController
 	public		$response		=	false;
 	private		$moduleName		=	false;
 	private		$actionName		=	false;
+	private		$isLayout		=	false;
 
 	private		$actionVars	=	array();
 	
@@ -78,5 +79,14 @@ abstract class actionController
 		$this->actionVars = $vars;
 	}
 
+	function isLayout($isLayout = null)
+	{
+		if (isset($isLayout))
+		{
+			$this->isLayout = $isLayout;
+		}
+
+		return $this->isLayout;
+	}
 }
 
