@@ -1,54 +1,41 @@
 var facebookClass = function ()
 {
-	this.configure = function(config)
-	{
-	}
+    this.configure = function(options)
+   	{
+        FB.init({
+            appId      : options.id,
+            channelUrl : options.domain + '/channel.html',
+            status     : true,
+            cookie     : true,
+            oauth      : true,
+            xfbml      : true
+        });
+    }
 
 	this.connect = function(perms, callback)
 	{
+        FB.login(function(response)
+        {
+           if (response.authResponse)
+           {
+               ajax.put('/account/signin', {}, function (response){
+                    if (typeof callback != 'undefined')
+                    {
+                        callback(response);
+                    }
+                });
+           }
+
+         }, {scope: perms});
 	}
 
-	this.signin = function (callback)
-	{
-		dialog.load('/account/waiting');
-		ajax.put('/account/signin', {'mode' : 'facebook', 'facebook_id' : facebook.id()}, function (response){
 
-			dialog.close();
-			
-			if (typeof callback != 'undefined')
-			{
-				callback(response);
-			}
-			
-		});
-	}
-
-	this.signup = function (callback)
-	{
-		dialog.load('/account/waiting');
-		
-		ajax.put('/account/signup', {'mode' : 'facebook', 'facebook_id' : facebook.id(), 'i': $('.invitation-code').val() }, function (response){
-
-			dialog.close();
-			
-			if (typeof callback != 'undefined')
-			{
-				callback(response);
-			}
-
-		});
-	}
-
-	this.signout = function ()
+	this.disconnect = function ()
 	{
 		FB.logout(function()
 		{
 			location.href='/account/signout';
 		});
-	}
-
-	this.id		=	function()
-	{
 	}
 }
 

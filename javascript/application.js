@@ -29,7 +29,7 @@ var applicationClass = function ()
 
 		if (typeof facebook != 'undefined')
 		{
-			facebook.configure(config.facebook);
+			// facebook.load(config.facebook);
 		}
 
 		if (typeof comet != 'undefined')
