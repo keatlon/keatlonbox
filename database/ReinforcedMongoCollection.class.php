@@ -27,6 +27,12 @@ class ReinforcedMongoCollection extends MongoCollection
 		return $this->findOne(_mongo::primary($pkey));
 	}
 
+
+	function set($pkey, $data)
+	{
+		$this->update(_mongo::primary($pkey), array('$set' => $data));
+	}
+
 	function inc($criteria, $fields, $inc = 1)
 	{
 		$criteria   =   $this->criteria($criteria);
@@ -43,9 +49,6 @@ class ReinforcedMongoCollection extends MongoCollection
 	{
 		$criteria       =   $this->criteria($criteria);
 		$criteria[str_replace('.$', '', $field)]    =   $value;
-
-		dd($this->findOne($criteria));
-
 		$data   =   array('$unset' => array('skills.items.$.privacy' => "public" ));
 //		$data   =   array('$unset' => array('skills.items.$.privacy' => "public" ));
 
@@ -76,12 +79,6 @@ class ReinforcedMongoCollection extends MongoCollection
 	{
 
 	}
-
-	function set($pkey, $where, $what)
-	{
-
-	}
-
 
 	function bit($pkey, $where, $what)
 	{
