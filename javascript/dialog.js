@@ -12,7 +12,7 @@ var dialogClass = function()
 			bgiframe	:	true,
 			modal		:	true,
 			minHeight	:	0,
-			position	:	['center','top'],
+			position	:	['center','80px'],
 			closeText	:	'Close'
 		});
 	}

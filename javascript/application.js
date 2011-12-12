@@ -214,15 +214,15 @@ var applicationClass = function ()
 
 	this.initUrl	=	function(selector, init)
 	{
-		this.getElements('a:not(.sf-usual),input[type="button"]', selector, init).click(function() {
+		this.getElements('a:not(.sf-usual)', selector, init).click(function() {
 
-			if ($(this).attr('target') == 'dialog')
+			if ($(this).attr('target') == 'post')
 			{
-				dialog.url($(this).attr('href'));
+				ajax.put($(this).attr('href'));
 				return false;
 			}
 
-			if ($(this).attr('target') == 'post')
+			if ($(this).attr('target') == 'get')
 			{
 				ajax.put($(this).attr('href'));
 				return false;
@@ -239,6 +239,12 @@ var applicationClass = function ()
 				return false;
 			}
 		});
+
+		this.getElements('input[type="button"][href]', selector, init).click(function ()
+		{
+			dialog.load($(this).attr('href'));
+		});
+
 	}
 
 	this.initForms = function(selector, init)

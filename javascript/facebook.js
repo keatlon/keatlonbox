@@ -8,7 +8,8 @@ var facebookClass = function ()
             status     : true,
             cookie     : true,
             oauth      : true,
-            xfbml      : true
+            xfbml      : true,
+			frictionlessRequests:true
         });
     }
 
