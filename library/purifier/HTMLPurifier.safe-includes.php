@@ -6,7 +6,7 @@
  * the core files required by HTML Purifier. This is a convenience stub that
  * includes all files using dirname(__FILE__) and require_once. PLEASE DO NOT
  * EDIT THIS FILE, changes will be overwritten the next time the script is run.
- * 
+ *
  * Changes to include_path are not necessary.
  */
 
@@ -49,6 +49,8 @@ require_once $__dir . '/HTMLPurifier/LanguageFactory.php';
 require_once $__dir . '/HTMLPurifier/Length.php';
 require_once $__dir . '/HTMLPurifier/Lexer.php';
 require_once $__dir . '/HTMLPurifier/PercentEncoder.php';
+require_once $__dir . '/HTMLPurifier/PropertyList.php';
+require_once $__dir . '/HTMLPurifier/PropertyListIterator.php';
 require_once $__dir . '/HTMLPurifier/Strategy.php';
 require_once $__dir . '/HTMLPurifier/StringHash.php';
 require_once $__dir . '/HTMLPurifier/StringHashParser.php';
@@ -90,6 +92,8 @@ require_once $__dir . '/HTMLPurifier/AttrDef/CSS/Percentage.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/CSS/TextDecoration.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/CSS/URI.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Bool.php';
+require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Nmtokens.php';
+require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Class.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Color.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/FrameTarget.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/ID.php';
@@ -97,7 +101,6 @@ require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Pixels.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Length.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/LinkTypes.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/MultiLength.php';
-require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Nmtokens.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/URI/Email.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/URI/Host.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/URI/IPv4.php';
@@ -115,6 +118,8 @@ require_once $__dir . '/HTMLPurifier/AttrTransform/Input.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/Lang.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/Length.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/Name.php';
+require_once $__dir . '/HTMLPurifier/AttrTransform/NameSync.php';
+require_once $__dir . '/HTMLPurifier/AttrTransform/Nofollow.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/SafeEmbed.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/SafeObject.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/SafeParam.php';
@@ -141,6 +146,7 @@ require_once $__dir . '/HTMLPurifier/HTMLModule/Image.php';
 require_once $__dir . '/HTMLPurifier/HTMLModule/Legacy.php';
 require_once $__dir . '/HTMLPurifier/HTMLModule/List.php';
 require_once $__dir . '/HTMLPurifier/HTMLModule/Name.php';
+require_once $__dir . '/HTMLPurifier/HTMLModule/Nofollow.php';
 require_once $__dir . '/HTMLPurifier/HTMLModule/NonXMLCommonAttributes.php';
 require_once $__dir . '/HTMLPurifier/HTMLModule/Object.php';
 require_once $__dir . '/HTMLPurifier/HTMLModule/Presentation.php';
@@ -166,6 +172,7 @@ require_once $__dir . '/HTMLPurifier/Injector/DisplayLinkURI.php';
 require_once $__dir . '/HTMLPurifier/Injector/Linkify.php';
 require_once $__dir . '/HTMLPurifier/Injector/PurifierLinkify.php';
 require_once $__dir . '/HTMLPurifier/Injector/RemoveEmpty.php';
+require_once $__dir . '/HTMLPurifier/Injector/RemoveSpansWithoutAttributes.php';
 require_once $__dir . '/HTMLPurifier/Injector/SafeObject.php';
 require_once $__dir . '/HTMLPurifier/Lexer/DOMLex.php';
 require_once $__dir . '/HTMLPurifier/Lexer/DirectLex.php';
@@ -185,9 +192,12 @@ require_once $__dir . '/HTMLPurifier/Token/Start.php';
 require_once $__dir . '/HTMLPurifier/Token/Text.php';
 require_once $__dir . '/HTMLPurifier/URIFilter/DisableExternal.php';
 require_once $__dir . '/HTMLPurifier/URIFilter/DisableExternalResources.php';
+require_once $__dir . '/HTMLPurifier/URIFilter/DisableResources.php';
 require_once $__dir . '/HTMLPurifier/URIFilter/HostBlacklist.php';
 require_once $__dir . '/HTMLPurifier/URIFilter/MakeAbsolute.php';
 require_once $__dir . '/HTMLPurifier/URIFilter/Munge.php';
+require_once $__dir . '/HTMLPurifier/URIScheme/data.php';
+require_once $__dir . '/HTMLPurifier/URIScheme/file.php';
 require_once $__dir . '/HTMLPurifier/URIScheme/ftp.php';
 require_once $__dir . '/HTMLPurifier/URIScheme/http.php';
 require_once $__dir . '/HTMLPurifier/URIScheme/https.php';

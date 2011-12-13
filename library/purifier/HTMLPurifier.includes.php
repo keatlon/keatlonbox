@@ -6,13 +6,13 @@
  * the core files required by HTML Purifier. Use this if performance is a
  * primary concern and you are using an opcode cache. PLEASE DO NOT EDIT THIS
  * FILE, changes will be overwritten the next time the script is run.
- * 
- * @version 3.2.0
- * 
+ *
+ * @version 4.3.0
+ *
  * @warning
  *      You must *not* include any other HTML Purifier files before this file,
  *      because 'require' not 'require_once' is used.
- * 
+ *
  * @warning
  *      This file requires that the include path contains the HTML Purifier
  *      library directory; this is not auto-set.
@@ -55,6 +55,8 @@ require 'HTMLPurifier/LanguageFactory.php';
 require 'HTMLPurifier/Length.php';
 require 'HTMLPurifier/Lexer.php';
 require 'HTMLPurifier/PercentEncoder.php';
+require 'HTMLPurifier/PropertyList.php';
+require 'HTMLPurifier/PropertyListIterator.php';
 require 'HTMLPurifier/Strategy.php';
 require 'HTMLPurifier/StringHash.php';
 require 'HTMLPurifier/StringHashParser.php';
@@ -96,6 +98,8 @@ require 'HTMLPurifier/AttrDef/CSS/Percentage.php';
 require 'HTMLPurifier/AttrDef/CSS/TextDecoration.php';
 require 'HTMLPurifier/AttrDef/CSS/URI.php';
 require 'HTMLPurifier/AttrDef/HTML/Bool.php';
+require 'HTMLPurifier/AttrDef/HTML/Nmtokens.php';
+require 'HTMLPurifier/AttrDef/HTML/Class.php';
 require 'HTMLPurifier/AttrDef/HTML/Color.php';
 require 'HTMLPurifier/AttrDef/HTML/FrameTarget.php';
 require 'HTMLPurifier/AttrDef/HTML/ID.php';
@@ -103,7 +107,6 @@ require 'HTMLPurifier/AttrDef/HTML/Pixels.php';
 require 'HTMLPurifier/AttrDef/HTML/Length.php';
 require 'HTMLPurifier/AttrDef/HTML/LinkTypes.php';
 require 'HTMLPurifier/AttrDef/HTML/MultiLength.php';
-require 'HTMLPurifier/AttrDef/HTML/Nmtokens.php';
 require 'HTMLPurifier/AttrDef/URI/Email.php';
 require 'HTMLPurifier/AttrDef/URI/Host.php';
 require 'HTMLPurifier/AttrDef/URI/IPv4.php';
@@ -121,6 +124,8 @@ require 'HTMLPurifier/AttrTransform/Input.php';
 require 'HTMLPurifier/AttrTransform/Lang.php';
 require 'HTMLPurifier/AttrTransform/Length.php';
 require 'HTMLPurifier/AttrTransform/Name.php';
+require 'HTMLPurifier/AttrTransform/NameSync.php';
+require 'HTMLPurifier/AttrTransform/Nofollow.php';
 require 'HTMLPurifier/AttrTransform/SafeEmbed.php';
 require 'HTMLPurifier/AttrTransform/SafeObject.php';
 require 'HTMLPurifier/AttrTransform/SafeParam.php';
@@ -147,6 +152,7 @@ require 'HTMLPurifier/HTMLModule/Image.php';
 require 'HTMLPurifier/HTMLModule/Legacy.php';
 require 'HTMLPurifier/HTMLModule/List.php';
 require 'HTMLPurifier/HTMLModule/Name.php';
+require 'HTMLPurifier/HTMLModule/Nofollow.php';
 require 'HTMLPurifier/HTMLModule/NonXMLCommonAttributes.php';
 require 'HTMLPurifier/HTMLModule/Object.php';
 require 'HTMLPurifier/HTMLModule/Presentation.php';
@@ -172,6 +178,7 @@ require 'HTMLPurifier/Injector/DisplayLinkURI.php';
 require 'HTMLPurifier/Injector/Linkify.php';
 require 'HTMLPurifier/Injector/PurifierLinkify.php';
 require 'HTMLPurifier/Injector/RemoveEmpty.php';
+require 'HTMLPurifier/Injector/RemoveSpansWithoutAttributes.php';
 require 'HTMLPurifier/Injector/SafeObject.php';
 require 'HTMLPurifier/Lexer/DOMLex.php';
 require 'HTMLPurifier/Lexer/DirectLex.php';
@@ -191,9 +198,12 @@ require 'HTMLPurifier/Token/Start.php';
 require 'HTMLPurifier/Token/Text.php';
 require 'HTMLPurifier/URIFilter/DisableExternal.php';
 require 'HTMLPurifier/URIFilter/DisableExternalResources.php';
+require 'HTMLPurifier/URIFilter/DisableResources.php';
 require 'HTMLPurifier/URIFilter/HostBlacklist.php';
 require 'HTMLPurifier/URIFilter/MakeAbsolute.php';
 require 'HTMLPurifier/URIFilter/Munge.php';
+require 'HTMLPurifier/URIScheme/data.php';
+require 'HTMLPurifier/URIScheme/file.php';
 require 'HTMLPurifier/URIScheme/ftp.php';
 require 'HTMLPurifier/URIScheme/http.php';
 require 'HTMLPurifier/URIScheme/https.php';
@@ -202,4 +212,3 @@ require 'HTMLPurifier/URIScheme/news.php';
 require 'HTMLPurifier/URIScheme/nntp.php';
 require 'HTMLPurifier/VarParser/Flexible.php';
 require 'HTMLPurifier/VarParser/Native.php';
-require 'HTMLPurifier/Filter/YouTube.php';
