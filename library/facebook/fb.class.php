@@ -75,13 +75,13 @@ class fb
 	{
 	}
 
-	static function removeRequest($id)
+	static function removeRequest($id, $uid)
 	{
 		return self::i()->api(
-			'/' . $id . '/',
+			'/' . $id . '_' . $uid . '/',
 			'DELETE',
 			array(
-				'access_token'	=>	conf::i()->facebook['token']
+				'access_token'	=>	fb::getAppToken()
 			));
 	}
 

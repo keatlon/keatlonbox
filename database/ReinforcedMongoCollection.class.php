@@ -22,6 +22,17 @@ class ReinforcedMongoCollection extends MongoCollection
 		return $criteria;
 	}
 
+	/**
+	 * Get document id by given criteria
+	 *
+	 * @param $pkey
+	 */
+	function id($criteria)
+	{
+		$row	=	$this->findOne($criteria);
+		return	(bool)$row ? $row['_id'] : false;
+	}
+
 	function get($pkey)
 	{
 		return $this->findOne(_mongo::primary($pkey));
@@ -31,6 +42,11 @@ class ReinforcedMongoCollection extends MongoCollection
 	function set($pkey, $data)
 	{
 		$this->update(_mongo::primary($pkey), array('$set' => $data));
+	}
+
+	function push($pkey, $field, $data)
+	{
+		$this->update(_mongo::primary($pkey), array('$push' => array($field => $data)));
 	}
 
 	function inc($criteria, $fields, $inc = 1)
@@ -43,51 +59,6 @@ class ReinforcedMongoCollection extends MongoCollection
 		}
 
 		return $this->update($criteria, array('$inc' => array($fields => $inc)));
-	}
-
-	function clear($criteria, $field, $value = false)
-	{
-		$criteria       =   $this->criteria($criteria);
-		$criteria[str_replace('.$', '', $field)]    =   $value;
-		$data   =   array('$unset' => array('skills.items.$.privacy' => "public" ));
-//		$data   =   array('$unset' => array('skills.items.$.privacy' => "public" ));
-
-		return $this->update($criteria, $data);
-	}
-
-	function pop($criteria, $field)
-	{
-
-	}
-
-	function push($criteria, $field, $data)
-	{
-
-	}
-
-	function pushAll($where, $what)
-	{
-
-	}
-
-	function pull($where, $what)
-	{
-
-	}
-
-	function pullAll($where, $what)
-	{
-
-	}
-
-	function bit($pkey, $where, $what)
-	{
-
-	}
-
-	function addToSet($pkey, $where, $what)
-	{
-
 	}
 
 }
