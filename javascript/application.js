@@ -222,9 +222,9 @@ var applicationClass = function ()
 				return false;
 			}
 
-			if ($(this).attr('target') == 'get')
+			if ($(this).attr('target') == 'get' || $(this).attr('target') == 'dialog')
 			{
-				ajax.put($(this).attr('href'));
+				ajax.get($(this).attr('href'));
 				return false;
 			}
 
