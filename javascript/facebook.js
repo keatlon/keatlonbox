@@ -33,11 +33,23 @@ var facebookClass = function ()
 
 	this.disconnect = function ()
 	{
-		FB.logout(function()
-		{
-			location.href='/account/signout';
-		});
+		FB.getLoginStatus(this._disconnect);
 	}
-}
 
+	this._disconnect = function (response)
+	{
+		if (response.status)
+		{
+			FB.logout(function ()
+			{
+				location.href = '/account/signout';
+			});
+		}
+		else
+		{
+			location.href = '/account/signout';
+		}
+	}
+
+}
 var facebook = new facebookClass();
