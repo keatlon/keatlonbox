@@ -37,7 +37,8 @@ class emailActionController extends actionController
 
 			if (!$this->email || !$v->isValid($this->email))
 			{
-	            $this->response['code'] = self::EXCEPTION;
+				log::push(log::E_USER, 'email', 'bad email ' . $this->email);
+				$this->response['code'] = self::EXCEPTION;
 				return $this->response['code'];
 			}
 
@@ -81,6 +82,7 @@ class emailActionController extends actionController
 
 	function render($view = false, $renderer = rendererFactory::HTML)
 	{
+		log::push(log::E_USER, 'email', 'render');
 		rendererFactory::create($renderer)->render($this, $view);
 	}
 
@@ -88,6 +90,8 @@ class emailActionController extends actionController
 	{
 		$content	= ob_get_contents();
 		ob_end_clean();
+
+		log::push(log::E_USER, 'email', 'after render');
 
 		$actionVars	= $this->getActionVars();
 
@@ -101,8 +105,11 @@ class emailActionController extends actionController
 
 		$content	=	textHelper::smartParse($content, $params);
 
+		log::push(log::E_USER, 'email', 'parse');
+
 		if (!conf::i()->email['enabled'])
 		{
+			log::push(log::E_USER, 'email', 'disabled');
 			return;
 		}
 
