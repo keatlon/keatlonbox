@@ -3,7 +3,7 @@ class email
 {
 	static public function send($nameTo, $emailTo, $subject, $body, $id = false)
 	{
-		log::push(log::E_USER, 'send email to ' . $emailTo . $subject);
+		log::push(log::E_USER, 'email', 'send to ' . $emailTo . $subject);
 
 		mb_language('uni');
 
