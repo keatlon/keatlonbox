@@ -3,8 +3,6 @@ class email
 {
 	static public function send($nameTo, $emailTo, $subject, $body, $id = false)
 	{
-		log::push(log::E_USER, 'email', 'send to ' . $emailTo . $subject);
-
 		mb_language('uni');
 
 		$headers = "Mime-Version: 1.0\n";
