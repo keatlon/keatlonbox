@@ -1,6 +1,9 @@
 <?php
 class twitter
 {
+	/**
+	 * @var OAuth
+	 */
 	static protected $instance = false;
 
 	/**
@@ -22,7 +25,15 @@ class twitter
 
 	static function getRequestToken()
 	{
-		$token = self::i()->getRequestToken(conf::i()->twitter['requestTokenUrl'], 'http://skillability.dev/twitter/login');
+		try
+		{
+			$token = self::i()->getRequestToken(conf::i()->twitter['requestTokenUrl'], conf::i()->domains['web'] . '/twitter/login');
+		}
+		catch(Exception $e)
+		{
+			return false;
+		}
+
 		if ($token['oauth_token'])
 		{
 			session::set('twrtoken', $token);
@@ -32,7 +43,7 @@ class twitter
 		return false;
 	}
 
-	static function getAccessToken($userId, $token, $requestToken)
+	static function getAccessToken($token, $requestToken)
 	{
 		self::i()->setToken($token, $requestToken['oauth_token_secret']);
 
@@ -53,5 +64,23 @@ class twitter
 		return false;
 	}
 
-}
+	static function post($userId, $message)
+	{
+		$user = users::full($userId);
 
+		self::i()->setToken($user['twitter']['token']['oauth_token'], $user['twitter']['token']['oauth_token_secret']);
+		self::i()->setAuthType(OAUTH_AUTH_TYPE_AUTHORIZATION);
+
+		try
+		{
+			self::i()->fetch('https://api.twitter.com/1/statuses/update.json', array(
+				'status'		=>	'hello',
+				'wrap_links'	=>	true
+			), OAUTH_HTTP_METHOD_POST);
+		}
+		catch(Exception $e)
+		{
+			dd(self::i()->getLastResponse());
+		}
+
+		dd(self::i()->getLastResp
