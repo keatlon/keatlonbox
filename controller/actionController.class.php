@@ -10,6 +10,7 @@ abstract class actionController
 	private		$moduleName		=	false;
 	private		$actionName		=	false;
 	private		$isLayout		=	false;
+	private		$hasLayout		=	true;
 
 	private		$actionVars	=	array();
 	
@@ -87,6 +88,21 @@ abstract class actionController
 		}
 
 		return $this->isLayout;
+	}
+
+	function hasLayout()
+	{
+		return $this->hasLayout;
+	}
+
+	function disableLayout()
+	{
+		$this->hasLayout = false;
+	}
+
+	function enableLayout()
+	{
+		$this->hasLayout = true;
 	}
 }
 

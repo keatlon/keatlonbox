@@ -108,7 +108,7 @@ class emailActionController extends actionController
 
         if ($this->handler == emailActionController::HANDLER_SENDMAIL)
         {
-            return email::send($this->name, $this->email, $this->subject, $content);
+            return email::send($this->email, $this->subject, $content);
         }
 	}
 

@@ -5,7 +5,7 @@ class application
 	/**
 	 * @var actionController
 	 */
-	static protected	$layout		=	null;
+	static protected	$layout		=	false;
     static protected	$queue		=	array();
     static protected	$events		=	array();
     static public		$name		=	null;
@@ -77,11 +77,19 @@ class application
 		switch(request::accept())
 		{
 			case	rendererFactory::HTML:
-				js::init('html');
-				self::$layout  = actionControllerFactory::create('layout', 'index');
-				self::$layout->isLayout(true);
-				self::$layout->dispatch(request::get());
-				self::$layout->render();
+
+				if (application::getLastAction()->hasLayout())
+				{
+					js::init('html');
+					self::$layout = actionControllerFactory::create('layout', 'index');
+					self::$layout->isLayout(true);
+					self::$layout->dispatch(request::get());
+					self::$layout->render();
+				}
+				else
+				{
+					application::render();
+				}
 				break;
 
 			case	rendererFactory::JSON:
@@ -166,6 +174,5 @@ class application
 	{
 		application::getLastAction()->render();
 	}
-
 }
 

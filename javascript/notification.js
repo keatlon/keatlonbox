@@ -98,7 +98,7 @@ var notificationClass = function()
 
 		$(item).animate(
 			{
-				marginLeft: 0
+				marginLeft: 20
 			},
 			400
 		);
