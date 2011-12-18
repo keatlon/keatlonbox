@@ -6,6 +6,19 @@ class twitter
 	 */
 	static protected $instance = false;
 
+	const 	RESPONSE_OK						=	200;
+
+	const 	RESPONSE_BAD_REQUEST 			= 	400;
+	const 	RESPONSE_UNAUTHORIZED 			=	401;
+	const 	RESPONSE_FORBIDDEN 				= 	403;
+	const 	RESPONSE_NOT_FOUND 				= 	404;
+	const	RESPONSE_NOT_ACCEPTABLE			= 	406;
+
+	const	RESPONSE_ENHANCE_YOUR_CALM		= 	420;
+	const	RESPONSE_INTERNAL_SERVER_ERROR	= 	500;
+	const	RESPONSE_BAD_GATEWAY			= 	502;
+	const	RESPONSE_SERVICE_UNAVAILABLE	= 	503;
+
 	/**
 	 *
 	 * @return OAuth
@@ -66,6 +79,11 @@ class twitter
 
 	static function post($userId, $message)
 	{
+		if (!$message)
+		{
+			return false;
+		}
+
 		$user = users::full($userId);
 
 		self::i()->setToken($user['twitter']['token']['oauth_token'], $user['twitter']['token']['oauth_token_secret']);
@@ -74,13 +92,26 @@ class twitter
 		try
 		{
 			self::i()->fetch('https://api.twitter.com/1/statuses/update.json', array(
-				'status'		=>	'hello',
+				'status'		=> 	$message,
 				'wrap_links'	=>	true
 			), OAUTH_HTTP_METHOD_POST);
 		}
 		catch(Exception $e)
 		{
-			dd(self::i()->getLastResponse());
+			log::exception($e);
+			$info = self::i()->getLastResponseInfo();
+
+			if ($info)
+			{
+				return (int)$info['http_code'];
+			}
+
+			return false;
 		}
 
-		dd(self::i()->getLastResp
+		$info = self::i()->getLastResponseInfo();
+		return (int)$info['http_code'];
+	}
+
+}
+

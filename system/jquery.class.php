@@ -1,7 +1,6 @@
 <?php
-class	js
+class	jquery
 {
-
 	const	INIT_SELF			=	1;
 	const	INIT_CHILDREN		=	2;
 
@@ -9,7 +8,7 @@ class	js
 	static private $vars		=	array();
 	static private $selectors	=	array();
 
-	static function init($selector, $init = js::INIT_CHILDREN)
+	static function init($selector, $init = jquery::INIT_CHILDREN)
 	{
 		self::$selectors[]	=	array('selector' => $selector, 'init' => $init);
 	}
@@ -34,21 +33,24 @@ class	js
         self::$vars[$name] = $value;
 	}
 
-	static function set($selector, $template, $params, $init  = js::INIT_CHILDREN)
+	static function html($selector, $content, $init = jquery::INIT_CHILDREN)
 	{
-		self::$commands[]	=	array(
-			'command'	=>	'set',
-			'selector'	=>	$selector,
-			'html'		=>	partialHelper::render($template, $params, true)
-		);
+		self::$commands[] = array('command'     => 'html',
+								  'selector'	=> $selector,
+								  'html'		=> $content);
 
 		if ($init)
 		{
-			js::init($selector, $init);
+			jquery::init($selector, $init);
 		}
 	}
 
-	static function animate($selector, $method, $init  = js::INIT_SELF)
+	static function render($selector, $template, $params, $init  = jquery::INIT_CHILDREN)
+	{
+		jquery::html($selector, partialHelper::render($template, $params, true), $init);
+	}
+
+	static function animate($selector, $method, $init  = jquery::INIT_SELF)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'animate',
@@ -58,11 +60,11 @@ class	js
 
 		if ($init)
 		{
-			js::init($selector, $init);
+			jquery::init($selector, $init);
 		}
 	}
 
-	static function append($selector, $template, $params, $init  = js::INIT_CHILDREN)
+	static function append($selector, $template, $params, $init  = jquery::INIT_CHILDREN)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'append',
@@ -72,11 +74,11 @@ class	js
 		
 		if ($init)
 		{
-			js::init($selector, $init);
+			jquery::init($selector, $init);
 		}
 	}
 
-	static function prepend($selector, $template, $params, $init  = js::INIT_CHILDREN)
+	static function prepend($selector, $template, $params, $init  = jquery::INIT_CHILDREN)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'prepend',
@@ -86,11 +88,11 @@ class	js
 
 		if ($init)
 		{
-			js::init($selector, $init);
+			jquery::init($selector, $init);
 		}
 	}
 
-	static function replace($selector, $template, $params, $init  = js::INIT_CHILDREN)
+	static function replace($selector, $template, $params, $init  = jquery::INIT_CHILDREN)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'replace',
@@ -100,7 +102,7 @@ class	js
 
 		if ($init)
 		{
-			js::init($selector, $init);
+			jquery::init($selector, $init);
 		}
 	}
 
@@ -112,7 +114,7 @@ class	js
 		);
 	}
 
-	static function insert($selector, $template, $params, $init = js::INIT_CHILDREN)
+	static function insert($selector, $template, $params, $init = jquery::INIT_CHILDREN)
 	{
 		self::$commands[]	=	array(
 			'command'	=>	'insert',
@@ -122,7 +124,7 @@ class	js
 
 		if ($init)
 		{
-			js::init($selector, $init);
+			jquery::init($selector, $init);
 		}
 	}
 

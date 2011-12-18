@@ -4,6 +4,6 @@ class dialog
 {
 	static function close()
 	{
-		js::raw('dialog.close()');
+		jquery::raw('dialog.close()');
 	}
 }

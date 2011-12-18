@@ -80,7 +80,7 @@ class application
 
 				if (application::getLastAction()->hasLayout())
 				{
-					js::init('html');
+					jquery::init('html');
 					self::$layout = actionControllerFactory::create('layout', 'index');
 					self::$layout->isLayout(true);
 					self::$layout->dispatch(request::get());

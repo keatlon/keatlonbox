@@ -105,7 +105,7 @@ var applicationClass = function ()
 					eval ("$('" + response.application.js.commands[l].selector + "')." + response.application.js.commands[l].plugin + "(response.application.js.commands[l].params);");
 					break;
 
-				case 'set':
+				case 'html':
 					$(response.application.js.commands[l].selector).html(response.application.js.commands[l].html);
 					break;
 
@@ -117,7 +117,7 @@ var applicationClass = function ()
 					$(response.application.js.commands[l].selector).prepend(response.application.js.commands[l].html);
 					break;
 
-				case 'replace':
+				case 'replaceWith':
 					$(response.application.js.commands[l].selector).replaceWith(response.application.js.commands[l].html);
 					break;
 

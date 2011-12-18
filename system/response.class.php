@@ -32,12 +32,12 @@ class response
 			'js'		=>	array
 			(
 				'dispatcher'	=>	$jsDispatcher,
-				'selectors'		=>	js::getSelectors(),
-				'commands'		=>	js::getCommands()
+				'selectors'		=>	jquery::getSelectors(),
+				'commands'		=>	jquery::getCommands()
 			)
 		);
 
-		self::$response['vars']				=	js::getVariables();
+		self::$response['vars']				=	jquery::getVariables();
 
 		return self::$response;
 	}
