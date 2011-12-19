@@ -6,4 +6,10 @@ class dialog
 	{
 		jquery::raw('dialog.close()');
 	}
+
+	static function options($options)
+	{
+		response::set('options', $options);
+	}
+
 }

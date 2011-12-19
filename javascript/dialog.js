@@ -11,6 +11,8 @@ var dialogClass = function()
 			autoOpen	:	false,
 			bgiframe	:	true,
 			modal		:	true,
+			show		:	{effect:'fadeup', duration:250},
+			hide		:	{effect:'fadedown', duration:250},
 			minHeight	:	0,
 			position	:	['center','80px'],
 			closeText	:	'Close'
@@ -27,6 +29,11 @@ var dialogClass = function()
 		if (!response.body)
 		{
 			return false;
+		}
+
+		if (typeof response.options != 'undefined')
+		{
+			$('#dialog').dialog('option', response.options);
 		}
 
 		dialog.show(response.title, response.body);

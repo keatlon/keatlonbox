@@ -84,9 +84,14 @@ class twitter
 			return false;
 		}
 
-		$user = users::full($userId);
+		$token = users::getTwitterToken($userId);
 
-		self::i()->setToken($user['twitter']['token']['oauth_token'], $user['twitter']['token']['oauth_token_secret']);
+		if (!$token)
+		{
+			return false;
+		}
+
+		self::i()->setToken($token['oauth_token'], $token['oauth_token_secret']);
 		self::i()->setAuthType(OAUTH_AUTH_TYPE_AUTHORIZATION);
 
 		try

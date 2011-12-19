@@ -44,6 +44,11 @@ class ReinforcedMongoCollection extends MongoCollection
 		$this->update(_mongo::primary($pkey), array('$set' => $data));
 	}
 
+	function _unset($pkey, $field)
+	{
+		$this->update(_mongo::primary($pkey), array('$unset' => $field));
+	}
+
 	function push($pkey, $field, $data)
 	{
 		$this->update(_mongo::primary($pkey), array('$push' => array($field => $data)));

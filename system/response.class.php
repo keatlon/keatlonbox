@@ -19,15 +19,15 @@ class response
 
 		$action			=	application::getLastAction();
 
-		$jsDispatcher	=	$action->actionName . 
-							ucfirst($action->moduleName) .
+		$jsDispatcher	=	$action->getActionName() .
+							ucfirst($action->getModuleName()) .
 							'Controller' .
 							ucfirst(strtolower(request::method()));
 
 		self::$response['application']	=	array
 		(
-			'module'	=>	$action->moduleName,
-			'action'	=>	$action->actionName,
+			'module'	=>	$action->getModuleName(),
+			'action'	=>	$action->getActionName(),
 			'renderer'	=>	request::accept(),
 			'js'		=>	array
 			(

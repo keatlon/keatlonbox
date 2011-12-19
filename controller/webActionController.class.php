@@ -3,6 +3,7 @@ abstract class webActionController extends actionController
 {
 	public		$response		=	false;
 	private		$viewName		=	false;
+	private		$selector		=	false;
 
 	public function dispatch($data)
 	{
