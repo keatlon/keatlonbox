@@ -132,6 +132,4 @@ class auth
 		$extra	=	auth::getExtraCredentials();
 		return ($extra['role'] ? $extra['role'] : 'guest');
 	}
-
 }
-
