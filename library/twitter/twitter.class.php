@@ -84,7 +84,8 @@ class twitter
 			return false;
 		}
 
-		$token = users::getTwitterToken($userId);
+		$userTwitter	=	users::getTwitter($userId);
+		$token			=	$userTwitter['token'];
 
 		if (!$token)
 		{
