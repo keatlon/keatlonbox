@@ -12,6 +12,7 @@ class application
     static public		$i18n		=	null;
 
 	const	EVENT_BEFORE_CONTROLLER		= 0;
+	const	EVENT_BEFORE_ACL 			= 1;
 	const	EVENT_BEFORE_RENDER			= 2;
 
 	static public function init()
@@ -25,6 +26,8 @@ class application
 		i18n	::	init();
 		auth	::	init();
 		request	::	init();
+
+		application::processEvent(application::EVENT_BEFORE_ACL);
 		acl		::	init();
 	}
 
@@ -41,7 +44,7 @@ class application
 		{
 			if ($event->position == $type)
 			{
-				$event->handle();
+				$event->handle(request::get());
 			}
 		}
 	}

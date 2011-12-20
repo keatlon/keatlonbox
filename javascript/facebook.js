@@ -38,7 +38,7 @@ var facebookClass = function ()
 
 	this._disconnect = function (response)
 	{
-		if (response.status)
+		if (response.status && response.status != 'unknown')
 		{
 			FB.logout(function ()
 			{
