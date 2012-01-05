@@ -46,8 +46,9 @@ return array
      *                      COUNTERS
      ***********************************************************/
 
-    'counter'         =>   array(
-        'google_analytics'          =>  false
+    'counters'         =>   array(
+        'ga'          =>  false,
+        'km'          =>  false
     ),
 
     /***********************************************************

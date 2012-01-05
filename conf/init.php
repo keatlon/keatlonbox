@@ -80,7 +80,7 @@ class conf
 	public $debug			= false;
 
 	
-    public $counter			= false;
+    public $counters		= false;
     public $i18n			= false;
     public $application		= false;
     public $acl				= false;
