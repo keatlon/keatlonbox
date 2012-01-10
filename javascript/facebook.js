@@ -17,7 +17,6 @@ var facebookClass = function ()
 	{
         FB.login(function(response)
         {
-			alert(response.toSource());
            if (response.authResponse)
            {
                ajax.put('/account/signin', {}, function (response){
