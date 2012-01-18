@@ -61,49 +61,12 @@ abstract class dbPeer
 	 * @param array $limit
 	 * @return array
 	 */
-	public function doGetList($where = array(), $join = array(), $order = array(), $limit = false, $offset = false, &$total = false)
+	public function doGetList($where = array(), $order = array(), $limit = false, $offset = false)
 	{
 		$bind			= array();
 		$where_clause	= array();
 		$join_clause	= array();
 		$fromTables[]	= $this->tableName;
-
-		if ($join)
-
-			foreach ($join as $table => $conditions)
-			{
-				$joinType = '';
-				$joinCondition = $condition;
-
-				switch ($joinType)
-				{
-					case 'left':
-						$join_clause[] = 'LEFT JOIN ' . $table . ' ON ' . $joinCondition;
-						break;
-
-					case 'right':
-						$join_clause[] = 'RIGHT JOIN ' . $table . ' ON ' . $joinCondition;
-						break;
-
-					case 'cross':
-						$join_clause[] = 'CROSS JOIN ' . $table . ' ON ' . $joinCondition;
-						break;
-
-					default:
-						$fromTables[] = $table;
-						foreach ($conditions as $conditionKey => $conditionValue)
-						{
-							if ($conditionValue[0] == ':')
-							{
-								$where[$conditionKey] = $conditionValue;
-							}
-							else
-							{
-								$where_clause[] = $conditionKey . ' = ' . $conditionValue;
-							}
-						}
-				}
-			}
 
 		if (is_array($where))
 			foreach ($where as $key => $value)
@@ -181,7 +144,7 @@ abstract class dbPeer
 		
 
 		/**
-		 * GET TOTAL ROWS QUERY
+		 * GET ROWS QUERY
 		 */
 		$sql =	' SELECT ' . implode(',', $this->primaryTKey) .
 				' FROM ' . implode(',', $fromTables) .

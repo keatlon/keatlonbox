@@ -58,9 +58,9 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $limit
      * @return array
      */
-    public static function  getList( $where = array(), $join = array(), $order = array(), $limit = false, $offset = false, &$total = false )
+    public static function  getList( $where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $join, $order, $limit, $offset, $total);
+        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $join, $order, $limit, $offset, $total, $more);
     }
 
 
