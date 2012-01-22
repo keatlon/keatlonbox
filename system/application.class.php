@@ -107,8 +107,14 @@ class application
 		}
 	}
     
-    static public function dispatch($module, $action = 'index', $data = false)
+    static public function dispatch($module, $action = 'index', $data = false, $application = false)
     {
+		if ($application)
+		{
+			application::$name = $application;
+			router::init($application);
+		}
+
 		application::push( actionControllerFactory::create($module, $action) )->dispatch($data ? $data : request::get());
     }
 

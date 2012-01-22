@@ -88,10 +88,10 @@
 			else
 			{
 				self.options.form.bind('submit', function (event){
-					
+
 					ajax.put
 					(	
-						self.options.form.attr('action'), 
+						self.options.form.attr('action'),
 						self._prepareData(self.options.form.serializeObject()), 
 						$.proxy(self._onResponse, self)
 					);
@@ -273,10 +273,15 @@
   $.fn.clone = function () {
     var result = original.apply (this, arguments),
         my_textareas = this.find('textarea'),
-    result_textareas = result.find('textarea');
+    result_textareas = result.find('textarea'),
+        my_selects = this.find('select'),
+    result_selects = result.find('select');
 
     for (var i = 0, l = my_textareas.length; i < l; ++i)
       $(result_textareas[i]).val ($(my_textareas[i]).val());
+
+    for (var i = 0, l = my_selects.length; i < l; ++i)
+      $(result_selects[i]).val ($(my_selects[i]).val());
 
     return result;
   };
