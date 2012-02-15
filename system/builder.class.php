@@ -117,9 +117,7 @@ class builder
 				builder::arrayToCode($appTasks) .
 				builder::arrayToCode($components) .
 				builder::arrayToCode($plugins) .
-				builder::arraytoCode($actions) .
-				builder::arraytoCode($configuration)
-
+				builder::arraytoCode($actions)
 			."); \n\n\n\n ?>"
 		);
 	}
@@ -292,7 +290,7 @@ class builder
 
     }
 
-    static protected function _readdir($dir, $pattern)
+    static public function _readdir($dir, $pattern)
     {
         $files = array();
 
