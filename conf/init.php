@@ -16,14 +16,21 @@ if (!defined('PRODUCT'))
 
 if (!defined('ENVIRONMENT'))
 {
-
 	if ($_SERVER['ENVIRONMENT'])
 	{
 		define('ENVIRONMENT',   $_SERVER['ENVIRONMENT']);
 	}
 	else
 	{
-        define('ENVIRONMENT', include dirname(__FILE__) . "/../../conf/environment");
+		if (defined('CONFDIR'))
+		{
+	        define('ENVIRONMENT', include CONFDIR . "/environment");
+		}
+		else
+		{
+	        define('ENVIRONMENT', include dirname(__FILE__) . "/../../conf/environment");
+		}
+
 	}
 }
 

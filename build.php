@@ -27,6 +27,8 @@ if (isset($arguments['confdir']))
 	define('CONFDIR', $arguments['confdir']);
 }
 
+define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
+
 $cacheDir = dirname(__FILE__) . '/../~cache';
 
 if (!is_dir($cacheDir))
@@ -38,9 +40,8 @@ $rootdir        =   dirname(__FILE__) . "/..";
 
 include dirname(__FILE__) . "/conf/init.php";
 
-define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
-
 include dirname(__FILE__) . "/system/builder.class.php";
+
 
 foreach($targets as $target)
 {
@@ -107,7 +108,7 @@ USAGE: build.php options
 possible targets
 1) core
 2) db
-3) app:[appname]
+3) apps
 ";
 }
 
