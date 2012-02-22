@@ -13,13 +13,18 @@ var facebookClass = function ()
         });
     }
 
-	this.connect = function(perms, callback)
+	this.connect = function(perms, callback, url)
 	{
+		if (typeof url == 'undefined')
+		{
+			var url = '/account/signin';
+		}
+
         FB.login(function(response)
         {
            if (response.authResponse)
            {
-               ajax.put('/account/signin', {}, function (response){
+               ajax.put(url, {}, function (response){
                     if (typeof callback != 'undefined')
                     {
                         callback(response);
@@ -31,23 +36,28 @@ var facebookClass = function ()
 	}
 
 
-	this.disconnect = function ()
+	this.disconnect = function (url)
 	{
-		FB.getLoginStatus(this._disconnect);
+		if (typeof url == 'undefined')
+		{
+			var url = '/account/signout';
+		}
+
+		FB.getLoginStatus(function (response) { this._disconnect(response, url) } );
 	}
 
-	this._disconnect = function (response)
+	this._disconnect = function (response, url)
 	{
 		if (response.status && response.status != 'unknown')
 		{
 			FB.logout(function ()
 			{
-				location.href = '/account/signout';
+				location.href = url;
 			});
 		}
 		else
 		{
-			location.href = '/account/signout';
+			location.href = url;
 		}
 	}
 
