@@ -25,7 +25,7 @@ var facebookClass = function ()
            if (response.authResponse)
            {
                ajax.put(url, {}, function (response){
-                    if (typeof callback != 'undefined')
+                    if (typeof callback == 'function')
                     {
                         callback(response);
                     }

@@ -40,7 +40,7 @@ class twitter
 	{
 		try
 		{
-			$token = self::i()->getRequestToken(conf::i()->twitter['requestTokenUrl'], conf::i()->domains['web'] . '/twitter/login');
+			$token = self::i()->getRequestToken(conf::i()->twitter['requestTokenUrl'], conf::i()->domains['web'] . conf::i()->twitter['localAuthorizeUrl']);
 		}
 		catch(Exception $e)
 		{
@@ -54,6 +54,11 @@ class twitter
 		}
 
 		return false;
+	}
+
+	static function setAccessToken($token)
+	{
+		session::set('twatoken', $token);
 	}
 
 	static function getAccessToken($token, $requestToken)
@@ -117,6 +122,12 @@ class twitter
 
 		$info = self::i()->getLastResponseInfo();
 		return (int)$info['http_code'];
+	}
+
+	static function id()
+	{
+		$token = session::get('twatoken');
+		return ($token ? $token['user_id'] : false);
 	}
 
 }

@@ -256,7 +256,32 @@ return array
 		'id'		=> 	'',
 		'key'		=> 	'',
 		'secret'	=> 	'',
+		'domain'	=>	''
     ),
+
+	/***********************************************************
+	*                      TWITTER
+	***********************************************************/
+
+	'twitter' => array
+	(
+		'authorizeUrl'		=>	'https://api.twitter.com/oauth/authorize',
+		'requestTokenUrl'	=>	'https://api.twitter.com/oauth/request_token',
+		'accessTokenUrl'	=>	'https://api.twitter.com/oauth/access_token',
+		'localAuthorizeUrl'	=>	'/twitter/authorize',
+	),
+
+
+	/***********************************************************
+	*                      VKONTAKTE
+	***********************************************************/
+
+	'vkontakte' => array
+	(
+		'id'				=>	'',
+		'key'				=>	''
+	),
+
 
 	/***********************************************************
      * 			CLIENT (JS)
