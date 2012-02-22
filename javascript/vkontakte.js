@@ -10,21 +10,17 @@ var vkontakteClass = function ()
 
 		VK.Auth.login(function (response){
 
+			if (response.status == 'connected')
+			{
+				ajax.put(url, {}, function (response){
+					if (typeof callback == 'function')
+					{
+						callback(response);
+					}
+				});
+			}
+
 		}, perms);
-
-        FB.login(function(response)
-        {
-           if (response.authResponse)
-           {
-               ajax.put(url, {}, function (response){
-                    if (typeof callback == 'function')
-                    {
-                        callback(response);
-                    }
-                });
-           }
-
-         }, {scope: perms});
 	}
 
 
