@@ -147,7 +147,7 @@ abstract class dbPeer
 
 		$countRow	= 	db::row($countSql, $bind, $this->connectionName);
 		$total		= 	$countRow['cnt'];
-		$more		=	$countRow['cnt'] >	($offset + $limit);
+		$more		=	$total > ((int)$offset + (int)$limit);
 
 		/**
 		 * GET ROWS QUERY
