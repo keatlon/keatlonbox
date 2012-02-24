@@ -82,6 +82,7 @@ var ajaxClass = function()
 		
 		ajaxParams.context = application.getGlobalContext();
 
+
 		for(var l in ajaxParams)
 		{
 			if (typeof ajaxParams[l] == "function")

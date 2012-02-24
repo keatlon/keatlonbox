@@ -1,5 +1,12 @@
 var applicationClass = function ()
 {
+
+	this.RENDERER_BASE      =	0;
+	this.RENDERER_HTML      =	1;
+	this.RENDERER_JSON      =	2;
+	this.RENDERER_XML		=	3;
+	this.RENDERER_DIALOG    =	4;
+
 	this.config			=	{};
 	this.response		=	{};
 	this.vars			=	{};
@@ -87,17 +94,19 @@ var applicationClass = function ()
 
 		switch(response.application.renderer)
 		{
-			case	'text/html':
+			case	this.RENDERER_HTML:
 				this.contexts.global	=	response.application.module + response.application.action;
 				break;
 
-			case	'application/json':
+			case	this.RENDERER_JSON:
 				this.contexts.current	=	response.application.module + response.application.action;
-				if (typeof dialog != 'undefined')
-				{
-					dialog.process(response);
-				}
 				break;
+
+			case	this.RENDERER_DIALOG:
+				this.contexts.current	=	response.application.module + response.application.action;
+				dialog.process(response);
+				break;
+
 		}
 
 		for (var l in response.application.js.commands)
