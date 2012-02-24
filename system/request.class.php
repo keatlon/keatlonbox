@@ -33,6 +33,10 @@ class request
 		return self::$accept;
 	}
 
+	static function ajax($is = false)
+	{
+	}
+
 	protected static function set($key, $value)
 	{
 		self::$data['params'][$key] = $value;
@@ -66,46 +70,62 @@ class request
 
 	static public function init()
 	{
-		request::method($_SERVER['REQUEST_METHOD']);
+		self::setRenderer();
+		self::method($_SERVER['REQUEST_METHOD']);
+		self::data(url::parse($_SERVER['REQUEST_URI']));
+	}
+
+	static function setRenderer()
+	{
+		switch($_SERVER['HTTP_KBOX_RENDERER'])
+		{
+			case 'html':
+				return application::setRenderer(rendererFactory::HTML);
+
+			case 'xml':
+				return application::setRenderer(rendererFactory::XML);
+
+			case 'json':
+				return application::setRenderer(rendererFactory::JSON);
+
+			case 'dialog':
+				return application::setRenderer(rendererFactory::DIALOG);
+		}
 
 		if (conf::i()->application[application::$name]['renderer'])
 		{
-			request::accept(conf::i()->application[application::$name]['renderer']);
+			return application::setRenderer(conf::i()->application[application::$name]['renderer']);
 		}
-		else
+
+		if (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false)
 		{
-			if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') !== false)
-			{
-				request::accept(rendererFactory::XML);
-			}
-
-			if (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false || strpos($_SERVER['HTTP_ACCEPT'], '*/*') !== false)
-			{
-				request::accept(rendererFactory::HTML);
-			}
-			
-			if ($_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-			{
-				request::accept(rendererFactory::JSON);
-			}
+			return application::setRenderer(rendererFactory::HTML);
 		}
 
-		request::data(url::parse($_SERVER['REQUEST_URI']));
+		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') !== false)
+		{
+			return application::setRenderer(rendererFactory::XML);
+		}
+
+		if ($_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+		{
+			return application::setRenderer(rendererFactory::JSON);
+		}
 	}
 
 	static function isHtml()
 	{
-		return (request::accept() == rendererFactory::HTML);
+		return (application::getRenderer() == rendererFactory::HTML);
 	}
 
 	static function isJson()
 	{
-		return (request::accept() == rendererFactory::JSON);
+		return (application::getRenderer() == rendererFactory::JSON);
 	}
 
 	static function isXml()
 	{
-		return (request::accept() == rendererFactory::XML);
+		return (application::getRenderer() == rendererFactory::XML);
 	}
 
 	static function raw()

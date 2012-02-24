@@ -5,6 +5,11 @@ abstract class dbPeer
 
 	protected static $instances = array();
 
+	/**
+	 * @static
+	 * @param $className
+	 * @return dbPeer
+	 */
 	static public function getInstance($className)
 	{
 		if (!self::$instances[$className])
@@ -61,11 +66,10 @@ abstract class dbPeer
 	 * @param array $limit
 	 * @return array
 	 */
-	public function doGetList($where = array(), $order = array(), $limit = false, $offset = false)
+	public function doGetList($where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false)
 	{
 		$bind			= array();
 		$where_clause	= array();
-		$join_clause	= array();
 		$fromTables[]	= $this->tableName;
 
 		if (is_array($where))
@@ -129,7 +133,10 @@ abstract class dbPeer
 
 		if ($limit && $offset)
 		{
-			$limit = $offset . ', ' . $limit;
+			$limit_sql = $offset . ', ' . $limit;
+		} else if ($limit)
+		{
+			$limit_sql = $limit;
 		}
 
 		/**
@@ -138,10 +145,9 @@ abstract class dbPeer
 		$countSql = 'SELECT COUNT(' . $this->tableName . '.' . $this->primaryKey[0] . ') cnt ' . ' FROM ' . implode(',', $fromTables) .
 			( $where_sql ? ' WHERE ' . $where_sql : '' );
 
-		$countRow	= db::row($countSql, $bind, $this->connectionName);
-		$total		= $countRow['cnt'];
-
-		
+		$countRow	= 	db::row($countSql, $bind, $this->connectionName);
+		$total		= 	$countRow['cnt'];
+		$more		=	$countRow['cnt'] >	($offset + $limit);
 
 		/**
 		 * GET ROWS QUERY
@@ -150,7 +156,7 @@ abstract class dbPeer
 				' FROM ' . implode(',', $fromTables) .
 				( $where_sql	? ' WHERE '		. $where_sql	: '' ) .
 				( $order_sql	? ' ORDER BY '	. $order_sql	: '' ) .
-				( $limit		? ' LIMIT '		. $limit		: '' );
+				( $limit_sql	? ' LIMIT '		. $limit_sql	: '' );
 
 		if ($this->multiPrimary)
 		{

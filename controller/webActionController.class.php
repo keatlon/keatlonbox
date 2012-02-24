@@ -135,7 +135,7 @@ abstract class webActionController extends actionController
 	{
 		if (!$renderer)
 		{
-			$renderer	=	request::accept();
+			$renderer	=	application::getRenderer();
 		}
 
 		rendererFactory::create($renderer)->render($this, $view);

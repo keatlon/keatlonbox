@@ -8,6 +8,7 @@ class application
 	static protected	$layout		=	false;
     static protected	$queue		=	array();
     static protected	$events		=	array();
+	static protected 	$renderer	=	false;
     static public		$name		=	null;
     static public		$i18n		=	null;
 
@@ -77,7 +78,7 @@ class application
         {}
 
 
-		switch(request::accept())
+		switch(self::getRenderer())
 		{
 			case	rendererFactory::HTML:
 
@@ -95,6 +96,7 @@ class application
 				}
 				break;
 
+			case	rendererFactory::DIALOG:
 			case	rendererFactory::JSON:
 				application::render();
 				break;
@@ -182,6 +184,16 @@ class application
 	static function render($stack = 'default')
 	{
 		application::getLastAction()->render();
+	}
+
+	static function setRenderer($renderer)
+	{
+		self::$renderer	=	$renderer;
+	}
+
+	static function getRenderer()
+	{
+		return self::$renderer;
 	}
 }
 

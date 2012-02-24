@@ -46,7 +46,7 @@ var dialogClass = function()
 
 	this.load = function ( url, params )
 	{
-		ajax.get(url, params);
+		ajax.get(url, params, false, 'dialog');
 	}
 
     this.show = function ( title, content )

@@ -60,7 +60,7 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  getList( $where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $join, $order, $limit, $offset, $total, $more);
+        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $order, $limit, $offset, $total, $more);
     }
 
 
@@ -75,7 +75,7 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  getSlicedList( $where = array(), $offset = false, $limit = false, &$total = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, false, false, $limit, $offset, $total );
+        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, false, $limit, $offset, $total );
     }
 
     /**

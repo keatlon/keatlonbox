@@ -37,23 +37,33 @@ var ajaxClass = function()
 		}, datatype);
 	}
 
-	this.get = function (url, params, callback, datatype)
+	this.get = function (url, params, callback, renderer)
 	{
-		if (typeof datatype == 'undefined')
+		if (typeof renderer == 'undefined')
 		{
-			datatype = 'json';
+			renderer = 'dialog';
 		}
 
-		$.get(url, params, function(response){
-			
-			if (typeof callback == 'function')
+		$.ajax(url,
+		{
+			url			:	url,
+			type		:	'GET',
+			data 		:	params,
+			dataType	:	'json',
+			headers		:	{ 'KBox-Renderer' : renderer},
+			success		:	function(response, textStatus, jqXHR)
 			{
-				callback(response);
-			}
-			
-			application.dispatch(response);
+				if (typeof callback == 'function')
+				{
+					callback(response);
+				}
 
-		}, datatype);
+				application.dispatch(response);
+			}
+
+		})
+
+
 	}
 
 	this.put = function (url, params, callback, datatype)

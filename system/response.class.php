@@ -28,7 +28,7 @@ class response
 		(
 			'module'	=>	$action->getModuleName(),
 			'action'	=>	$action->getActionName(),
-			'renderer'	=>	request::accept(),
+			'renderer'	=>	application::getRenderer(),
 			'js'		=>	array
 			(
 				'dispatcher'	=>	$jsDispatcher,
