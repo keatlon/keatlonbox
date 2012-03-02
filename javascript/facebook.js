@@ -43,7 +43,7 @@ var facebookClass = function ()
 			var url = '/account/signout';
 		}
 
-		FB.getLoginStatus(function (response) { this._disconnect(response, url) } );
+		FB.getLoginStatus(function (response) { facebook._disconnect(response, url) } );
 	}
 
 	this._disconnect = function (response, url)
