@@ -70,8 +70,8 @@ class request
 
 	static public function init()
 	{
-		self::setRenderer();
 		self::method($_SERVER['REQUEST_METHOD']);
+		self::setRenderer();
 		self::data(url::parse($_SERVER['REQUEST_URI']));
 	}
 
@@ -95,6 +95,11 @@ class request
 		if (conf::i()->application[application::$name]['renderer'])
 		{
 			return application::setRenderer(conf::i()->application[application::$name]['renderer']);
+		}
+
+		if (self::isPost())
+		{
+			return application::setRenderer(rendererFactory::JSON);
 		}
 
 		if (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false)
@@ -126,6 +131,11 @@ class request
 	static function isXml()
 	{
 		return (application::getRenderer() == rendererFactory::XML);
+	}
+
+	static function isPost()
+	{
+		return (self::method() == 'POST');
 	}
 
 	static function raw()
