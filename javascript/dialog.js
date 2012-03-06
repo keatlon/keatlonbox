@@ -6,6 +6,7 @@ var dialogClass = function()
 		width		:	'auto',
 		height		:	'auto',
 		autoOpen	:	false,
+		autoResize	:	true,
 		bgiframe	:	true,
 		modal		:	true,
 		show		:	{effect:'fadeup', duration:250},
@@ -41,8 +42,6 @@ var dialogClass = function()
 			return false;
 		}
 
-		$('#dialog').dialog('option', dialog.options);
-
 		if (typeof response.options != 'undefined')
 		{
 			$('#dialog').dialog('option', response.options);
@@ -64,6 +63,7 @@ var dialogClass = function()
     this.show = function ( title, content )
 	{
         $('#' + contentContainer).html( content );
+
         $('#ui-dialog-title-dialog').html( title );
         $('#dialog').dialog('open');
     }
