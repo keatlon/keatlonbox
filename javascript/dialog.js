@@ -1,22 +1,32 @@
 var dialogClass = function()
 {
 	var contentContainer = 'dialog';
+	this.options =
+	{
+		width		:	'auto',
+		height		:	'auto',
+		autoOpen	:	false,
+		bgiframe	:	true,
+		modal		:	true,
+		show		:	{effect:'fadeup', duration:250},
+		hide		:	{effect:'fadedown', duration:250},
+		minHeight	:	0,
+		position	:	'center',
+		closeText	:	'Close',
+		close		:	function ()
+		{
+			$('.wrapper').removeClass('blurred');
+		},
+		open		:	function ()
+		{
+			$('.wrapper').addClass('blurred');
+		}
+	};
 
 	this.configure = function(config)
 	{
 		$('body').append('<div id="dialog"></div>');
-		$('#dialog').dialog(
-		{
-			width		:	'auto',
-			autoOpen	:	false,
-			bgiframe	:	true,
-			modal		:	true,
-			show		:	{effect:'fadeup', duration:250},
-			hide		:	{effect:'fadedown', duration:250},
-			minHeight	:	0,
-			position	:	['center','80px'],
-			closeText	:	'Close'
-		});
+		$('#dialog').dialog(dialog.options);
 	}
 
 	this.close = function ( )
@@ -30,6 +40,8 @@ var dialogClass = function()
 		{
 			return false;
 		}
+
+		$('#dialog').dialog('option', dialog.options);
 
 		if (typeof response.options != 'undefined')
 		{
