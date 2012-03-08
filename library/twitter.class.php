@@ -82,6 +82,33 @@ class twitter
 		return false;
 	}
 
+	static function getProfile($userId, $twitterId)
+	{
+		$token			=	session::get('twatoken');
+
+		if (!$token)
+		{
+			return false;
+		}
+
+		self::i()->setToken($token['oauth_token'], $token['oauth_token_secret']);
+		self::i()->setAuthType(OAUTH_AUTH_TYPE_AUTHORIZATION);
+
+		try
+		{
+			self::i()->fetch('https://api.twitter.com/1/users/show.json', array(
+				'user_id'	=>	$twitterId
+			), OAUTH_HTTP_METHOD_GET);
+
+			return json_decode(self::i()->getLastResponse(), true);
+		}
+		catch(Exception $e)
+		{
+			log::exception($e);
+			return false;
+		}
+	}
+
 	static function post($userId, $message)
 	{
 		if (!$message)

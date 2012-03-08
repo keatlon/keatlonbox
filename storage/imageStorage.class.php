@@ -50,19 +50,27 @@ class imageStorage extends storage
 		return self::subpath($id) . self::getFilename($id, $size) . '.jpg';
 	}
 
-	static function webPath($id, $size, $fullPath = true, $suffix = false)
+	static function webPath($id, $size, $fullPath = true, $suffix = false, $type = 'all')
 	{
+
 		if ($suffix)
 		{
 			$suffix = '_' . str_replace(' ', '_' , $suffix);
 		}
 
+		if (!$id)
+		{
+			return conf::i()->image['default'][$type][$size];
+		}
+
+		$url	=	self::subpath($id) . self::getFilename($id, $size) . $suffix . '.jpg';
+
 	    if ($fullPath)
 	    {
-			return conf::i()->domains['image'] . self::subpath($id) . self::getFilename($id, $size) . $suffix . '.jpg';
+			return conf::i()->domains['image'] . $url;
 	    }
 	    
-	    return self::subpath($id) . self::getFilename($id, $size) . '.jpg';
+	    return $url;
 	}
 
 	static function crop($id, $sourceType, $destinationType, $width, $height, $offsetX, $offsetY)
