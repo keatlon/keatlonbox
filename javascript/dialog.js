@@ -12,7 +12,7 @@ var dialogClass = function()
 		show		:	{effect:'fadeup', duration:250},
 		hide		:	{effect:'fadedown', duration:250},
 		minHeight	:	0,
-		position	:	'center',
+		position	:	['center', 80],
 		closeText	:	'Close',
 		close		:	function ()
 		{
