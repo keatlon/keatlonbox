@@ -7,7 +7,10 @@ class resizeImageController extends taskActionController
 		
 		if( file_exists($staticFile))
 		{
-			$this->out($staticFile);
+			if (!$params['convert'])
+			{
+				$this->out($staticFile);
+			}
 			return;
 		}
 
@@ -96,7 +99,6 @@ class resizeImageController extends taskActionController
 
 		if (!$params['convert'])
 		{
-
 	        $content = file_get_contents($cachePath);
 			
 			header('Content-Type: image/jpeg');
