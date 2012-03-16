@@ -3,6 +3,8 @@ class imageStorage extends storage
 {
 	static function save($tmpFile)
 	{
+		$data	=	array();
+
 		switch(conf::i()->database['engine'])
 		{
 			case	'mysql':
