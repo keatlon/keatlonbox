@@ -272,6 +272,11 @@ var applicationClass = function ()
 
 	this.initSlicers = function(selector, init)
 	{
+		if (typeof slicers == 'undefined')
+		{
+			return false;
+		}
+
 		for(l in slicers)
 		{
 			slicers[l].obj = new slicer( slicers[l]);

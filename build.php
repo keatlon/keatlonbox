@@ -135,6 +135,3 @@ function parseArguments($arguments)
 	
 	return $items;
 }
-
-
-?>

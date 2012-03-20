@@ -75,7 +75,7 @@ class imageStorage extends storage
 	    return $url;
 	}
 
-	static function crop($id, $sourceType, $destinationType, $width, $height, $offsetX, $offsetY)
+	static function crop($id, $sourceType, $destinationType, $width, $height, $offsetX, $offsetY, $useOriginal = true)
 	{
         if ($sourceType)
         {
@@ -86,26 +86,37 @@ class imageStorage extends storage
             $sourceFile = self::storagePath($id);
         }
 
-		$originalFile = self::storagePath($id);
+		$sourceSize			=	getimagesize($sourceFile);
+		$sourceWidth		=	$sourceSize[0];
+		$sourceHeight		=	$sourceSize[1];
 
-		$sourceSize		= getimagesize($sourceFile);
-		$sourceWidth	= $sourceSize[0];
-		$sourceHeight	= $sourceSize[1];
+		$destinationFile	= self::cachePath($id, $destinationType);
 
-		$originalSize	= getimagesize($originalFile);
-		$originalWidth	= $originalSize[0];
-		$originalHeight	= $originalSize[1];
+		if ($useOriginal)
+		{
+			$originalFile 	= 	self::storagePath($id);
+			$sourceFile		=	$originalFile;
+			$originalSize	= 	getimagesize($originalFile);
+			$originalWidth	= 	$originalSize[0];
+			$originalHeight	= 	$originalSize[1];
 
-        $destinationFile = self::cachePath($id, $destinationType);
+			$rectangle['left']		=	floor($offsetX * $originalWidth / $sourceWidth);
+			$rectangle['top']		=	floor($offsetY * $originalHeight / $sourceHeight);
+			$rectangle['width']		=	floor($width * $originalWidth / $sourceWidth);
+			$rectangle['height']	=	floor($height * $originalHeight / $sourceHeight);
+		}
+		else
+		{
+			$rectangle['left']		= 	$offsetX;
+			$rectangle['top']		= 	$offsetY;
+			$rectangle['width']		= 	$width;
+			$rectangle['height']	= 	$height;
+		}
 
-		$original['top']	= floor($offsetY * $originalHeight / $sourceHeight);
-		$original['left']	= floor($offsetX * $originalWidth / $sourceWidth);
-		$original['height']	= floor($height * $originalHeight / $sourceHeight);
-		$original['width']	= floor($width * $originalWidth / $sourceWidth);
 
         storage::preparePath($destinationFile);
 
-        $cmd = conf::i()->image['imagick'] . ' ' . $originalFile . ' -crop '. $original['width'] . 'x' . $original['height'] . '+' . $original['left'] . '+' . $original['top'] . ' -quality 90 ' . $destinationFile;
+        $cmd = conf::i()->image['imagick'] . ' ' . $sourceFile . ' -crop '. $rectangle['width'] . 'x' . $rectangle['height'] . '+' . $rectangle['left'] . '+' . $rectangle['top'] . ' -quality 90 ' . $destinationFile;
 
         if (conf::i()->image['escapecmd'])
         {
