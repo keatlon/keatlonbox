@@ -124,6 +124,30 @@ class %BASECLASSNAME% extends dbPeer
         return dbPeer::getInstance('%CLASSNAME%')->doDelete( $primaryKey );
     }
 
+	static function setMeta($id, $values)
+	{
+		$item	=	dbPeer::getInstance('%CLASSNAME%')->doGetItem($id);
+		$meta	=	json_decode($item['meta'], true);
+
+		foreach ($values as $key => $value)
+		{
+			$meta[$key]	=	$value;
+		}
+
+		dbPeer::getInstance('%CLASSNAME%')->doUpdate($id, array('meta' => json_encode($meta)));
+	}
+
+	static function getMeta($id, $key, $item = false)
+	{
+		if (!$item)
+		{
+			$item	=	dbPeer::getInstance('%CLASSNAME%')->doGetItem($id);
+		}
+
+		$meta	=	json_decode($item['meta'], true);
+		return $meta[$key];
+	}
+
 
 }
 
