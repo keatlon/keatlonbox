@@ -24,7 +24,7 @@ class db
 			{
 				continue;
 			}
-			
+
 			if (is_int($value))
 			{
 				$statement->bindValue( ":{$key}", $value, PDO::PARAM_INT);

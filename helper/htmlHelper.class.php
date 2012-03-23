@@ -2,9 +2,9 @@
 
 class htmlHelper
 {
-    static function selected($current, $value)
+    static function selected($current, $value, $class = 'selected')
     {
-        return (bool)($current == $value) ? 'selected' : '';
+        return (bool)($current == $value) ? $class : '';
     }
 
 	static function selectedModuleAction($module, $action, $extra = true)
