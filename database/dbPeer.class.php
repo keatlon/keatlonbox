@@ -199,7 +199,6 @@ abstract class dbPeer
 
 			$columns[]	=	'created';
 			$sqlColumns	=	implode(",", $columns);
-
 			return db::exec('INSERT INTO ' . $this->tableName . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $this->connectionName);
 		}
 
@@ -209,10 +208,13 @@ abstract class dbPeer
 
 		foreach ($data as $column => $value)
 		{
-			$insert_data[] = "{$column} = :{$column}";
+			$insert_data[] = "`{$column}` = :{$column}";
 		}
 
-		db::exec('INSERT INTO ' . $this->tableName . ' SET ' . implode(', ', $insert_data), $data, $this->connectionName);
+		$sql	=	'INSERT INTO ' . $this->tableName . ' SET ' . implode(', ', $insert_data);
+
+
+		db::exec($sql, $data, $this->connectionName);
 
 		return db::lastId();
 	}
@@ -270,7 +272,7 @@ abstract class dbPeer
 					break;
 				
 				default:
-					$update_data[] = "{$column} = :{$column}";
+					$update_data[] = "`{$column}` = :{$column}";
 					break;
 			}
 
