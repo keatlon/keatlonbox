@@ -39,7 +39,14 @@ abstract class dbPeer
 			return false;
 		}
 
-		return db::row('SELECT * FROM ' . $this->tableName . " WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($primaryKey), $this->connectionName);
+		$row = db::row('SELECT * FROM ' . $this->tableName . " WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($primaryKey), $this->connectionName);
+
+		if ($row['meta'])
+		{
+			$row['meta']	=	json_decode($row['meta'], true);
+		}
+
+		return $row;
 	}
 
 	public function doGetItems($primaryKeys)
