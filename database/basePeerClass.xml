@@ -127,7 +127,7 @@ class %BASECLASSNAME% extends dbPeer
 	static function setMeta($id, $values)
 	{
 		$item	=	dbPeer::getInstance('%CLASSNAME%')->doGetItem($id);
-		$meta	=	json_decode($item['meta'], true);
+		$meta	=	$item['meta'];
 
 		foreach ($values as $key => $value)
 		{

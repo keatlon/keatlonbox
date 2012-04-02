@@ -116,6 +116,8 @@ class request
 		{
 			return application::setRenderer(rendererFactory::JSON);
 		}
+
+		return application::setRenderer(rendererFactory::HTML);
 	}
 
 	static function isHtml()
