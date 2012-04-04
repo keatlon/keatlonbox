@@ -4,18 +4,18 @@ class storage
 	const STORAGE	= 1;
 	const WEB		= 2;
 
-	public static function preparePath($file)
+	static function preparePath($file)
 	{
 		self::createDir(pathinfo($file, PATHINFO_DIRNAME));
 	}
 	
-	protected static function store($input, $output)
+	static function store($input, $output)
 	{
 		self::preparePath($output);
 		return copy($input, $output);
 	}
 
-	protected static function subpath($id)
+	static function subpath($id)
 	{
 		switch(conf::i()->database['engine'])
 		{
@@ -32,7 +32,8 @@ class storage
 
 	protected static function createDir($dir)
 	{
-        $parts	=	(array)explode('/', $dir);
+		$basedir	=	'';
+        $parts		=	(array)explode('/', $dir);
 
         foreach ($parts as $part)
         {
@@ -53,7 +54,7 @@ class storage
         return true;
     }
 
-	protected static function getFilename($id, $size = false)
+	static function getFilename($id, $size = false)
 	{
 		if (!$size)
 		{
