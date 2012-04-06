@@ -132,4 +132,18 @@ class auth
 		$extra	=	auth::getExtraCredentials();
 		return ($extra['role'] ? $extra['role'] : 'guest');
 	}
+
+	static function roleIn($roles)
+	{
+		$extra	=	auth::getExtraCredentials();
+		$role	=	($extra['role'] ? $extra['role'] : 'guest');
+
+		if (is_array($roles))
+		{
+			return in_array($role, $roles);
+		}
+
+		return (bool)($role == $roles);
+	}
+
 }
