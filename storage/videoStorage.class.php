@@ -1,7 +1,6 @@
 <?php
 class videoStorage extends storage
 {
-	const CENSORSHIP	= 1;
 
 	static function save($type, $filename)
 	{
