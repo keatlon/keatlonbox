@@ -8,6 +8,11 @@ class request
 	protected	static	$accept		=	false;
 	protected	static	$data		= false;
 
+	static function fileExists()
+	{
+		return !empty($_FILES);
+	}
+
 	static function file($name)
 	{
 		return $_FILES[$name];

@@ -20,7 +20,15 @@ class jsonRenderer extends baseRenderer
 
 		response::set('data', $data);
 
-		echo json_encode(response::get());
+		if (request::get('KBOX_REQUEST_SRC') == 'iframe')
+		{
+			echo '<textarea>' . json_encode(response::get()) . '</textarea>';
+		}
+		else
+		{
+			echo json_encode(response::get());
+		}
+
 
 		$__action->afterRender();
 	}
