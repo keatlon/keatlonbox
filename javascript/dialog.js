@@ -55,9 +55,9 @@ var dialogClass = function()
 		});
 	}
 
-	this.load = function ( url, params )
+	this.load = function ( url, params, cb )
 	{
-		ajax.get(url, params, false, 'dialog');
+		ajax.get(url, params, cb, 'dialog');
 	}
 
     this.show = function ( title, content )

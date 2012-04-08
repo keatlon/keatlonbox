@@ -53,13 +53,14 @@
 
 			self.options.iframe.bind('load', function (){
 				var response	=	$.parseJSON(self.options.iframe.contents().find('textarea').val());
+
 				if (!response)
 				{
 					return false;
 				}
 
-				self._onResponse(response);
 				application.dispatch(response);
+				self._onResponse(response);
 			});
 
 		},
@@ -237,21 +238,3 @@
   };
   
 })(jQuery);
-
-(function (original) {
-  $.fn.clone = function () {
-    var result = original.apply (this, arguments),
-        my_textareas = this.find('textarea'),
-    result_textareas = result.find('textarea'),
-        my_selects = this.find('select'),
-    result_selects = result.find('select');
-
-    for (var i = 0, l = my_textareas.length; i < l; ++i)
-      $(result_textareas[i]).val ($(my_textareas[i]).val());
-
-    for (var i = 0, l = my_selects.length; i < l; ++i)
-      $(result_selects[i]).val ($(my_selects[i]).val());
-
-    return result;
-  };
-}) ($.fn.clone);
