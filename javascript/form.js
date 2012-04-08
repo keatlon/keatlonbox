@@ -35,12 +35,33 @@
 		_createIFrame	: function() 
 		{
 			var self				=	this;
+
+			self.element.append(
+				$('<input type="hidden">').
+				attr("name", "KBOX_REQUEST_SRC").
+				attr("value", "iframe")
+			);
+
 			self.options.iframeId	=	this._getIFrameSelector(this.options.action);
-			self.options.iframe		=	$('<iframe style="display:none;"></iframe>').
-											attr("id", self.options.iframeId).
-											attr('name', self.options.iframeId);
-			
+			self.options.iframe		=	$('<iframe>').
+			attr("id", self.options.iframeId).
+			attr('name', self.options.iframeId).
+			css({ position: 'absolute', top: '-1000px', left: '-1000px' });
+
+			self.element.attr('target', self.options.iframeId);
 			$('body').append(self.options.iframe);
+
+			self.options.iframe.bind('load', function (){
+				var response	=	$.parseJSON(self.options.iframe.contents().find('textarea').val());
+				if (!response)
+				{
+					return false;
+				}
+
+				self._onResponse(response);
+				application.dispatch(response);
+			});
+
 		},
 
 		_markup	: function() {
@@ -60,46 +81,6 @@
 			if (self.options.multipart)
 			{
 				self._createIFrame();
-			}
-		},
-
-		_prepare	:	function()
-		{
-			var self			=	this;
-			self.options.form	=	self.element.clone();
-			
-			if (this.options.multipart)
-			{
-				self.options.iframe.contents().find('body').append(self.options.form);
-				
-				self.options.form.bind('submit', function (event){
-
-					self.options.iframe.bind('load', function()
-					{
-						var response	=	$.parseJSON(self.options.iframe.contents().find('body').html());
-
-						self._onResponse(response);
-						self.options.iframe.unbind('load');
-						application.dispatch(response);
-					});
-				});
-				
-			}
-			else
-			{
-				self.options.form.bind('submit', function (event){
-
-					ajax.put
-					(	
-						self.options.form.attr('action'),
-						self._prepareData(self.options.form.serializeObject()), 
-						$.proxy(self._onResponse, self)
-					);
-						
-					event.preventDefault();
-					
-					return false;
-				});
 			}
 		},
 
@@ -141,22 +122,8 @@
 						return false;
 					}
 				}
-				
+
 				self._disableSubmit();
-				
-				self._prepare();
-				
-				if (self.options.multipart)
-				{
-					self.options.iframe.contents().find('form').submit();
-				}
-				else
-				{
-					self.options.form.submit();
-				}
-				
-				event.preventDefault();
-				return false;
 			});
 			
 		},
@@ -165,6 +132,7 @@
 		{
 			this._enableSubmit();
 			
+			this._hideErrors(response);
 			this._showErrors(response);
 			
 			if (typeof response != 'object')

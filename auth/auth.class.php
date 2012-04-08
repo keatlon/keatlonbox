@@ -143,7 +143,7 @@ class auth
 			return in_array($role, $roles);
 		}
 
-		return (bool)($role == $roles);
+		return (bool)($roles == $role);
 	}
 
 }
