@@ -133,8 +133,9 @@ class auth
 		return ($extra['role'] ? $extra['role'] : 'guest');
 	}
 
-	static function roleIn($roles)
+	static function roleIn()
 	{
+		$roles	=	func_get_args();
 		$extra	=	auth::getExtraCredentials();
 		$role	=	($extra['role'] ? $extra['role'] : 'guest');
 
