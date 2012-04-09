@@ -79,10 +79,7 @@
 				}
 			});
 			
-			if (self.options.multipart)
-			{
-				self._createIFrame();
-			}
+			self._createIFrame();
 		},
 
 		_create	: function() {
