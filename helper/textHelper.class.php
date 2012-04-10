@@ -11,11 +11,11 @@ class textHelper
 	{
 		$start_pos  = strpos($text, '(:');
 
-        while($start_pos)
+        while($start_pos !== false)
 		{
-            $end_pos    = strpos($text, ')', $start_pos);
+            $end_pos    = mb_strpos($text, ')', $start_pos);
 
-            $variants   = substr($text, $start_pos + 2, $end_pos - $start_pos - 2);
+            $variants   = mb_substr($text, $start_pos + 2, $end_pos - $start_pos - 2);
 
             $set = explode(',', $variants);
 
@@ -28,7 +28,7 @@ class textHelper
             }
 
             $text = str_replace('(:' . $variants . ')', $replacement, $text);
-    		$start_pos  = strpos($text, '(:');
+    		$start_pos  = mb_strpos($text, '(:');
         }
 
 	    return htmlspecialchars(sprintf($text, $num), ENT_QUOTES);
