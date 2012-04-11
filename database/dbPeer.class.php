@@ -94,36 +94,36 @@ abstract class dbPeer
 				switch ($operand)
 				{
 					case 'in':
-						$where_clause[] = "{$key} IN (:{$bindKey})";
+						$where_clause[] = "`{$key}` IN (:{$bindKey})";
 						break;
 					
 					case '!=':
-						$where_clause[] = "{$key} <> :{$bindKey}";
+						$where_clause[] = "`{$key}` <> :{$bindKey}";
 						break;
 
 					case '>':
-						$where_clause[] = "{$key} > :{$bindKey}";
+						$where_clause[] = "`{$key}` > :{$bindKey}";
 						break;
 
 					case '>=':
-						$where_clause[] = "{$key} >= :{$bindKey}";
+						$where_clause[] = "`{$key}` >= :{$bindKey}";
 						break;
 
 					case '<':
-						$where_clause[] = "{$key} < :{$bindKey}";
+						$where_clause[] = "`{$key}` < :{$bindKey}";
 						break;
 
 					case '<=':
-						$where_clause[] = "{$key} <= :{$bindKey}";
+						$where_clause[] = "`{$key}` <= :{$bindKey}";
 						break;
 
 					case '%':
-						$where_clause[] = "{$key} LIKE :{$bindKey}";
+						$where_clause[] = "`{$key}` LIKE :{$bindKey}";
 						$value = '%' . $value . '%';
 						break;
 
 					default:
-						$where_clause[] = "{$key} = :{$bindKey}";
+						$where_clause[] = "`{$key}` = :{$bindKey}";
 				}
 
 
@@ -206,7 +206,7 @@ abstract class dbPeer
 
 			$columns[]	=	'created';
 			$sqlColumns	=	implode(",", $columns);
-			return db::exec('INSERT INTO ' . $this->tableName . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $this->connectionName);
+			return db::exec('INSERT INTO `' . $this->tableName . '` (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $this->connectionName);
 		}
 
 		$data['created'] = time();
@@ -218,7 +218,7 @@ abstract class dbPeer
 			$insert_data[] = "`{$column}` = :{$column}";
 		}
 
-		$sql	=	'INSERT INTO ' . $this->tableName . ' SET ' . implode(', ', $insert_data);
+		$sql	=	'INSERT INTO `' . $this->tableName . '` SET ' . implode(', ', $insert_data);
 
 
 		db::exec($sql, $data, $this->connectionName);
@@ -240,10 +240,10 @@ abstract class dbPeer
 
 		foreach ($data as $column => $value)
 		{
-			$insert_data[] = "{$column} = :{$column}";
+			$insert_data[] = "`{$column}` = :{$column}";
 		}
 
-		db::exec('REPLACE INTO ' . $this->tableName . ' SET ' . implode(', ', $insert_data), $data, $this->connectionName);
+		db::exec('REPLACE INTO `' . $this->tableName . '` SET ' . implode(', ', $insert_data), $data, $this->connectionName);
 
 		return db::lastId();
 	}
@@ -288,7 +288,7 @@ abstract class dbPeer
 		$data = $this->doBindPrimaryKey($primaryKey, $data);
 		
 
-		return db::exec('UPDATE ' . $this->tableName . ' SET ' . implode(', ', $update_data) . " WHERE {$this->primaryBind}", $data, $this->connectionName);
+		return db::exec('UPDATE `' . $this->tableName . '` SET ' . implode(', ', $update_data) . " WHERE {$this->primaryBind}", $data, $this->connectionName);
 	}
 
 	/**
@@ -308,7 +308,7 @@ abstract class dbPeer
 			return true;
 		}
 
-		return db::exec('DELETE FROM ' . $this->tableName . ' WHERE ' . "{$this->primaryBind}", $this->doBindPrimaryKey($primaryKey), $this->connectionName);
+		return db::exec('DELETE FROM `' . $this->tableName . '` WHERE ' . "{$this->primaryBind}", $this->doBindPrimaryKey($primaryKey), $this->connectionName);
 	}
 
 	/**
