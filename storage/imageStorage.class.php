@@ -113,19 +113,18 @@ class imageStorage extends storage
 			$rectangle['height']	= 	$height;
 		}
 
+		$resizeOptions = conf::i()->image['sizes'][$destinationType];
 
         storage::preparePath($destinationFile);
 
-        $cmd = conf::i()->image['imagick'] . ' ' . $sourceFile . ' -crop '. $rectangle['width'] . 'x' . $rectangle['height'] . '+' . $rectangle['left'] . '+' . $rectangle['top'] . ' -quality 90 ' . $destinationFile;
+        $cmd = conf::i()->image['imagick'] . ' ' . $sourceFile . ' -crop '. $rectangle['width'] . 'x' . $rectangle['height'] . '+' . $rectangle['left'] . '+' . $rectangle['top'] . ' ' . $resizeOptions . ' ' . $destinationFile;
 
         if (conf::i()->image['escapecmd'])
         {
             $cmd = escapeshellcmd($cmd);
         }
 
-        exec($cmd);
-
-		return $percent;
+        return exec($cmd);
 	}
 
 	static function convert($id, $sourceType, $destinationType)
