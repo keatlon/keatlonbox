@@ -7,9 +7,14 @@ class htmlHelper
         return (bool)($current == $value) ? $class : '';
     }
 
-	static function selectedModuleAction($module, $action, $extra = true)
+	static function selectedModuleAction($module, $action = false, $extra = true)
 	{
-		if ($extra && $module == application::getLastAction()->getModuleName() && $action == application::getLastAction()->getActionName())
+		if ($action && $extra && $module == application::getLastAction()->getModuleName() && $action == application::getLastAction()->getActionName())
+		{
+			return 'selected';
+		}
+
+		if (!$action && $extra && $module == application::getLastAction()->getModuleName())
 		{
 			return 'selected';
 		}
