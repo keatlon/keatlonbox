@@ -25,7 +25,7 @@ class log
 
 
 		$output[]	=	get_class($e) . ': ' . $e->getMessage();
-		$output[]	=	$divider;
+		$output[]	=	'';
 
 		$trace	=	$e->getTrace();
 
@@ -36,7 +36,7 @@ class log
 			$output[]	=	$divider;
 		}
 
-        log::push(log::E_EXCEPTION, false, implode("\n", $output));
+        log::push(implode("\n", $output), false, log::E_EXCEPTION);
     }
 
     static public function php_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
@@ -53,10 +53,10 @@ class log
 				break;
 		}
 		
-		log::push(log::E_PHP, $errno, $message);
+		log::push($message, $errno, log::E_PHP);
     }
 
-    public static function push($type, $label, $msg = false)
+    public static function push($msg, $label = 'default', $type = log::E_USER)
     {
 		if (conf::i()->debug['display_errors'])
 		{
