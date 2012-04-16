@@ -35,7 +35,7 @@ class Minify_Logger {
      */
     public static function log($msg, $label = 'Minify') {
         if (! self::$_logger) return;
-        self::$_logger->push(log::E_PHP, $label, $msg);
+        self::$_logger->push($msg, $label, log::_PHP);
     }
     
     /**

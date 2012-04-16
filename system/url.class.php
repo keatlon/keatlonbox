@@ -35,7 +35,7 @@ class url
 
 		$defaultController = conf::i()->application[application::$name]['default'];
 
-		if (auth::hasCredentials())
+		if (auth::id())
 		{
 			$result['module'] 	= $defaultController['signedin'][0];
 			$result['action'] 	= $defaultController['signedin'][1];

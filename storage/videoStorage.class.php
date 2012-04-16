@@ -4,7 +4,7 @@ class videoStorage extends storage
 
 	static function save($type, $filename)
 	{
-		$id	= videoPeer::insert(array('user_id' => auth::getCredentials(), 'type' => $type));
+		$id	= videoPeer::insert(array('user_id' => auth::id(), 'type' => $type));
 
 		if (!storage::store($filename, videoStorage::storagePath($id)))
 		{
