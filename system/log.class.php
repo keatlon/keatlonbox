@@ -33,7 +33,7 @@ class log
 		{
 			$output[]	=	"\t" . $traceItem['file'] . '(line ' . $traceItem['line'] . ')';
 			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'] . json_encode($traceItem['args']);
-			$output[]	=	$divider;
+			$output[]	=	'';
 		}
 
         log::push(implode("\n", $output), false, log::E_EXCEPTION);

@@ -9,45 +9,31 @@ abstract class authBase
 		return false;
 	}
 
-    function getCredentials() 
+    function id()
 	{
-		return $_SESSION['c'][get_class($this)];
+		return $_SESSION['KBOX'][get_class($this)]['id'];
 	}
 
-    function createUser($data) {}
-
-    function setCredentials($userId, $role = 'member')
-    {
-		$this->setExtraCredentials(array('role' => $role));
-        $_SESSION['c'][get_class($this)]    = $userId;
-    }
-
-    function setExtraCredentials($data)
-    {
-        $_SESSION['ce'][get_class($this)]    = $data;
-    }
-
-    function getExtraCredentials()
-    {
-        return $_SESSION['ce'][get_class($this)];
-    }
-
-
-    function hasCredentials()
+	function role()
 	{
-        return isset($_SESSION['c'][get_class($this)]);
+		return $_SESSION['KBOX'][get_class($this)]['role'];
+	}
+
+    function set($userId, $role = 'member')
+    {
+		$_SESSION['KBOX'][get_class($this)]['role']	=	$role;
+        $_SESSION['KBOX'][get_class($this)]['id']	=	$userId;
     }
 
-    function clearCredentials()
+    function clear()
 	{
         unset($_SESSION['c'][get_class($this)]);
-        unset($_SESSION['ce'][get_class($this)]);
 		session::destroy();
     }
 
     function me($id)
     {
-        return ($id == $this->getCredentials());
+        return ($id == $this->id());
     }
 
 }

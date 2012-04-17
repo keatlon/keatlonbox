@@ -11,13 +11,8 @@ class auth
 	 * @param type enum server|cp|guest|web|iphone
 	 * @return authBase
 	 */
-	static function i($type = false, $application = false)
+	static function i($type = false)
 	{
-		if (!$application)
-		{
-			$application = application::$name;
-		}
-
 		if (!$type)
 		{
 			$type = self::$gateway;
@@ -39,62 +34,36 @@ class auth
 
 	static function mongoId()
 	{
-		return _mongo::primary(self::i()->getCredentials());
+		return _mongo::primary(self::i()->id());
 	}
 
 	static function id()
 	{
-		return self::i()->getCredentials();
+		return self::i()->id();
 	}
 	
-	static function getCredentials()
+	static function set($userId, $role = 'member')
 	{
-		return self::i()->getCredentials();
+		return self::i()->set($userId, $role);
 	}
 
-	static function getExtraCredentials()
+	static function clear()
 	{
-		return self::i()->getExtraCredentials();
-	}
-
-	static function createUser($data)
-	{
-		return self::i()->createUser($data);
-	}
-
-	static function setCredentials($userId, $role = 'member')
-	{
-		return self::i()->setCredentials($userId, $role);
-	}
-
-	static function setExtraCredentials($data)
-	{
-		return self::i()->setExtraCredentials($data);
-	}
-
-	static function hasCredentials()
-	{
-		return self::i()->hasCredentials();
-	}
-
-	static function clearCredentials()
-	{
-		return self::i()->clearCredentials();
+		return self::i()->clear();
 	}
 
 	public static function me($id)
 	{
-		$args = func_get_args();
-		return call_user_func_array(array(self::i(), __FUNCTION__), $args);
+		return call_user_func_array(array(self::i(), __FUNCTION__), func_get_args());
 	}
 
-	static function setGateway($gateway)
+	static function gateway($gateway = false)
 	{
-		self::$gateway = $gateway;
-	}
+		if ($gateway)
+		{
+			self::$gateway = $gateway;
+		}
 
-	static function getGateway()
-	{
 		return self::$gateway;
 	}
 
@@ -107,21 +76,21 @@ class auth
 
 		foreach(conf::i()->application[APPLICATION]['auth'] as $authEngine)
 		{
-			if (auth::i($authEngine)->getCredentials())
+			if (auth::i($authEngine)->id())
 			{
-				auth::setGateway($authEngine);
+				auth::gateway($authEngine);
 			}
 		}
 
-		if (!auth::getGateway())
+		if (!auth::gateway())
 		{
 			if (is_array(conf::i()->application[APPLICATION]['auth']))
 			{
-				auth::setGateway(conf::i()->application[APPLICATION]['auth'][0]);
+				auth::gateway(conf::i()->application[APPLICATION]['auth'][0]);
 			}
 			else
 			{
-				auth::setGateway('server');
+				auth::gateway('server');
 			}
 		}
 		
@@ -129,15 +98,13 @@ class auth
 
 	static function role()
 	{
-		$extra	=	auth::getExtraCredentials();
-		return ($extra['role'] ? $extra['role'] : 'guest');
+		return self::i()->role();
 	}
 
 	static function roleIn()
 	{
 		$roles	=	func_get_args();
-		$extra	=	auth::getExtraCredentials();
-		$role	=	($extra['role'] ? $extra['role'] : 'guest');
+		$role	=	auth::role();
 
 		if (is_array($roles))
 		{

@@ -271,6 +271,14 @@ return array
 		'localAuthorizeUrl'	=>	'/twitter/authorize',
 	),
 
+	'instagram' => array
+	(
+		'authorizeUrl'		=>	'https://api.instagram.com/oauth/authorize',
+		'requestTokenUrl'	=>	'https://api.instagram.com/oauth/request_token',
+		'accessTokenUrl'	=>	'https://api.instagram.com/oauth/access_token',
+		'localAuthorizeUrl'	=>	'/instagram/authorize',
+	),
+
 
 	/***********************************************************
 	*                      VKONTAKTE

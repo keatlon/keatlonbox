@@ -16,14 +16,8 @@ class authMysql extends authBase
             return false;
         }
 
-		$this->setCredentials($user['id'], $user['role']);
+		$this->set($user['id'], $user['role']);
 
         return $user['id'];
     }
-
-	function clearCredentials()
-	{
-		parent::clearCredentials();
-		response::redirect('/');
-	}
 }
