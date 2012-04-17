@@ -11,6 +11,7 @@ var dialogClass = function()
 		modal		:	true,
 		show		:	{effect:'fadeup', duration:250},
 		hide		:	{effect:'fadedown', duration:250},
+		resizable	:	false,
 		minHeight	:	0,
 		position	:	['center', 80],
 		closeText	:	'Close',
