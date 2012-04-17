@@ -28,7 +28,7 @@ class instagram
 
 		foreach ($params as $key => $value)
 		{
-			$uriparams[] = $key . '=' . urlencode($value);
+			$uriparams[] = $key . '=' . rawurlencode($value);
 		}
 
 		return implode('&', $uriparams);
@@ -49,13 +49,15 @@ class instagram
 		return response::redirect(conf::i()->instagram['authorizeUrl'] . '/?' . self::array2uri($params));
 	}
 
-	static function getAccessToken($code)
+	static function getAccessToken($code, $redirectUrl = false)
 	{
+		$redirectUrl = $redirectUrl ? $redirectUrl : conf::i()->domains['web'] . conf::i()->instagram['localAuthorizeUrl'];
+
 		$params	=	array
 		(
 			'client_id'		=>	conf::i()->instagram['key'],
 			'client_secret'	=>	conf::i()->instagram['secret'],
-			'redirect_uri'	=>	conf::i()->domains['web'] . conf::i()->instagram['localAuthorizeUrl'],
+			'redirect_uri'	=>	$redirectUrl,
 			'grant_type'	=>	'authorization_code',
 			'code'			=>	$code
 		);
