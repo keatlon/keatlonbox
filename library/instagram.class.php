@@ -34,13 +34,15 @@ class instagram
 		return implode('&', $uriparams);
 	}
 
-	static function getRequestToken()
+	static function getRequestToken($redirectUrl = false)
 	{
+		$redirectUrl = $redirectUrl ? $redirectUrl : conf::i()->domains['web'] . conf::i()->instagram['localAuthorizeUrl'];
+
 		$params	=	array
 		(
 			'client_id'		=>	conf::i()->instagram['key'],
 			'display'		=>	'touch',
-			'redirect_uri'	=>	conf::i()->domains['web'] . conf::i()->instagram['localAuthorizeUrl'],
+			'redirect_uri'	=>	$redirectUrl,
 			'response_type'	=>	'code'
 		);
 

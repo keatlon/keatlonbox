@@ -14,9 +14,11 @@ class url
     static function _parse($url)
     {
 		if (conf::i()->application[application::$name]['rewrite'])
-		foreach(conf::i()->application[application::$name]['rewrite'] as $pattern => $replacement)
 		{
-			$url = preg_replace($pattern, $replacement, $url);
+			foreach(conf::i()->application[application::$name]['rewrite'] as $pattern => $replacement)
+			{
+				$url = preg_replace($pattern, $replacement, $url);
+			}
 		}
 
 		$question = strpos($url, '?');
@@ -26,10 +28,7 @@ class url
 			$url = substr($url, 0, $question);
 		}
 
-        if ($url[0] == '/')
-        {
-            $url = substr($url, 1);
-        }
+		$url	=	trim($url, '/');
 
         $parts	= explode('/', $url);
 
