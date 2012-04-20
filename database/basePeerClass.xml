@@ -144,8 +144,12 @@ class %BASECLASSNAME% extends dbPeer
 			$item	=	dbPeer::getInstance('%CLASSNAME%')->doGetItem($id);
 		}
 
-		$meta	=	json_decode($item['meta'], true);
-		return $meta[$key];
+		if ($item['meta'])
+		{
+			return $item['meta'][$key];
+		}
+
+		return false;
 	}
 
 
