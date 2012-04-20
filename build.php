@@ -12,15 +12,11 @@ if (!$arguments)
 
 if (!isset($arguments['target']))
 {
-	$targets	=	array
-	(
-		'core',
-	);
+	printUsage();
+	exit (1);
 }
-else
-{
-	$targets	=	explode(',', $arguments['target']);
-}
+
+$targets	=	explode(',', $arguments['target']);
 
 if (isset($arguments['confdir']))
 {
@@ -32,8 +28,7 @@ define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
 $rootdir        =   dirname(__FILE__) . "/..";
 
 include dirname(__FILE__) . "/conf/init.php";
-
-include dirname(__FILE__) . "/system/builder.class.php";
+include dirname(__FILE__) . "/system/build.class.php";
 
 $cacheDir = $rootdir . conf::i()->cachedir;
 
@@ -42,42 +37,25 @@ if (!is_dir($cacheDir))
 	mkdir($cacheDir);
 }
 
-
 foreach($targets as $target)
 {
-	if (strpos($target, ':') !== false)
-	{
-		list($target, $app) = explode(':', $target);
-	}
-
 	switch($target)
 	{
-		case 'core':
-			builder::buildCore($rootdir);
-			break;
-
-		case 'apps':
-            $applist    =   builder::getApps($rootdir);
-
-            foreach ($applist as $app)
-            {
-                builder::buildApplication($rootdir, $app);
-            }
-			break;
-
-		case 'app':
-			builder::buildApplication($rootdir, $app);
+		case 'autoload':
+			build::all($rootdir);
 			break;
 
 		case 'db':
-			builder::buildDatabase();
+			build::database();
 			break;
 
 		case 'form':
-			builder::buildForms($rootdir, $app);
+			build::forms($rootdir, $app);
 			break;
 
 		case 'static':
+			build::css();
+			build::javascript();
 			break;
 	}
 }
@@ -101,8 +79,7 @@ echo
 USAGE: build.php options
 -----------------------------------------------------------
 --product	- product name. Default `default`
---environment	- application environment
---target	- targets to execute (comma separated)
+--target	- targets to process (comma separated)
 --confdir	- directory with configuration files
 -----------------------------------------------------------
 possible targets

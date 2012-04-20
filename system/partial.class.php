@@ -1,5 +1,5 @@
 <?php
-class partialHelper
+class partial
 {
     public static function render($templateRnD1983001, $variablesRnD1983001 = array(), $returnRnD1983001 = true)
     {

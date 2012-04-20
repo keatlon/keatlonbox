@@ -119,7 +119,6 @@ class application
 		if ($application)
 		{
 			application::$name = $application;
-			router::init($application);
 		}
 
 		application::push( actionControllerFactory::create($module, $action) )->dispatch($data ? $data : request::get());
@@ -137,12 +136,10 @@ class application
 
     static public function execute($module, $task, $data = false)
     {
-		date_default_timezone_set(conf::i()->application['timezone']);
-        
         try
         {
             $context['controller']  = actionControllerFactory::create($module, $task);
-			
+
             if (!$data)
             {
                 $context['data'] = $_SERVER['argv'];

@@ -1,5 +1,5 @@
 <?php
-class webserverExceptionController extends webActionController
+class exceptionWebserverController extends webActionController
 {
     
 }

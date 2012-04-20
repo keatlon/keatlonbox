@@ -2,21 +2,21 @@
 
 class router
 {
-    static private $classRoutes = null;
+    static private $classRoutes = array();
 	
-    static public function init($application = 'frontend')
+    static public function init($application = false)
     {
-        include conf::i()->rootdir . "/~cache/autoload-core.php";
-		
-        if ($application)
-        {
-			if (file_exists(conf::i()->rootdir . "/~cache/autoload-{$application}.php"))
-			{
-				include conf::i()->rootdir . "/~cache/autoload-{$application}.php";
-			}
-        }
-        
-        self::$classRoutes = array_merge((array)$coreClasses, (array)${$application . 'Classes'});
+		if ($application)
+		{
+			self::$classRoutes = array_merge(
+				require_once conf::i()->rootdir . "/~cache/autoload-core.php",
+				require_once conf::i()->rootdir . "/~cache/autoload-$application.php"
+			);
+		}
+		elseif (file_exists(conf::i()->rootdir . "/~cache/autoload-core.php"))
+		{
+			self::$classRoutes = require_once conf::i()->rootdir . "/~cache/autoload-core.php";
+		}
     }
 	
     static public function get($className)
