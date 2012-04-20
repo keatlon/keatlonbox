@@ -6,6 +6,7 @@ return array
      *                      DIRS
      ***********************************************************/
     'rootdir'		=> 	'',
+	'cachedir'		=> 	'/~cache',
 
     /***********************************************************
      *                      DOMAINS
@@ -14,8 +15,6 @@ return array
     'domains'			=>	array(
         'web'		=> 	'',
         'static'	=> 	'',
-        'image'		=> 	'',
-        'video'		=> 	'',
         'cookie'	=> 	'.',
     ),
 
@@ -24,12 +23,21 @@ return array
      ***********************************************************/
 	'debug'                     =>       array(
 		'enable'					=>	false,
-		'display_errors'            =>  false,
-		'display_level'				=>	E_ALL & ~E_NOTICE,
-		'log_level'					=>	E_ALL & ~E_NOTICE,
 		'log_errors'                =>  false,
 		'log_exceptions'            =>  false,
 		'log_information'           =>  false,
+	),
+
+	/***********************************************************
+	*                      PHP INI
+	***********************************************************/
+
+	'phpini'	=>	array
+	(
+		'display_errors'            =>  false,
+		'display_level'				=>	E_ALL & ~E_NOTICE,
+		'log_level'					=>	E_ALL & ~E_NOTICE,
+		'date.timezone'				=>	'Europe/Helsinki'
 	),
 
 	/***********************************************************
@@ -46,9 +54,19 @@ return array
      *                      COUNTERS
      ***********************************************************/
 
-    'counters'         =>   array(
-        'ga'          =>  false,
-        'km'          =>  false
+    'counters'	=>   array
+	(
+        'googleanalytics'	=>  array
+		(
+			'enabled'	=>	false,
+			'id'		=>	''
+		),
+
+		'kissmetrics'	=>  array
+		(
+			'enabled'	=>	false,
+			'id'		=>	''
+		),
     ),
 
     /***********************************************************
@@ -66,7 +84,6 @@ return array
 
     'application'    =>   array
 	(
-		'timezone'	=>	'Europe/Helsinki',
         'frontend'	=> array
 		(
             'auth'  => array('mysql'),
@@ -93,16 +110,6 @@ return array
 		)
 
 
-    ),
-
-    /***********************************************************
-     *                      AD
-     ***********************************************************/
-    'ad'         =>   array
-	(
-        'enabled'                   =>  false,
-        '300x250'                   =>  false,
-        'top'                       =>  false
     ),
 
     /***********************************************************
@@ -190,7 +197,7 @@ return array
     ),
 
     /***********************************************************
-     *                      SPHINXSEARCH
+     *                      SPHINX
      ***********************************************************/
     'sphinx'         =>   array(
         'config_path'               =>  '',
@@ -242,6 +249,7 @@ return array
 
     'captcha' => array
     (
+		'lib'		=>	'/lib/php/recaptcha',
 		'public_key'	=> 	'',
 		'private_key'	=> 	'',
     ),
@@ -253,6 +261,7 @@ return array
 
     'facebook' => array
     (
+		'lib'		=>	'/lib/php/facebook',
 		'id'		=> 	'',
 		'key'		=> 	'',
 		'secret'	=> 	'',
@@ -265,14 +274,20 @@ return array
 
 	'twitter' => array
 	(
+		'lib'				=>	'',
 		'authorizeUrl'		=>	'https://api.twitter.com/oauth/authorize',
 		'requestTokenUrl'	=>	'https://api.twitter.com/oauth/request_token',
 		'accessTokenUrl'	=>	'https://api.twitter.com/oauth/access_token',
 		'localAuthorizeUrl'	=>	'/twitter/authorize',
 	),
 
+	/***********************************************************
+	*                      INSTAGRAM
+	***********************************************************/
+
 	'instagram' => array
 	(
+		'lib'				=>	'',
 		'authorizeUrl'		=>	'https://api.instagram.com/oauth/authorize',
 		'requestTokenUrl'	=>	'https://api.instagram.com/oauth/request_token',
 		'accessTokenUrl'	=>	'https://api.instagram.com/oauth/access_token',
@@ -286,10 +301,19 @@ return array
 
 	'vkontakte' => array
 	(
+		'lib'				=>	'',
 		'id'				=>	'',
 		'key'				=>	''
 	),
 
+	/***********************************************************
+	*                      LESSPHP
+	***********************************************************/
+
+	'lessphp' => array
+	(
+		'lib'				=>	'/lib/php/lessphp',
+	),
 
 	/***********************************************************
      * 			CLIENT (JS)

@@ -1,5 +1,107 @@
 @charset "UTF-8";
 
+/**************************************************************************
+*			ABSTRACT
+**************************************************************************/
+
+.width(@value:auto)
+{
+    width:@value !important;
+}
+
+.position(@value:auto)
+{
+    position:@value !important;
+}
+
+.radius(@radius:0px)
+{
+    border-radius:@radius;
+	-moz-border-radius:@radius;
+	-web-border-radius:@radius;
+}
+
+.shadow(@value)
+{
+	-webkit-box-shadow    : @value;
+	-moz-box-shadow       : @value;
+	box-shadow            : @value;
+}
+
+
+.display(@value:auto)
+{
+	display:@value;
+}
+
+.float(@value:none)
+{
+	float:@value;
+}
+
+.text-align(@value:left)
+{
+	text-align:@value;
+}
+
+
+.gradient(@color:#888)
+{
+	background-color   : @color;
+	background-image   : -moz-linear-gradient(top, @color + #222, @color - #222);
+	background-image   : -ms-linear-gradient(top, @color + #222, @color - #222);
+	background-image   : -webkit-gradient(linear, 0 0, 0 100%, from(@color + #222), to(@color - #222));
+	background-image   : -webkit-linear-gradient(top, @color + #222, @color - #222);
+	background-image   : -o-linear-gradient(top, @color + #222, @color - #222);
+	background-image   : linear-gradient(top, @color + #222, @color - #222);
+}
+
+
+.gradient-image(@url, @color:#888)
+{
+	background	: @color @url;
+	background  : @url, -moz-linear-gradient(top, @color + #222, @color - #222);
+	background  : @url, -ms-linear-gradient(top, @color + #222, @color - #222);
+	background  : @url, -webkit-gradient(linear, 0 0, 0 100%, from(@color + #222), to(@color - #222));
+	background  : @url, -webkit-linear-gradient(top, @color + #222, @color - #222);
+	background  : @url, -o-linear-gradient(top, @color + #222, @color - #222);
+	background  : @url, linear-gradient(top, @color + #222, @color - #222);
+}
+
+
+.circle(@radius)
+{
+	.radius(@radius);
+	width                 : @radius;
+	height                : @radius;
+	line-height           : @radius;
+}
+
+
+
+
+.block
+{
+	.display(block);
+}
+
+.inline
+{
+	.display(inline);
+}
+
+.block 	{ .display(block) }
+.hidden { .display(none) }
+.inline { .display(inline) }
+
+
+
+
+
+
+
+
+
 .absolute {position:absolute}
 .relative {position:relative}
 
@@ -11,15 +113,13 @@
 
 .top { vertical-align:top; }
 .v { vertical-align:middle; }
-.block { display:block !important; }
-.hidden { display:none; }
-.inline { display:inline !important;}
 
 .left { float:left; }
 .right { float:right; }
 .clear { clear:both; }
 
-.w20 {	width:20px !important;}
+
+.w20 {	.width(20px) }
 .w30 {	width:30px !important;}
 .w50 {	width:50px !important;}
 .w70 {	width:70px !important;}

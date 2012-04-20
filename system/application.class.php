@@ -18,7 +18,11 @@ class application
 
 	static public function init()
 	{
-		date_default_timezone_set(conf::i()->application['timezone']);
+		foreach (conf::i()->phpini as $key => $value)
+		{
+			ini_set($key, $value);
+		}
+
         application::$name	= APPLICATION;
 
 		session	::	init();
@@ -27,6 +31,7 @@ class application
 		i18n	::	init();
 		auth	::	init();
 		request	::	init();
+		head	::	init();
 
 		application::processEvent(application::EVENT_BEFORE_ACL);
 		acl		::	init();

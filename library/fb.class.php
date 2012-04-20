@@ -1,6 +1,5 @@
 <?php
 
-require conf::i()->rootdir . '/core/library/facebook/facebook.php';
 
 class fb
 {
@@ -14,6 +13,8 @@ class fb
 	{
 		if (!self::$instance)
 		{
+			require conf::i()->rootdir . conf::i()->facebook['lib'] . '/facebook.php';
+
 			self::$instance = new Facebook(array
 			(
 				'appId'		=>	conf::i()->facebook['id'],

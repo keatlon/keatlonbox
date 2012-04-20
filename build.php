@@ -29,18 +29,18 @@ if (isset($arguments['confdir']))
 
 define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
 
-$cacheDir = dirname(__FILE__) . '/../~cache';
-
-if (!is_dir($cacheDir))
-{
-	mkdir($cacheDir);
-}
-
 $rootdir        =   dirname(__FILE__) . "/..";
 
 include dirname(__FILE__) . "/conf/init.php";
 
 include dirname(__FILE__) . "/system/builder.class.php";
+
+$cacheDir = $rootdir . conf::i()->cachedir;
+
+if (!is_dir($cacheDir))
+{
+	mkdir($cacheDir);
+}
 
 
 foreach($targets as $target)
