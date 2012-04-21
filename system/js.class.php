@@ -19,7 +19,12 @@ class js
 
 	static function render($group)
 	{
-		build::javascript($group);
+		if (!conf::i()->static['check'] || (conf::i()->static['check'] && build::hasUpdates($group)))
+		{
+			build::javascript($group);
+		}
+
+		header('Content-type: application/x-javascript');
 		echo file_get_contents(conf::i()->rootdir . '/web/static/' . $group);
 	}
 }

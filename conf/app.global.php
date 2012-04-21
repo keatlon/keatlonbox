@@ -57,6 +57,7 @@ return array
 	(
 		'yuicompressor'	=>	'yuicompressor.jar',
 		'compiled'		=>	'/web/static',
+		'less'			=>	false,
 		'check'			=>	true
 	),
 

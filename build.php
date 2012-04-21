@@ -54,8 +54,25 @@ foreach($targets as $target)
 			break;
 
 		case 'static':
-			build::css();
-			build::javascript();
+
+			$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
+
+			foreach ($conf as $group => $files)
+			{
+				$info = pathinfo($group);
+
+				switch($info['extension'])
+				{
+					case 'css':
+						build::css($group);
+						break;
+
+					case 'js':
+						build::javascript($group);
+						break;
+				}
+			}
+
 			break;
 	}
 }

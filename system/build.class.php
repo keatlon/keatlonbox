@@ -148,6 +148,17 @@ class build
 				continue;
 			}
 
+
+			$isCoreAction = preg_match('#/core/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)/([a-zA-Z0-9]+)\.action\.php#U', $file, $matches);
+
+			if ($isCoreAction)
+			{
+				list($path, $application, $module, $type, $name, $ext) = $matches;
+				$classes['core'][$name . ucfirst($module) . 'Controller'] = $file;
+				continue;
+			}
+
+
 			$isTask = preg_match('#/(core|lib)/task/(.*)/(.*)\.task\.php#', $file, $matches);
 
 			if ($isTask)
@@ -262,6 +273,7 @@ class build
 		require_once conf::i()->rootdir . conf::i()->lessphp['lib'] . '/lessc.inc.php';
 
 		$in = $out	=	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm';
+		$out	.=	'l';
 
 		try
 		{
@@ -270,6 +282,9 @@ class build
 		catch (Exception $e) {
 			die("Error: less cannot process the file");
 		}
+
+		unlink($in);
+		rename($out, $in);
 	}
 
 	protected static function merge($group)
@@ -283,11 +298,41 @@ class build
 			{
 				dd('Error: File ' . $file . ' does not exists in group ' . $group);
 			}
-
 			$content .= file_get_contents($file) . "\n";
 		}
 
 		file_put_contents( conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm', $content);
+		file_put_contents(conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta', self::lastTouched($group));
+	}
+
+	static function hasUpdates($group)
+	{
+		return		(bool)(self::lastCompiled($group) < self::lastTouched($group));
+	}
+
+	static function lastCompiled($group)
+	{
+		$meta 	= 	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta';
+		return 	file_exists($meta) ? file_get_contents($meta) : 0;
+	}
+
+	static function lastTouched($group)
+	{
+		$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
+		$last	=	0;
+
+		foreach ($conf[$group] as $file)
+		{
+			if (!file_exists($file))
+			{
+				continue;
+			}
+
+			$current	=	filemtime($file);
+			$last		=	($current > $last) ? $current : $last;
+		}
+
+		return $last;
 	}
 
 }
