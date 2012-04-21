@@ -5,19 +5,13 @@ class css
 
 	static function add($src, $remote = false, $media = "screen")
 	{
-		$postfix 	= 	build::lastCompiled($src. '.css');
-		$full		=	$remote ? $remote : conf::i()->domains['static'] . '/static/' . $src . '.css?' . $postfix;
-
-		if (conf::i()->static['check'] && !$remote)
-		{
-			$full	=	conf::i()->domains['web'] . '/static.php?f=' . $src . '.css';
-		}
+		$group		=	$src . '.css';
+		$timestamp	= 	(conf::i()->static['check'] == 'modified') ? build::lastTouched($group) : build::lastCompiled($group);
+		$href		=	$remote ? $remote : conf::i()->domains['static'] . '/static/' . $src . '.' . $timestamp . '.css';
 
 		self::$scripts[] = sprintf
 		(
-			'<link rel="stylesheet" href="%s" type="text/css" media="%s"/>',
-			$full,
-			$media
+			'<link rel="stylesheet" href="%s" type="text/css" media="%s"/>', $href, $media
 		);
 	}
 
@@ -26,16 +20,6 @@ class css
 		return implode("\n", self::$scripts);
 	}
 
-	static function render($group)
-	{
-		if (!conf::i()->static['check'] || (conf::i()->static['check'] && build::hasUpdates($group)))
-		{
-			build::css($group);
-		}
-
-		header('Content-type: text/css');
-		echo file_get_contents(conf::i()->rootdir . '/web/static/' . $group);
-	}
 }
 
 

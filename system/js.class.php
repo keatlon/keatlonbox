@@ -5,10 +5,13 @@ class js
 
 	static function add($src, $remote = false)
 	{
+		$group		=	$src . '.js';
+		$timestamp	= 	(conf::i()->static['check'] == 'modified') ? build::lastTouched($group) : build::lastCompiled($group);
+		$href		=	$remote ? $remote : conf::i()->domains['static'] . '/static/' . $src . '.' . $timestamp . '.js';
+
 		self::$scripts[] = sprintf
 		(
-			'<script type="text/javascript" src="%s"></script>',
-			$remote ? $remote : conf::i()->domains['static'] . '/static/' . $src . '.js'
+			'<script type="text/javascript" src="%s"></script>', $href
 		);
 	}
 
@@ -17,9 +20,11 @@ class js
 		return implode("\n", self::$scripts);
 	}
 
-	static function render($group)
+	static function render($filename)
 	{
-		if (!conf::i()->static['check'] || (conf::i()->static['check'] && build::hasUpdates($group)))
+		$group = build::getStaticGroup($filename);
+
+		if (build::hasUpdates($group))
 		{
 			build::javascript($group);
 		}
@@ -27,6 +32,8 @@ class js
 		header('Content-type: application/x-javascript');
 		echo file_get_contents(conf::i()->rootdir . '/web/static/' . $group);
 	}
+
+
 }
 
 

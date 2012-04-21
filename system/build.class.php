@@ -2,19 +2,6 @@
 class build
 {
 
-	static function javascript($group)
-	{
-		self::merge($group);
-		self::compress($group, 'js');
-	}
-
-	static function css($group)
-	{
-		self::merge($group);
-		self::less($group);
-		self::compress($group, 'css');
-	}
-
 	static function database()
 	{
 		foreach(conf::i()->database['pool'] as $dbName => $dbConnection)
@@ -110,7 +97,7 @@ class build
 	}
 
 
-	static function all($rootdir)
+	static function autoload($rootdir)
 	{
 		$files		=	self::scan($rootdir, '|.*\.php$|');
 		$classes	=	array();
@@ -249,90 +236,5 @@ class build
         return $files;
     }
 
-	protected static function compress($group, $type)
-	{
-		$in 	= 	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm';
-		$out	=	conf::i()->rootdir . conf::i()->static['compiled'] . '/' . $group;
-
-		$cmd	=	sprintf
-		(
-			'%s -jar %s --type %s %s > %s',
-			conf::i()->system['java'],
-			conf::i()->static['yuicompressor'],
-			$type,
-			$in,
-			$out
-		);
-
-		exec($cmd);
-		unlink($in);
-	}
-
-	protected static function less($group)
-	{
-		require_once conf::i()->rootdir . conf::i()->lessphp['lib'] . '/lessc.inc.php';
-
-		$in = $out	=	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm';
-		$out	.=	'l';
-
-		try
-		{
-			lessc::ccompile($in, $out);
-		}
-		catch (Exception $e) {
-			die("Error: less cannot process the file");
-		}
-
-		unlink($in);
-		rename($out, $in);
-	}
-
-	protected static function merge($group)
-	{
-		$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
-		$content	=	'';
-
-		foreach ($conf[$group] as $file)
-		{
-			if (!file_exists($file))
-			{
-				dd('Error: File ' . $file . ' does not exists in group ' . $group);
-			}
-			$content .= file_get_contents($file) . "\n";
-		}
-
-		file_put_contents( conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm', $content);
-		file_put_contents(conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta', self::lastTouched($group));
-	}
-
-	static function hasUpdates($group)
-	{
-		return		(bool)(self::lastCompiled($group) < self::lastTouched($group));
-	}
-
-	static function lastCompiled($group)
-	{
-		$meta 	= 	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta';
-		return 	file_exists($meta) ? file_get_contents($meta) : 0;
-	}
-
-	static function lastTouched($group)
-	{
-		$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
-		$last	=	0;
-
-		foreach ($conf[$group] as $file)
-		{
-			if (!file_exists($file))
-			{
-				continue;
-			}
-
-			$current	=	filemtime($file);
-			$last		=	($current > $last) ? $current : $last;
-		}
-
-		return $last;
-	}
 
 }

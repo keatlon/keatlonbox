@@ -42,7 +42,7 @@ foreach($targets as $target)
 	switch($target)
 	{
 		case 'autoload':
-			build::all($rootdir);
+			build::autoload($rootdir);
 			break;
 
 		case 'db':
@@ -64,11 +64,11 @@ foreach($targets as $target)
 				switch($info['extension'])
 				{
 					case 'css':
-						build::css($group);
+						cjss::build($group, 'css');
 						break;
 
 					case 'js':
-						build::javascript($group);
+						cjss::build($group, 'js');
 						break;
 				}
 			}
