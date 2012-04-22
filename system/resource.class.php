@@ -92,7 +92,7 @@ class resource
 				break;
 
 			default:
-				die('Bad extension ' . $info['extension']);
+				log::push('Bad extension ' . $info['extension'], 'resource', log::E_PHP);
 				break;
 		}
 	}
