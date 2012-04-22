@@ -1,33 +1,94 @@
 <?php
 
-class cjss
+class resource
 {
 	const	CSS	=	'css';
 	const	JS	=	'js';
 
+	protected static $css	=	array();
+	protected static $js	=	array();
 
+	static function load($type)
+	{
+		switch($type)
+		{
+			case self::JS:
+				return implode("\n", self::$js);
+
+			case self::CSS:
+				return implode("\n", self::$css);
+		}
+	}
+
+	static function add($group, $remote = false)
+	{
+		$info		=	pathinfo($group);
+		$timestamp	= 	(conf::i()->static['check'] == 'modified') ? self::lastTouched($group) : self::lastCompiled($group);
+		$href		=	$remote ? $remote : conf::i()->domains['static'] . '/static/' . self::getStaticFilename($group, $timestamp);
+
+		switch($info['extension'])
+		{
+			case self::JS:
+				self::$js[] = sprintf
+				(
+					'<script type="text/javascript" src="%s"></script>', $href
+				);
+				break;
+
+			case self::CSS:
+				self::$css[] = sprintf
+				(
+					'<link rel="stylesheet" href="%s" type="text/css" media="%s"/>', $href, 'screen'
+				);
+				break;
+		}
+	}
 
 	static function build($group, $type)
 	{
-		cjss::merge($group);
+		self::merge($group);
 
-		if ($type == cjss::CSS)
+		if ($type == self::CSS)
 		{
-			cjss::less($group);
+			self::less($group);
 		}
 
-		cjss::compress($group, $type);
+		return self::compress($group, $type);
+	}
+
+
+	static function render($group, $type)
+	{
+		if (self::hasUpdates($group))
+		{
+			$filename	=	self::build($group, $type);
+		}
+
+		switch($type)
+		{
+			case self::CSS:
+				header('Content-type: text/css');
+				break;
+
+			case self::JS:
+				header('Content-type: application/x-javascript');
+				break;
+		}
+
+
+		echo file_get_contents($filename);
 	}
 
 	static function process($filename)
 	{
-		$info = pathinfo($filename);
+		$info 	= 	pathinfo($filename);
+		$group	=	self::getStaticGroup($filename);
 
 		switch($info['extension'])
 		{
-			case cjss::JS:
-			case cjss::CSS:
-				self::render($info['basename'], $info['extension']);
+			case self::JS:
+			case self::CSS:
+				self::render($group, $info['extension']);
 				break;
 
 			default:
@@ -36,8 +97,22 @@ class cjss
 		}
 	}
 
+	protected static function cleanup($group, $max)
+	{
+		$basename	=	str_replace('.css', '.*\.css', $group);
+		$basename	=	str_replace('.js', '.*\.js', $basename);
+		$files 		=	scan(conf::i()->rootdir . conf::i()->static['compiled'], '|' . $basename . '|');
 
-	static function compress($group, $type)
+		foreach ($files as $file)
+		{
+			if (filemtime($file) < $max)
+			{
+				unlink($file);
+			}
+		}
+	}
+
+	static protected function compress($group, $type)
 	{
 		$touched	=	self::lastTouched($group);
 		$filename	=	self::getStaticFilename($group, $touched);
@@ -57,9 +132,13 @@ class cjss
 		exec($cmd);
 		unlink($in);
 		file_put_contents(conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta', $touched);
+
+		self::cleanup($group, $touched);
+
+		return $out;
 	}
 
-	static function less($group)
+	static protected function less($group)
 	{
 		require_once conf::i()->rootdir . conf::i()->lessphp['lib'] . '/lessc.inc.php';
 
@@ -78,7 +157,7 @@ class cjss
 		rename($out, $in);
 	}
 
-	static function merge($group)
+	static protected function merge($group)
 	{
 		$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
 		$content	=	'';
@@ -95,18 +174,18 @@ class cjss
 		file_put_contents( conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm', $content);
 	}
 
-	protected static function hasUpdates($group)
+	static protected function hasUpdates($group)
 	{
 		return	(bool)(self::lastCompiled($group) < self::lastTouched($group));
 	}
 
-	protected static function lastCompiled($group)
+	static protected function lastCompiled($group)
 	{
 		$meta 	= 	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta';
 		return 	file_exists($meta) ? file_get_contents($meta) : 0;
 	}
 
-	protected static function lastTouched($group)
+	static protected function lastTouched($group)
 	{
 		$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
 		$last	=	0;
@@ -125,7 +204,7 @@ class cjss
 		return $last;
 	}
 
-	protected static function getStaticGroup($filename)
+	static protected function getStaticGroup($filename)
 	{
 		$info 	= 	pathinfo($filename);
 		$parts	=	explode('.', $info['filename']);
@@ -134,46 +213,18 @@ class cjss
 		return implode('.', $parts);
 	}
 
-	protected static function getStaticFilename($group, $timestamp)
+	static protected function getStaticFilename($group, $timestamp)
 	{
 		$info 	= 	pathinfo($group);
 		return $info['filename'] . '.' . $timestamp . '.' . $info['extension'];
 	}
 
-	protected static function getFullStaticFilename($filename, $timestamp)
+	static protected function getFullStaticFilename($filename, $timestamp)
 	{
 		$out		=	conf::i()->rootdir . conf::i()->static['compiled'] . '/' . $filename;
 
 		$info 	= 	pathinfo($filename);
 		return $info['filename'] . '.' . $timestamp . '.' . $info['extension'];
-	}
-
-	static function render($filename, $type)
-	{
-		$group 		= 	self::getStaticGroup($filename);
-		$rebuild	=	build::hasUpdates($group);
-
-		switch($type)
-		{
-			case cjss::CSS:
-				if ($rebuild)
-				{
-					build::css($group);
-				}
-				header('Content-type: text/css');
-				break;
-
-			case cjss::JS:
-				if ($rebuild)
-				{
-					build::js($group);
-				}
-				header('Content-type: application/x-javascript');
-				break;
-		}
-
-
-		echo file_get_contents(conf::i()->rootdir . '/web/static/' . $group);
 	}
 
 }

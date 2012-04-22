@@ -62,3 +62,44 @@ function __($phrase)
 {
     return i18n::get($phrase);
 }
+
+function scan($dir, $regexp)
+{
+	$files = array();
+
+	if (!file_exists($dir))
+	{
+		return $files;
+	}
+
+	$handle = opendir($dir);
+
+	if (!$handle)
+	{
+		return false;
+	}
+
+	while (false !== ($file = readdir($handle)))
+	{
+		if ($file == '.' || $file == '..' )
+		{
+			continue;
+		}
+
+		if (is_dir($dir . '/' .$file))
+		{
+			$files = array_merge($files, (array)scan($dir . '/' . $file, $regexp));
+		}
+		else
+		{
+			if (preg_match($regexp, $file, $matches))
+			{
+				$files[] = $dir . '/' . $file;
+			}
+		}
+
+	}
+
+	closedir($handle);
+	return $files;
+}
