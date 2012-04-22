@@ -304,11 +304,11 @@ function bigmigrate($rootdir)
 	foreach ($actions as $action)
 	{
 		preg_match('|(.*)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.action\.php$|', $action, $matches);
-		$newfile = $matches[1] . '/' . $matches[2] . '/' . $matches[3] . '/' . $matches[4] . ucfirst($matches[2]) . 'Controller.class.php';
+		$newfile = $matches[1] . '/' . $matches[2] . '/' . $matches[3] . '/' . $matches[4] . ucfirst($matches[2]) . '.class.php';
 
 //		d('rename ' . $action . ' to ' . $newfile . "\n");
-
 //		rename($action, $newfile);
+
 	}
 
 
@@ -316,7 +316,7 @@ function bigmigrate($rootdir)
 	{
 		preg_match('|(.*)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.task\.php$|', $task, $matches);
 		$newfile = $matches[1] . '/' . $matches[2] . '/' . $matches[3] . '/' . $matches[4] . ucfirst($matches[3]) . 'Controller.class.php';
-		rename($task, $newfile);
+		// rename($task, $newfile);
 	}
 
 	// $isAction = preg_match('#/apps/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)/([a-zA-Z0-9]+)\.action\.php#U', $file, $matches);
