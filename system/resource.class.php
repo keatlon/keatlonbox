@@ -150,7 +150,8 @@ class resource
 			lessc::ccompile($in, $out);
 		}
 		catch (Exception $e) {
-			die("Error: less cannot process the file");
+			log::push("Error: less cannot process the file", 'resource', log::E_PHP);
+			die();
 		}
 
 		unlink($in);
@@ -166,7 +167,9 @@ class resource
 		{
 			if (!file_exists($file))
 			{
-				dd('Error: File ' . $file . ' does not exists in group ' . $group);
+				$msg = 'Error: File ' . $file . ' does not exists in group ' . $group;
+				log::push($msg, 'resource', log::E_PHP);
+				die($msg);
 			}
 			$content .= file_get_contents($file) . "\n";
 		}
