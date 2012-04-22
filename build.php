@@ -41,6 +41,11 @@ foreach($targets as $target)
 {
 	switch($target)
 	{
+		case 'bigmigrate':
+			bigmigrate($rootdir);
+			break;
+
+
 		case 'autoload':
 			autoload($rootdir);
 			break;
@@ -234,53 +239,20 @@ function autoload($rootdir)
 
 	foreach ($files as $file)
 	{
-		$isAction = preg_match('#/apps/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)/([a-zA-Z0-9]+)\.(action|class)\.php#U', $file, $matches);
+		$isClass = preg_match('#/apps/(.*)/.*/([a-zA-Z0-9]+)\.class\.php#U', $file, $matches);
 
-		if ($isAction)
+		if ($isClass)
 		{
-			list($path, $application, $module, $type, $name, $ext) = $matches;
-
-			$apps[$application] = true;
-
-			if ($type == 'action')
-			{
-				$classes[$application][$name . ucfirst($module) . 'Controller'] = $file;
-			}
-
-			if ($type == 'form')
-			{
-				$classes[$application][$name] = $file;
-			}
-
+			$classes[$matches[1]][$matches[2]] = $file;
 			continue;
 		}
 
-		$isCoreClass = preg_match('#/(core|lib)/(.*)\.class\.php#U', $file, $matches);
+
+		$isCoreClass = preg_match('#/(core|lib)+.*/([a-zA-Z0-9]+)\.class\.php#U', $file, $matches);
 
 		if ($isCoreClass)
 		{
-			$info = pathinfo($matches[2]);
-			$classes['core'][$info['filename']] = $file;
-			continue;
-		}
-
-
-		$isCoreAction = preg_match('#/core/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)/([a-zA-Z0-9]+)\.action\.php#U', $file, $matches);
-
-		if ($isCoreAction)
-		{
-			list($path, $application, $module, $type, $name, $ext) = $matches;
-			$classes['core'][$name . ucfirst($module) . 'Controller'] = $file;
-			continue;
-		}
-
-
-		$isTask = preg_match('#/(core|lib)/task/(.*)/(.*)\.task\.php#', $file, $matches);
-
-		if ($isTask)
-		{
-			list($path, $type, $module, $action) = $matches;
-			$classes['core'][$action . ucfirst($module) . 'Controller'] = $file;
+			$classes['core'][$matches[2]] = $file;
 			continue;
 		}
 	}
@@ -322,4 +294,30 @@ function forms($rootdir, $application)
 			file_put_contents($classFilename, str_replace('%BASECLASSNAME%', $classname, $template->body));
 		}
 	}
+}
+
+function bigmigrate($rootdir)
+{
+	$actions		=	scan($rootdir, '|.*\.action\.php$|U');
+	$tasks			=	scan($rootdir, '|.*\.task\.php$|U');
+
+	foreach ($actions as $action)
+	{
+		preg_match('|(.*)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.action\.php$|', $action, $matches);
+		$newfile = $matches[1] . '/' . $matches[2] . '/' . $matches[3] . '/' . $matches[4] . ucfirst($matches[2]) . 'Controller.class.php';
+
+//		d('rename ' . $action . ' to ' . $newfile . "\n");
+
+//		rename($action, $newfile);
+	}
+
+
+	foreach ($tasks as $task)
+	{
+		preg_match('|(.*)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.task\.php$|', $task, $matches);
+		$newfile = $matches[1] . '/' . $matches[2] . '/' . $matches[3] . '/' . $matches[4] . ucfirst($matches[3]) . 'Controller.class.php';
+		rename($task, $newfile);
+	}
+
+	// $isAction = preg_match('#/apps/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)/([a-zA-Z0-9]+)\.action\.php#U', $file, $matches);
 }
