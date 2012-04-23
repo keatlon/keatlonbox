@@ -5,6 +5,9 @@ class resource
 	const	CSS	=	'css';
 	const	JS	=	'js';
 
+	const	BEFORE	=	'before';
+	const	AFTER	=	'after';
+
 	protected static $css	=	array();
 	protected static $js	=	array();
 
@@ -20,13 +23,14 @@ class resource
 		}
 	}
 
-	static function add($group, $remote = false)
+	static function add($group, $remote = false, $type = false)
 	{
 		$info		=	pathinfo($group);
+		$type		=	$type ? $type : $info['extension'];
 		$timestamp	= 	(conf::i()->static['check'] == 'modified') ? self::lastTouched($group) : self::lastCompiled($group);
-		$href		=	$remote ? $remote : conf::i()->domains['static'] . '/static/' . self::getStaticFilename($group, $timestamp);
+		$href		=	$remote ? $group : conf::i()->domains['static'] . '/static/' . self::getStaticFilename($group, $timestamp);
 
-		switch($info['extension'])
+		switch($type)
 		{
 			case self::JS:
 				self::$js[] = sprintf
