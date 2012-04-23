@@ -250,13 +250,10 @@ function autoload($rootdir)
 			if ($type == 'action')
 			{
 				$classes[$application][$name . ucfirst($module) . 'Controller'] = $file;
+				continue;
 			}
 
-			if ($type == 'form')
-			{
-				$classes[$application][$name] = $file;
-			}
-
+			$classes[$application][$name] = $file;
 			continue;
 		}
 
