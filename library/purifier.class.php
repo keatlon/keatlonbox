@@ -1,5 +1,4 @@
 <?
-require_once conf::i()->rootdir . '/core/library/purifier/HTMLPurifier.includes.php';
 
 class purifier
 {
@@ -10,6 +9,8 @@ class purifier
     {
         if (!self::$purifier)
         {
+			require_once conf::i()->rootdir . conf::i()->purifier['lib'] . '/HTMLPurifier.includes.php';
+
             self::$config = HTMLPurifier_Config::createDefault();
 
 			self::$config->set('AutoFormat.Linkify', true);
