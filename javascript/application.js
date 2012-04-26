@@ -228,6 +228,18 @@ var applicationClass = function ()
 	{
 		this.getElements('a:not(.sf-usual)', selector, init).click(function() {
 
+			if (typeof $(this).attr('repeat') != 'undefined')
+			{
+				var r = parseInt($(this).attr('repeat'));
+
+				if (r > 0)
+				{
+					$(this).addClass('repeat');
+					$(this).attr('repeat', r - 1);
+					return false;
+				}
+			}
+
 			if ($(this).attr('target') == 'post')
 			{
 				ajax.put($(this).attr('href'));
