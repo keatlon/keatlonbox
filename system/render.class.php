@@ -9,9 +9,9 @@ class render
 	protected static $layout 	= true;
 	protected static $type 		= self::XML;
 
-	public static function layout($layout = false)
+	public static function layout($layout = null)
 	{
-		if ($layout)
+		if (isset($layout))
 		{
 			self::$layout	=	$layout;
 		}
@@ -24,14 +24,6 @@ class render
 		if ($type)
 		{
 			self::$type	=	$type;
-
-			switch($type)
-			{
-				case self::XML:
-				case self::DIALOG:
-					render::layout(false);
-					break;
-			}
 		}
 
 		return self::$type;
@@ -44,17 +36,25 @@ class render
 
 	public static function controller(webActionController $controller)
 	{
+		$controller->beforeRender();
+
 		switch($controller->render())
 		{
 			case self::XML:
-				return self::xml($controller);
+				self::xml($controller);
+				break;
 
 			case self::DIALOG:
-				return self::dialog($controller);
+				self::dialog($controller);
+				break;
 
 			case self::JSON:
-				return self::json($controller);
+				self::json($controller);
+				break;
 		}
+
+		$controller->afterRender();
+
 	}
 
 	/**
@@ -92,28 +92,22 @@ class render
 		}
 	}
 
-	protected static function dialog(actionController $__controller__, $__view__ = false)
+	protected static function dialog(actionController $__controller__)
 	{
-		$__controller__->beforeRender();
-
-		$data = array();
 		response::set('status', $__controller__->response['code']);
-		response::set('data', $data);
+		response::set('data', array());
 
 		ob_start();
-		$__controller__->render($__view__, rendererFactory::XML);
+		self::xml($__controller__);
 		response::set('body', ob_get_contents());
 		ob_end_clean();
 
 		echo json_encode(response::get());
 
-		$__controller__->afterRender();
 	}
 
-	protected static function json(actionController $__controller__, $__view__ = false)
+	protected static function json(actionController $__controller__)
 	{
-		$__controller__->beforeRender();
-
 		$data = array();
 		response::set('status', $__controller__->response['code']);
 
@@ -139,14 +133,10 @@ class render
 		{
 			echo json_encode(response::get());
 		}
-
-		$__controller__->afterRender();
 	}
 
 	protected static function xml(actionController $__controller__, $__view__ = false)
 	{
-		$__controller__->beforeRender($__controller__);
-
 		/*
 		if ($__controller__->isLayout())
 		{
@@ -189,8 +179,6 @@ class render
 		}
 
 		include $path;
-
-		$__controller__->afterRender($__controller__);
 	}
 
 	/**

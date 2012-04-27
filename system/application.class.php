@@ -62,7 +62,7 @@ class application
 		}
 		else
 		{
-			application::render();
+			render::stack();
 		}
 	}
 

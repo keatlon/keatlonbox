@@ -73,24 +73,27 @@ class request
 	{
 		self::method($_SERVER['REQUEST_METHOD']);
 
+		if (!$_SERVER['HTTP_KBOX_RENDERER'] && (self::isPost() || $_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false))
+		{
+			$_SERVER['HTTP_KBOX_RENDERER'] = 'json';
+		}
+
 		switch($_SERVER['HTTP_KBOX_RENDERER'])
 		{
-			case 'xml':
-				return render::type(renderer::XML);
-
 			case 'json':
-				return render::type(renderer::JSON);
+				render::layout(false);
+				render::type(render::JSON);
+				break;
 
 			case 'dialog':
-				return render::type(renderer::DIALOG);
-		}
+				render::layout(false);
+				render::type(render::DIALOG);
+				break;
 
-		if (self::isPost() || $_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-		{
-			return render::type(render::JSON);
+			case 'xml':
+			default:
+				render::type(render::XML);
 		}
-
-		render::type(render::XML);
 
 		self::data(url::parse($_SERVER['REQUEST_URI']));
 	}
