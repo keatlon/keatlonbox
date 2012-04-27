@@ -42,6 +42,11 @@ class response
 		return self::$response;
 	}
 
+	static function header($header)
+	{
+		Header($header);
+	}
+
 	static function redirect($url, $direct = false)
 	{
 		if(request::isJson())
@@ -58,7 +63,7 @@ class response
 			throw new redirectException;
 		}
 
-		Header('Location:' . $url);
+		response:header('Location:' . $url);
 		exit;
 	}
 
