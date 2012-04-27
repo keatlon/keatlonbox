@@ -24,7 +24,7 @@ class moduleAddController extends taskActionController
 
 		if ($action)
 		{
-			$template	=	simplexml_load_file(conf::i()->rootdir . '/core/builder/action.xml');
+			$template	=	simplexml_load_file(conf::i()->rootdir . '/core/assets/templates/action.xml');
 
 			file_put_contents
 			(

@@ -202,7 +202,7 @@ function database()
 
 			$baseClassName = implode('', $parts) . 'BasePeer';
 			$baseClassPath = $modelPath . '/base/' . $baseClassName . '.class.php';
-			$xml = simplexml_load_file(conf::i()->rootdir . '/core/database/basePeerClass.xml');
+			$xml = simplexml_load_file(conf::i()->rootdir . '/core/assets/templates/basePeerClass.xml');
 			$baseClassContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
 			$baseClassContent = str_replace('%CLASSNAME%', $className, $baseClassContent);
 			$baseClassContent = str_replace('%TABLENAME%', $tableName, $baseClassContent);
@@ -217,7 +217,7 @@ function database()
 
 			file_put_contents($baseClassPath, $baseClassContent);
 
-			$xml = simplexml_load_file(conf::i()->rootdir . '/core/database/peerClass.xml');
+			$xml = simplexml_load_file(conf::i()->rootdir . '/core/assets/templates/peerClass.xml');
 			$classContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
 			$classContent = str_replace('%CLASSNAME%', $className, $classContent);
 			if (!file_exists($classPath))
@@ -298,7 +298,7 @@ function forms($rootdir, $application)
 {
 	$formPath	=   conf::i()->rootdir . '/lib/form';
 	$views		=	scan($rootdir . "/apps/" . $application, '|.*\.view\.php|');
-	$template	=	simplexml_load_file(conf::i()->rootdir . '/core/builder/form.xml');
+	$template	=	simplexml_load_file(conf::i()->rootdir . '/core/assets/templates/form.xml');
 
 	foreach ($views as $filename)
 	{

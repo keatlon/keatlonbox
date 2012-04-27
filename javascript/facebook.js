@@ -1,17 +1,5 @@
 var facebookClass = function ()
 {
-    this.configure = function(options)
-   	{
-        FB.init({
-            appId      : options.id,
-            channelUrl : options.domain + '/channel.html',
-            status     : true,
-            cookie     : true,
-            oauth      : true,
-            xfbml      : true,
-			frictionlessRequests:true
-        });
-    }
 
 	this.connect = function(perms, callback, url)
 	{
