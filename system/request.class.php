@@ -103,6 +103,11 @@ class request
 		return (self::method() == 'POST');
 	}
 
+	static function isJson()
+	{
+		return (render::type() == render::JSON);
+	}
+
 	static function raw()
 	{
 		return file_get_contents('php://input');
