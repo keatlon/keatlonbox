@@ -77,7 +77,7 @@ class render
 		}
 
 		extract($__vars__, EXTR_OVERWRITE);
-		require self::getTemplatePath($__template__);
+		include self::getTemplatePath($__template__);
 
 		if ($__return__)
 		{

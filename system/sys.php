@@ -103,3 +103,20 @@ function scan($dir, $regexp)
 	closedir($handle);
 	return $files;
 }
+
+function _amr($a, $b)
+{
+	foreach($b as $key => $value)
+	{
+		if(array_key_exists($key, $a) && is_array($value))
+		{
+			$a[$key] = _amr($a[$key], $b[$key]);
+		}
+		else
+		{
+			$a[$key] = $value;
+		}
+	}
+
+	return $a;
+}
