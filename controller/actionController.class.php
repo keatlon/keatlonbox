@@ -9,8 +9,6 @@ abstract class actionController
 	public		$response		=	false;
 	private		$moduleName		=	false;
 	private		$actionName		=	false;
-	private		$isLayout		=	false;
-	private		$hasLayout		=	true;
 
 	private		$actionVars	=	array();
 	

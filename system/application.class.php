@@ -6,7 +6,6 @@ class application
 	 * @var actionController
 	 */
 	static protected	$layout		=	false;
-    static protected	$queue		=	array();
     static protected	$events		=	array();
 	static protected 	$renderer	=	false;
     static public		$name		=	null;
@@ -87,13 +86,11 @@ class application
 		{
 			case	rendererFactory::HTML:
 
-				if (application::getLastAction()->hasLayout())
+				if (1)
 				{
 					jquery::init('html');
-					self::$layout = actionControllerFactory::create('layout', 'index');
-					self::$layout->isLayout(true);
-					self::$layout->dispatch(request::get());
-					self::$layout->render();
+					stack::push(actionControllerFactory::create('layout', 'index')->dispatch(request::get()), 'layout');
+					application::render('layout');
 				}
 				else
 				{
@@ -128,7 +125,7 @@ class application
 	{
 		if ($actionController instanceof webActionController)
 		{
-			self::$queue[] = $actionController;
+			stack::push($actionController);
 		}
 
 		return $actionController;
@@ -164,15 +161,6 @@ class application
         return $code;
     }
 
-	/**
-	 *
-	 * @static
-	 * @return actionController
-	 */
-	static function getLastAction()
-	{
-		return application::$queue[count(application::$queue) - 1];
-	}
 
 	/**
 	 * @static
@@ -185,7 +173,7 @@ class application
 
 	static function render($stack = 'default')
 	{
-		application::getLastAction()->render();
+		stack::render($stack);
 	}
 
 	static function setRenderer($renderer)

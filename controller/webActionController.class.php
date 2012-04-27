@@ -4,6 +4,8 @@ abstract class webActionController extends actionController
 	public		$response		=	false;
 	private		$viewName		=	false;
 	private		$selector		=	false;
+	private		$isLayout		=	false;
+	private		$hasLayout		=	true;
 
 	public function dispatch($data)
 	{
@@ -131,13 +133,8 @@ abstract class webActionController extends actionController
 		return $this->forward($module , $action);
 	}
 
-	function render($view = false, $renderer = false)
+	function view($view)
 	{
-		if (!$renderer)
-		{
-			$renderer	=	application::getRenderer();
-		}
 
-		rendererFactory::create($renderer)->render($this, $view);
 	}
 }

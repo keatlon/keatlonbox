@@ -7,33 +7,24 @@ class baseRenderer
     {
     }
 
-    static public function getTemplateByAction(actionController $action)
+    static public function getTemplatePath($action, $module = false)
     {
-		return self::getTemplatePath($action->getActionName(), $action->getModuleName());
-	}
-
-    static public function getTemplatePath($template, $module = false)
-    {
-        if (!$module)
+        if ( substr($action, 0, 2) == '//')
         {
-			$module = application::getLastAction()->getModuleName();
+            return conf::i()->rootdir . substr($action, 1) . '.view.php';
         }
 
-        if ( substr($template, 0, 2) == '//')
+        if ($action[0] == '/')
         {
-            $partialPath = conf::i()->rootdir . substr($template, 1) . '.view.php';
-        }
-        else
-        if ($template[0] == '/')
-        {
-            $partialPath = conf::i()->rootdir . '/apps' . $template . '.view.php';
-        }
-        else
-        {
-            $partialPath = conf::i()->rootdir . '/apps/' . application::$name . '/' . $module . '/view/' . $template  . '.view.php';
+            return conf::i()->rootdir . '/apps' . $action . '.view.php';
         }
 
-        return $partialPath;
+		if (!$module)
+		{
+			$module = stack::currentModule();
+		}
+
+		return conf::i()->rootdir . '/apps/' . application::$name . '/' . $module . '/view/' . $action . '.view.php';
     }
 
 }

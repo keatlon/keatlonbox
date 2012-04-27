@@ -17,17 +17,17 @@ class response
 			return self::$response[$key];
 		}
 
-		$action			=	application::getLastAction();
+		$controller		=	stack::getLastController();
 
-		$jsDispatcher	=	$action->getActionName() .
-							ucfirst($action->getModuleName()) .
+		$jsDispatcher	=	$controller->getActionName() .
+							ucfirst($controller->getModuleName()) .
 							'Controller' .
 							ucfirst(strtolower(request::method()));
 
 		self::$response['application']	=	array
 		(
-			'module'	=>	$action->getModuleName(),
-			'action'	=>	$action->getActionName(),
+			'module'	=>	$controller->getModuleName(),
+			'action'	=>	$controller->getActionName(),
 			'renderer'	=>	application::getRenderer(),
 			'js'		=>	array
 			(

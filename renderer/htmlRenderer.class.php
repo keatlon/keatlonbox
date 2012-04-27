@@ -5,6 +5,7 @@ class htmlRenderer extends baseRenderer
     {
         $__action->beforeRender($__action);
 
+		/*
 		if ($__action->isLayout())
 		{
 			$__action->setActionVars(array_merge((array)$__action->getActionVars(), (array)application::getLastAction()->getActionVars()));
@@ -16,6 +17,7 @@ class htmlRenderer extends baseRenderer
 				$__action->setActionVars(array_merge((array)$__action->getActionVars(), (array)application::getLayoutAction()->getActionVars()));
 			}
 		}
+		*/
 
 		$__actionVars	= $__action->getActionVars();
 
@@ -41,7 +43,7 @@ class htmlRenderer extends baseRenderer
             }
         }
 
-        $path = baseRenderer::getTemplateByAction($__action);
+        $path = baseRenderer::getTemplatePath($__action->getActionName(), $__action->getModuleName());
 
         if (!file_exists($path))
         {
