@@ -16,7 +16,7 @@ class db
 
 		$statement = dbConnection::get( $connection_name )->prepare($sql);
 
-		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $sql, $bind) : null;
+		$logId 	=	profiler::start(profiler::SQL, $sql, $bind);
 
 		foreach ( $bind as $key => $value )
 		{
@@ -43,7 +43,7 @@ class db
 			throw new dbException($error[2], $sql);
 		}
 		
-		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
+		profiler::finish($logId);
 
 		return $statement;
 	}

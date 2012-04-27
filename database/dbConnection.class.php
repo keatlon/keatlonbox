@@ -6,7 +6,7 @@ class dbConnection
 	
 	public static function create( $alias = null, $params = null )
 	{
-		$log_id = ( conf::i()->debug['enable'] ) ? profiler::start(profiler::SQL, $alias . ' DB connecting ', 'DB connection') : null;
+		$logId	=	profiler::start(profiler::SQL, sprintf('Connect to db %s', $alias));
 		
 		if ( !$alias )
 		{
@@ -18,7 +18,7 @@ class dbConnection
 			$databases = conf::i()->database['pool'];
 			if ( !$databases[$alias] )
 			{
-				throw new Exception('DB connection params for "' . $alias . '" absent in Configiguration');
+				throw new Exception('DB connection params for "' . $alias . '" absent in Configuration');
 			}
 			
 			$params = $databases[$alias];
@@ -34,7 +34,8 @@ class dbConnection
 
 		self::$connections[$alias] = new PDO($uri, $params['user'], $params['password'], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8", PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true) );
 		self::$connections[$alias]->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-		conf::i()->debug['enable'] ? profiler::finish($log_id) : null;
+
+		profiler::finish($logId);
 		
 		return self::$connections[$alias];
 	}

@@ -1,7 +1,7 @@
 <?
 class forwardException extends applicationException
 {
-	public function __construct( $module, $action, $method = false, $renderer = false)
+	public function __construct( $module, $action, $method = false, $render = false)
 	{
 		$this->module = $module;
 		$this->action = $action;
@@ -11,9 +11,9 @@ class forwardException extends applicationException
 			request::method($method);
 		}
 
-		if ($renderer)
+		if ($render)
 		{
-			render::type($renderer);
+			render::type($render);
 		}
 
 	}

@@ -23,6 +23,7 @@ class render
 	{
 		if ($type)
 		{
+			stack::clear();
 			self::$type	=	$type;
 		}
 

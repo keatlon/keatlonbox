@@ -29,6 +29,8 @@ class application
 	 */
 	static public function run()
 	{
+		profiler::start(profiler::APPLICATION, 'APP');
+
 		ob_start();
 		application::init();
 
@@ -64,6 +66,8 @@ class application
 		{
 			render::stack();
 		}
+
+		profiler::finish($pid);
 	}
 
 	/**

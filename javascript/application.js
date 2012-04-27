@@ -34,11 +34,6 @@ var applicationClass = function ()
 			notification.configure(config.notification);
 		}
 
-		if (typeof facebook != 'undefined')
-		{
-			// facebook.load(config.facebook);
-		}
-
 		if (typeof comet != 'undefined')
 		{
 			comet.configure(config.comet);

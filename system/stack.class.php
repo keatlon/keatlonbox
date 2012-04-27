@@ -126,4 +126,10 @@ class stack
 
 		return self::$currentModule;
 	}
+
+	static function clear($stack = 'default')
+	{
+		return self::$stacks[$stack] = false;
+	}
+
 }
