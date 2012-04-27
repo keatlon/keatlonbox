@@ -75,7 +75,7 @@ class mc
 
     static public function init()
     {
-        foreach (conf::i()->memcache as $memcacheConfig)
+        foreach (conf::$conf['memcache'] as $memcacheConfig)
         {
             if (!$memcacheConfig['enabled'])
             {

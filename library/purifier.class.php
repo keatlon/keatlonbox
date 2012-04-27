@@ -9,7 +9,7 @@ class purifier
     {
         if (!self::$purifier)
         {
-			require_once conf::i()->rootdir . conf::i()->purifier['lib'] . '/HTMLPurifier.includes.php';
+			require_once conf::$conf['rootdir'] . conf::$conf['purifier']['lib'] . '/HTMLPurifier.includes.php';
 
             self::$config = HTMLPurifier_Config::createDefault();
 
@@ -20,7 +20,7 @@ class purifier
             // self::$config->set('Cache', 'DefinitionImpl', null); // remove this later!
             self::$config->set('HTML', 'AllowedElements', 'a,em,b,strong,i,img,youtube,h2,ul,li,ol,quote,cut,br');
             self::$config->set('HTML', 'AllowedAttributes', 'a.href,a.title,img.src,img.alt,img.align,img.class');
-            self::$config->set('Cache', 'SerializerPath', conf::i()->rootdir . '/~cache');
+            self::$config->set('Cache', 'SerializerPath', conf::$conf['rootdir'] . '/~cache');
 
             self::$purifier = new HTMLPurifier(self::$config);
         }

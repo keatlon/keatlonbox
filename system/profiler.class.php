@@ -5,6 +5,7 @@ class profiler
 	const SYSTEM		= 1;
 	const SQL       	= 2;
 	const USER      	= 4;
+	const RENDER		= 5;
 
 	protected	static $appId		=	0;
 	protected 	static $stack		= array();
@@ -37,7 +38,7 @@ class profiler
 		self::$stack[$type][self::$counter] = $record;
 		self::$counters[self::$counter]	= $type;
 
-		if ($type == self::APPLICATION)
+		if ($type == self::RENDER)
 		{
 			self::$appId = self::$counter;
 		}

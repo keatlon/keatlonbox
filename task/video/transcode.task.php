@@ -33,9 +33,9 @@ class transcodeVideoController extends taskActionController
 			$output = videoStorage::cachePath($id);
             
             videoStorage::preparePath($output);
-			echo "\n" . conf::i()->video['encoder'] . ' -i ' . $input . ' ' . conf::i()->video['sizes']['normal'] . ' ' . $output;
+			echo "\n" . conf::$conf['video']['encoder'] . ' -i ' . $input . ' ' . conf::$conf['video']['sizes']['normal'] . ' ' . $output;
 
-			exec(conf::i()->video['encoder'] . ' -i ' . $input . ' ' . conf::i()->video['sizes']['normal'] . ' ' . $output);
+			exec(conf::$conf['video']['encoder'] . ' -i ' . $input . ' ' . conf::$conf['video']['sizes']['normal'] . ' ' . $output);
 			videoPeer::update($id, array('status' => 'processed', 'processed' => time()));
 			echo $inputFilename ." processed \n";
 		}

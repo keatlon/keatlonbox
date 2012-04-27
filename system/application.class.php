@@ -5,7 +5,7 @@ class application
 
 	static public function init()
 	{
-		foreach (conf::i()->phpini as $key => $value)
+		foreach (conf::$conf['phpini'] as $key => $value)
 		{
 			ini_set($key, $value);
 		}
@@ -29,9 +29,8 @@ class application
 	 */
 	static public function run()
 	{
-		profiler::start(profiler::APPLICATION, 'APP');
+		$pid = profiler::start(profiler::APPLICATION, 'APP');
 
-		ob_start();
 		application::init();
 
         try
@@ -56,6 +55,10 @@ class application
         catch (moduleException $e)
         {}
 
+		profiler::finish($pid);
+
+		profiler::start(profiler::RENDER);
+
 		if (render::layout())
 		{
 			jquery::init('html');
@@ -66,8 +69,6 @@ class application
 		{
 			render::stack();
 		}
-
-		profiler::finish($pid);
 	}
 
 	/**

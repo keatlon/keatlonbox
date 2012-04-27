@@ -27,8 +27,8 @@ class resource
 	{
 		$info		=	pathinfo($group);
 		$type		=	$type ? $type : $info['extension'];
-		$timestamp	= 	(conf::i()->static['check'] == 'modified') ? self::lastTouched($group) : self::lastCompiled($group);
-		$href		=	$remote ? $group : conf::i()->domains['static'] . '/static/' . self::getStaticFilename($group, $timestamp);
+		$timestamp	= 	(conf::$conf['static']['check'] == 'modified') ? self::lastTouched($group) : self::lastCompiled($group);
+		$href		=	$remote ? $group : conf::$conf['domains']['static'] . '/static/' . self::getStaticFilename($group, $timestamp);
 
 		switch($type)
 		{
@@ -105,7 +105,7 @@ class resource
 	{
 		$basename	=	str_replace('.css', '.*\.css', $group);
 		$basename	=	str_replace('.js', '.*\.js', $basename);
-		$files 		=	scan(conf::i()->rootdir . conf::i()->static['compiled'], '|' . $basename . '|');
+		$files 		=	scan(conf::$conf['rootdir'] . conf::$conf['static']['compiled'], '|' . $basename . '|');
 
 		foreach ($files as $file)
 		{
@@ -120,14 +120,14 @@ class resource
 	{
 		$touched	=	self::lastTouched($group);
 		$filename	=	self::getStaticFilename($group, $touched);
-		$in 		= 	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm';
-		$out		=	conf::i()->rootdir . conf::i()->static['compiled'] . '/' . $filename;
+		$in 		= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . 'm';
+		$out		=	conf::$conf['rootdir'] . conf::$conf['static']['compiled'] . '/' . $filename;
 
 		$cmd	=	sprintf
 		(
 			'%s -jar %s --type %s %s > %s',
-			conf::i()->system['java'],
-			conf::i()->static['yuicompressor'],
+			conf::$conf['system']['java'],
+			conf::$conf['static']['yuicompressor'],
 			$type,
 			$in,
 			$out
@@ -135,7 +135,7 @@ class resource
 
 		exec($cmd);
 		unlink($in);
-		file_put_contents(conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta', $touched);
+		file_put_contents(conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.meta', $touched);
 
 		self::cleanup($group, $touched);
 
@@ -144,9 +144,9 @@ class resource
 
 	static protected function less($group)
 	{
-		require_once conf::i()->rootdir . conf::i()->lessphp['lib'] . '/lessc.inc.php';
+		require_once conf::$conf['rootdir'] . conf::$conf['lessphp']['lib'] . '/lessc.inc.php';
 
-		$in = $out	=	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm';
+		$in = $out	=	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . 'm';
 		$out	.=	'l';
 
 		try
@@ -164,7 +164,7 @@ class resource
 
 	static protected function merge($group)
 	{
-		$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
+		$conf 		= 	include conf::$conf['rootdir'] . '/conf/' . PRODUCT . '.static.php';
 		$content	=	'';
 
 		foreach ($conf[$group] as $file)
@@ -178,7 +178,7 @@ class resource
 			$content .= file_get_contents($file) . "\n";
 		}
 
-		file_put_contents( conf::i()->rootdir . conf::i()->cachedir . '/' . $group . 'm', $content);
+		file_put_contents( conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . 'm', $content);
 	}
 
 	static protected function hasUpdates($group)
@@ -188,13 +188,13 @@ class resource
 
 	static protected function lastCompiled($group)
 	{
-		$meta 	= 	conf::i()->rootdir . conf::i()->cachedir . '/' . $group . '.meta';
+		$meta 	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.meta';
 		return 	file_exists($meta) ? file_get_contents($meta) : 0;
 	}
 
 	static protected function lastTouched($group)
 	{
-		$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
+		$conf 		= 	include conf::$conf['rootdir'] . '/conf/' . PRODUCT . '.static.php';
 		$last	=	0;
 
 		foreach ($conf[$group] as $file)
@@ -228,7 +228,7 @@ class resource
 
 	static protected function getFullStaticFilename($filename, $timestamp)
 	{
-		$out		=	conf::i()->rootdir . conf::i()->static['compiled'] . '/' . $filename;
+		$out		=	conf::$conf['rootdir'] . conf::$conf['static']['compiled'] . '/' . $filename;
 
 		$info 	= 	pathinfo($filename);
 		return $info['filename'] . '.' . $timestamp . '.' . $info['extension'];

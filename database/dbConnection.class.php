@@ -10,12 +10,12 @@ class dbConnection
 		
 		if ( !$alias )
 		{
-			$alias = conf::i()->database['default_connection'];
+			$alias = conf::$conf['database']['default_connection'];
 		}
 		
 		if ( !$params )
 		{
-			$databases = conf::i()->database['pool'];
+			$databases = conf::$conf['database']['pool'];
 			if ( !$databases[$alias] )
 			{
 				throw new Exception('DB connection params for "' . $alias . '" absent in Configuration');
@@ -47,7 +47,7 @@ class dbConnection
 	{
 		if ( !$alias )
 		{
-			$alias = conf::i()->database['default_connection'];
+			$alias = conf::$conf['database']['default_connection'];
 		}
 		
 		if ( self::$connections[$alias] === null )

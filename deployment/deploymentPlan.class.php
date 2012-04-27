@@ -196,7 +196,7 @@ class deploymentPlan
 			$space = self::$space;
 		}
 
-		conf::i()->deployment[$space]['var'][$key] = $value;
+		conf::$conf['deployment'][$space]['var'][$key] = $value;
 	}
 
 	static function getVar($key, $space = false)
@@ -206,7 +206,7 @@ class deploymentPlan
 			$space = self::$space;
 		}
 
-		return conf::i()->deployment[$space]['var'][$key];
+		return conf::$conf['deployment'][$space]['var'][$key];
 	}
 
 }

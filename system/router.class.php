@@ -9,13 +9,13 @@ class router
 		if ($application)
 		{
 			self::$classRoutes = array_merge(
-				require_once conf::i()->rootdir . "/~cache/autoload-core.php",
-				require_once conf::i()->rootdir . "/~cache/autoload-$application.php"
+				require_once conf::$conf['rootdir'] . "/~cache/autoload-core.php",
+				require_once conf::$conf['rootdir'] . "/~cache/autoload-$application.php"
 			);
 		}
-		elseif (file_exists(conf::i()->rootdir . "/~cache/autoload-core.php"))
+		elseif (file_exists(conf::$conf['rootdir'] . "/~cache/autoload-core.php"))
 		{
-			self::$classRoutes = require_once conf::i()->rootdir . "/~cache/autoload-core.php";
+			self::$classRoutes = require_once conf::$conf['rootdir'] . "/~cache/autoload-core.php";
 		}
     }
 	

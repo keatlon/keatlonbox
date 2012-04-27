@@ -67,7 +67,7 @@ class deploymentQueue
 				continue;
 			}
 
-			if (conf::i()->comet['enabled'])
+			if (conf::$conf['comet']['enabled'])
 			{
 				$cometItem	=	array(
 					'total'			=>	$queueLength,

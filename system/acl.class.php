@@ -7,7 +7,7 @@ class acl
 
 	static function init()
 	{
-		self::$acl	=  conf::i()->acl;
+		self::$acl	=  conf::$conf['acl'];
 		self::parse();
 	}
 

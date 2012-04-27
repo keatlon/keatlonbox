@@ -29,7 +29,7 @@ class redis
 	{
 		if (!self::$instance)
 		{
-			self::$instance = new redis(conf::i()->redis['host'], conf::i()->redis['port']);
+			self::$instance = new redis(conf::$conf['redis']['host'], conf::$conf['redis']['port']);
 		}
 
 		return self::$instance;
@@ -59,7 +59,7 @@ class redis
 	 */
 	public function set( $key, $value )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 
 		$value = $this->packValue($value);
 		$cmd = array("SET {$key} " . strlen($value), $value);
@@ -74,7 +74,7 @@ class redis
 	 */
 	public function get( $key )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 
 		$response = $this->executeCommand( "GET {$key}" );
 		if ( $this->getError($response) )
@@ -95,7 +95,7 @@ class redis
 	 */
 	public function delete( $key )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		return $this->executeCommand( "DEL {$key}" );
 	}
 
@@ -105,7 +105,7 @@ class redis
 	 */
 	public function exists( $key )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		return $this->executeCommand( "EXISTS {$key}" ) == ':1';
 	}
 
@@ -116,7 +116,7 @@ class redis
 	 */
 	public function inc( $key, $by = 1 )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$response = $this->executeCommand( "INCRBY {$key} {$by}" );
 		return substr($response, 1);
 	}
@@ -128,7 +128,7 @@ class redis
 	 */
 	public function dec( $key, $by = 1 )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$response = $this->executeCommand( "DECRBY {$key} {$by}" );
 		return substr($response, 1);
 	}
@@ -137,7 +137,7 @@ class redis
 
 	public function prepend( $key, $value )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$value = $this->packValue($value);
 		$cmd = array("LPUSH {$key} " . strlen($value), $value);
 
@@ -147,7 +147,7 @@ class redis
 
 	public function append( $key, $value )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$value = $this->packValue($value);
 		$cmd = array("RPUSH {$key} " . strlen($value), $value);
 
@@ -157,7 +157,7 @@ class redis
 
 	public function getList($key, $limit, $offset = 0)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$limit--;
 		$start = $offset;
 		$end = $start + $limit;
@@ -182,7 +182,7 @@ class redis
 
 	public function getFilteredList($key, $filters, $limit = 0, $offset = 0)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$start = 0;
 		$end = $this->getListLength($key);
 
@@ -213,7 +213,7 @@ class redis
 
 	public function getListLength($key)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$response = $this->executeCommand( "LLEN {$key}" );
 		if ( $this->getError($response) )
 		{
@@ -225,7 +225,7 @@ class redis
 
 	public function removeFromList($key, $value, $count = 0)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$value = $this->packValue($value);
 		$response = $this->executeCommand( array("LREM {$key} {$count} " . strlen($value), $value) );
 
@@ -239,7 +239,7 @@ class redis
 
 	public function removeByFilter($key, $filters)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$list = $this->getFilteredList($key, $filters);
 
 		foreach ( $list as $item )
@@ -250,7 +250,7 @@ class redis
 
 	public function truncateList($key, $limit, $offset = 0)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$limit--;
 		$start = $offset;
 		$end = $start + $limit;
@@ -269,7 +269,7 @@ class redis
 
 	public function addMember( $key, $value )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$value = $this->packValue($value);
 		$cmd = array("SADD {$key} " . strlen($value), $value);
 
@@ -279,7 +279,7 @@ class redis
 
 	public function removeMember( $key, $value )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$value = $this->packValue($value);
 		$cmd = array("SREM {$key} " . strlen($value), $value);
 
@@ -289,7 +289,7 @@ class redis
 
 	public function isMember( $key, $value )
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$value = $this->packValue($value);
 		$cmd = array("SISMEMBER {$key} " . strlen($value), $value);
 
@@ -299,7 +299,7 @@ class redis
 
 	public function getMembers($key)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$response = $this->executeCommand( "SMEMBERS {$key}" );
 		if ( $this->getError($response) )
 		{
@@ -320,7 +320,7 @@ class redis
 
 	public function getMembersCount($key)
 	{
-		$key = conf::i()->redis['prefix'] . $key;
+		$key = conf::$conf['redis']['prefix'] . $key;
 		$response = $this->executeCommand( "SCARD {$key}" );
 		if ( $this->getError($response) )
 		{

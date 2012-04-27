@@ -5,7 +5,7 @@ class imageStorage extends storage
 	{
 		$data	=	array();
 
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case	'mysql':
 				$id	= imagePeer::insert($data);
@@ -20,7 +20,7 @@ class imageStorage extends storage
 
 		if (!storage::store($tmpFile, imageStorage::storagePath($id)))
 		{
-			switch(conf::i()->database['engine'])
+			switch(conf::$conf['database']['engine'])
 			{
 				case	'mysql':
 					imagePeer::delete($id);
@@ -39,14 +39,14 @@ class imageStorage extends storage
 
 	static function storagePath($id)
 	{
-		return conf::i()->image['storage'] . self::subpath($id) . self::getFilename($id) . '.jpg';
+		return conf::$conf['image']['storage'] . self::subpath($id) . self::getFilename($id) . '.jpg';
 	}
 
 	static function cachePath($id, $size, $full = true)
 	{
 		if ($full)
 		{
-			return conf::i()->image['cache'] . self::subpath($id) . self::getFilename($id, $size) . '.jpg';
+			return conf::$conf['image']['cache'] . self::subpath($id) . self::getFilename($id, $size) . '.jpg';
 		}
 		
 		return self::subpath($id) . self::getFilename($id, $size) . '.jpg';
@@ -62,14 +62,14 @@ class imageStorage extends storage
 
 		if (!$id)
 		{
-			return conf::i()->image['default'][$type][$size];
+			return conf::$conf['image']['default'][$type][$size];
 		}
 
 		$url	=	self::subpath($id) . self::getFilename($id, $size) . $suffix . '.jpg';
 
 	    if ($fullPath)
 	    {
-			return conf::i()->domains['image'] . $url;
+			return conf::$conf['domains']['image'] . $url;
 	    }
 	    
 	    return $url;
@@ -113,15 +113,15 @@ class imageStorage extends storage
 			$rectangle['height']	= 	$height;
 		}
 
-		$resizeOptions = conf::i()->image['sizes'][$destinationType];
+		$resizeOptions = conf::$conf['image']['sizes'][$destinationType];
 
         storage::preparePath($destinationFile);
 
-        $cmd = conf::i()->image['imagick'] . ' ' . $sourceFile . ' -crop '. $rectangle['width'] . 'x' . $rectangle['height'] . '+' . $rectangle['left'] . '+' . $rectangle['top'] . ' ' . $resizeOptions . ' ' . $destinationFile;
+        $cmd = conf::$conf['image']['imagick'] . ' ' . $sourceFile . ' -crop '. $rectangle['width'] . 'x' . $rectangle['height'] . '+' . $rectangle['left'] . '+' . $rectangle['top'] . ' ' . $resizeOptions . ' ' . $destinationFile;
 
 		log::push($cmd, 'convert');
 
-        if (conf::i()->image['escapecmd'])
+        if (conf::$conf['image']['escapecmd'])
         {
             $cmd = escapeshellcmd($cmd);
         }
@@ -140,15 +140,15 @@ class imageStorage extends storage
             $sourceFile = self::storagePath($id);
         }
         
-        $options = conf::i()->image['sizes'][$destinationType];
+        $options = conf::$conf['image']['sizes'][$destinationType];
 
         $destinationFile = self::cachePath($id, $destinationType);
 
         storage::preparePath($destinationFile);
 
-        $cmd = conf::i()->image['imagick'] . ' ' . $sourceFile . ' ' .$options . ' ' .$destinationFile;
+        $cmd = conf::$conf['image']['imagick'] . ' ' . $sourceFile . ' ' .$options . ' ' .$destinationFile;
 
-        if (conf::i()->image['escapecmd'])
+        if (conf::$conf['image']['escapecmd'])
         {
             $cmd = escapeshellcmd($cmd);
         }

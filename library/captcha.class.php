@@ -10,8 +10,8 @@ class captcha
 
     static public function init()
     {
-        self::$publicKey    = conf::i()->captcha['public_key'];
-        self::$privateKey   = conf::i()->captcha['private_key'];
+        self::$publicKey    = conf::$conf['captcha']['public_key'];
+        self::$privateKey   = conf::$conf['captcha']['private_key'];
     }
 
     static public function generate()

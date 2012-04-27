@@ -14,7 +14,7 @@ class i18n
 		self::$application	=	APPLICATION;
 		self::$locale		=	self::getLocale();
 
-		if (conf::i()->i18n['enabled'])
+		if (conf::$conf['i18n']['enabled'])
 		{
 			i18n::load(self::$application);
 		}
@@ -36,7 +36,7 @@ class i18n
     {
         if (!$_COOKIE['locale'])
         {
-            $defaultLocale = conf::i()->application[APPLICATION]['i18n']['defaultLocale'];
+            $defaultLocale = conf::$conf['application'][APPLICATION]['i18n']['defaultLocale'];
             i18n::setLocale($defaultLocale);
             return $defaultLocale;
         }
@@ -51,7 +51,7 @@ class i18n
 			return false;
 		}
 
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return mysqlTranslation::translatePhrase($hash, $lang, $translation);
@@ -97,8 +97,8 @@ class i18n
 
     static private function getFilename($application)
     {
-		$path = conf::i()->i18n['path'] ? conf::i()->i18n['path'] : '/~cache';
-		return conf::i()->rootdir . $path . '/i18n.' . $application . '.xml';
+		$path = conf::$conf['i18n']['path'] ? conf::$conf['i18n']['path'] : '/~cache';
+		return conf::$conf['rootdir'] . $path . '/i18n.' . $application . '.xml';
 	}
 
     static function load($application = false)
@@ -120,7 +120,7 @@ class i18n
 
 		$hashedPhrase = $phrase;
 
-		if (conf::i()->i18n['type'] == 'hash')
+		if (conf::$conf['i18n']['type'] == 'hash')
 		{
 			$hashedPhrase = md5($phrase);
 		}
@@ -137,7 +137,7 @@ class i18n
 
 	function addPhrase($phrase, $application)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return mysqlTranslation::insert($phrase, $application);
@@ -149,7 +149,7 @@ class i18n
 
 	function removePhrase($hash)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return mysqlTranslation::removePhrase($hash);
@@ -166,7 +166,7 @@ class i18n
 			$application = APPLICATION;
 		}
 
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return mysqlTranslation::getPhrases($application);
@@ -178,7 +178,7 @@ class i18n
 
 	function getUntranslatedPhrases($application, $lang)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return mysqlTranslation::getUntranslatedPhrases($application, $lang);
@@ -190,7 +190,7 @@ class i18n
 
 	function getLostPhrases($application)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return mysqlTranslation::getLostPhrases($application);
@@ -203,7 +203,7 @@ class i18n
     static function scan($application, $locale)
     {
 		$scantime		=	time();
-        $items			=	i18n::scanPhrases(conf::i()->rootdir . '/apps/' . $application);
+        $items			=	i18n::scanPhrases(conf::$conf['rootdir'] . '/apps/' . $application);
 
         foreach($items as $item)
         {
@@ -220,7 +220,7 @@ class i18n
             }
         }
 
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				mysqlTranslation::setLostPhrases($application, $scantime);

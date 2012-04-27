@@ -16,7 +16,7 @@ class mdb
 		{
 			$memcache = new Memcache;
 
-			if ( !$memcache->connect(conf::i()->mdb['host'], conf::i()->mdb['port']) )
+			if ( !$memcache->connect(conf::$conf['mdb']['host'], conf::$conf['mdb']['port']) )
 			{
 				throw new applicationException('Cannot connect to mdb');
 			}

@@ -96,7 +96,7 @@ class emailActionController extends actionController
 
 		$content	=	textHelper::smartParse($content, $params);
 
-		if (!conf::i()->email['enabled'])
+		if (!conf::$conf['email']['enabled'])
 		{
 			return;
 		}

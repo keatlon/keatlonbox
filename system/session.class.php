@@ -4,7 +4,7 @@ class session
 {
     public static function init()
     {
-        if (conf::i()->application[APPLICATION]['session'])
+        if (conf::$conf['application'][APPLICATION]['session'])
 		{
 			session::start();
 		}
@@ -18,7 +18,7 @@ class session
 		}
 
         session_start();
-        cookie::set(session_name(), session_id(), time() + 86400 * 14, conf::i()->domain['cookie'] );
+        cookie::set(session_name(), session_id(), time() + 86400 * 14, conf::$conf['domain']['cookie'] );
     }
 
     public static function restart($sid)

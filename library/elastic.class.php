@@ -1,6 +1,6 @@
 <?php
 
-require conf::i()->rootdir . '/core/library/elasticsearch/ElasticSearchClient.php';
+require conf::$conf['rootdir'] . '/core/library/elasticsearch/ElasticSearchClient.php';
 
 class elastic
 {

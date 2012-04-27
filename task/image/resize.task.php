@@ -3,7 +3,7 @@ class resizeImageController extends taskActionController
 {
     function execute($params)
     {
-		$staticFile	= realpath(conf::i()->image['cache'] . '/' . $params['req']);
+		$staticFile	= realpath(conf::$conf['image']['cache'] . '/' . $params['req']);
 		
 		if( file_exists($staticFile))
 		{
@@ -34,11 +34,11 @@ class resizeImageController extends taskActionController
         
         if (!file_exists($cachePath))
         {
-            $options		= conf::i()->image['sizes'][$image['size']];
+            $options		= conf::$conf['image']['sizes'][$image['size']];
 			
-			if (conf::i()->image['source'] && !in_array($image['size'], (array)conf::i()->image['ignoresource']))
+			if (conf::$conf['image']['source'] && !in_array($image['size'], (array)conf::$conf['image']['ignoresource']))
 			{
-	            $storagePath	= imageStorage::cachePath($image['id'], conf::i()->image['source']);
+	            $storagePath	= imageStorage::cachePath($image['id'], conf::$conf['image']['source']);
 				if (!file_exists($storagePath))
 				{
 		            $storagePath	= imageStorage::storagePath($image['id']);
@@ -56,20 +56,20 @@ class resizeImageController extends taskActionController
 
             storage::preparePath($cachePath);
 
-            $cmd = conf::i()->image['imagick'] . ' ' . $storagePath . ' ' . $options . ' ' . $cachePath;
+            $cmd = conf::$conf['image']['imagick'] . ' ' . $storagePath . ' ' . $options . ' ' . $cachePath;
 
-            if (conf::i()->image['escapecmd'])
+            if (conf::$conf['image']['escapecmd'])
             {
                 $cmd = escapeshellcmd($cmd);
             }
             
             exec($cmd);
 
-            if (isset(conf::i()->image['watermark'][$image['size']]))
+            if (isset(conf::$conf['image']['watermark'][$image['size']]))
             {
-                $wmcmd = sprintf(conf::i()->image['watermark'][$image['size']], conf::i()->rootdir . '/web/images/watermark.png', $cachePath, $cachePath);
+                $wmcmd = sprintf(conf::$conf['image']['watermark'][$image['size']], conf::$conf['rootdir'] . '/web/images/watermark.png', $cachePath, $cachePath);
 
-                if (conf::i()->image['escapecmd'])
+                if (conf::$conf['image']['escapecmd'])
                 {
                     $wmcmd = escapeshellcmd($wmcmd);
                 }

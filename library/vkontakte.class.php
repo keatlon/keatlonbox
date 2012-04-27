@@ -8,7 +8,7 @@ class vkontakte
 		$member 	=	false;
 		$validKeys	= 	array('expire', 'mid', 'secret', 'sid', 'sig');
 
-		$appCookie = 	$_COOKIE['vk_app_' . conf::i()->vkontakte['id']];
+		$appCookie = 	$_COOKIE['vk_app_' . conf::$conf['vkontakte']['id']];
 
 		if ($appCookie)
 		{
@@ -44,7 +44,7 @@ class vkontakte
 				}
 			}
 
-			$sign	.=	conf::i()->vkontakte['key'];
+			$sign	.=	conf::$conf['vkontakte']['key'];
 			$sign	=	md5($sign);
 
 			if ($session['sig'] == $sign && $session['expire'] > time())

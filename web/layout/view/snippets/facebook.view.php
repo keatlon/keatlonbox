@@ -3,7 +3,7 @@
   window.fbAsyncInit = function() {
 
     FB.init({
-      appId      : '<?= conf::i()->facebook['id'] ?>', // App ID
+      appId      : '<?= conf::$conf['facebook']['id'] ?>', // App ID
       status     : true,
       cookie     : true,
       oauth      : true,

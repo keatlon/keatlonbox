@@ -18,7 +18,7 @@ class log
 
     static public function exception(Exception $e)
     {
-        if (!conf::i()->debug['log_exceptions'])
+        if (!conf::$conf['debug']['log_exceptions'])
         {
             return true;
         }
@@ -58,7 +58,7 @@ class log
 
     public static function push($msg, $label = 'default', $type = log::E_USER)
     {
-		if (conf::i()->debug['display_errors'])
+		if (conf::$conf['debug']['display_errors'])
 		{
 			$item['type']		= $type;
 			$item['label']		= $label;
@@ -72,34 +72,34 @@ class log
 		{
 			case log::E_PHP:
 
-				if (!conf::i()->debug['log_errors'])
+				if (!conf::$conf['debug']['log_errors'])
 				{
 					return false;
 				}
 				
-				$filename = conf::i()->debug['log_errors'];
+				$filename = conf::$conf['debug']['log_errors'];
 
 				break;
 
 			case log::E_EXCEPTION:
 
-				if (!conf::i()->debug['log_exceptions'])
+				if (!conf::$conf['debug']['log_exceptions'])
 				{
 					return false;
 				}
 
-				$filename = conf::i()->debug['log_exceptions'];
+				$filename = conf::$conf['debug']['log_exceptions'];
 
 				break;
 
 			case log::E_USER:
 
-				if (!conf::i()->debug['log_exceptions'])
+				if (!conf::$conf['debug']['log_exceptions'])
 				{
 					return false;
 				}
 
-				$filename = conf::i()->debug['log_information'];
+				$filename = conf::$conf['debug']['log_information'];
 
 				break;
 		}

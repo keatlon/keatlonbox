@@ -17,7 +17,7 @@ class storage
 
 	static function subpath($id)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case	'mysql':
 		        return '/' . chunk_split(base_convert(abs((int) $id), 10, 36), 1, '/');
@@ -67,7 +67,7 @@ class storage
 
 	public static function getHash($id, $size = false)
 	{
-		return substr(md5( $size . conf::i()->supersalt . $id), 0, 12);
+		return substr(md5( $size . conf::$conf['supersalt'] . $id), 0, 12);
 	}
 }
 

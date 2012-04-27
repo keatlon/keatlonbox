@@ -30,7 +30,7 @@ $rootdir        =   dirname(__FILE__) . "/..";
 include dirname(__FILE__) . "/conf/init.php";
 include dirname(__FILE__) . "/system/build.class.php";
 
-$cacheDir = $rootdir . conf::i()->cachedir;
+$cacheDir = $rootdir . conf::$conf['cachedir'];
 
 if (!is_dir($cacheDir))
 {
@@ -60,7 +60,7 @@ foreach($targets as $target)
 
 		case 'static':
 
-			$conf 		= 	include conf::i()->rootdir . '/conf/' . PRODUCT . '.static.php';
+			$conf 		= 	include conf::$conf['rootdir'] . '/conf/' . PRODUCT . '.static.php';
 
 			foreach ($conf as $group => $files)
 			{
@@ -138,11 +138,11 @@ function parseArguments($arguments)
 
 function database()
 {
-	foreach(conf::i()->database['pool'] as $dbName => $dbConnection)
+	foreach(conf::$conf['database']['pool'] as $dbName => $dbConnection)
 	{
-		$dbName     =   conf::i()->database['pool']['master']['dbname'];
+		$dbName     =   conf::$conf['database']['pool']['master']['dbname'];
 		$tables     =   db::rows('SHOW TABLES FROM `' . $dbName . '`');
-		$modelPath  =   conf::i()->rootdir . '/lib/model';
+		$modelPath  =   conf::$conf['rootdir'] . '/lib/model';
 
 		foreach($tables as $table)
 		{
@@ -202,7 +202,7 @@ function database()
 
 			$baseClassName = implode('', $parts) . 'BasePeer';
 			$baseClassPath = $modelPath . '/base/' . $baseClassName . '.class.php';
-			$xml = simplexml_load_file(conf::i()->rootdir . '/core/assets/templates/basePeerClass.xml');
+			$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/basePeerClass.xml');
 			$baseClassContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
 			$baseClassContent = str_replace('%CLASSNAME%', $className, $baseClassContent);
 			$baseClassContent = str_replace('%TABLENAME%', $tableName, $baseClassContent);
@@ -217,7 +217,7 @@ function database()
 
 			file_put_contents($baseClassPath, $baseClassContent);
 
-			$xml = simplexml_load_file(conf::i()->rootdir . '/core/assets/templates/peerClass.xml');
+			$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/peerClass.xml');
 			$classContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
 			$classContent = str_replace('%CLASSNAME%', $className, $classContent);
 			if (!file_exists($classPath))
@@ -296,9 +296,9 @@ function autoload($rootdir)
 
 function forms($rootdir, $application)
 {
-	$formPath	=   conf::i()->rootdir . '/lib/form';
+	$formPath	=   conf::$conf['rootdir'] . '/lib/form';
 	$views		=	scan($rootdir . "/apps/" . $application, '|.*\.view\.php|');
-	$template	=	simplexml_load_file(conf::i()->rootdir . '/core/assets/templates/form.xml');
+	$template	=	simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/form.xml');
 
 	foreach ($views as $filename)
 	{
@@ -359,16 +359,16 @@ function sphinx($rootdir, $application)
 
     $sphinxConfigContent = file_get_contents(dirname(__FILE__) . "/../../conf/sphinx.abstract.conf");
 
-    $sphinxConfigContent = str_replace('%%MYSQL_HOST%%',        conf::i()->database['pool'][conf::i()->sphinx['database']]['host'], $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%MYSQL_USER%%',        conf::i()->database['pool'][conf::i()->sphinx['database']]['user'], $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%MYSQL_PASSWORD%%',    conf::i()->database['pool'][conf::i()->sphinx['database']]['password'], $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%MYSQL_DATABASE%%',    conf::i()->database['pool'][conf::i()->sphinx['database']]['dbname'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%MYSQL_HOST%%',        conf::$conf['database']['pool'][conf::$conf['sphinx']['database']]['host'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%MYSQL_USER%%',        conf::$conf['database']['pool'][conf::$conf['sphinx']['database']]['user'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%MYSQL_PASSWORD%%',    conf::$conf['database']['pool'][conf::$conf['sphinx']['database']]['password'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%MYSQL_DATABASE%%',    conf::$conf['database']['pool'][conf::$conf['sphinx']['database']]['dbname'], $sphinxConfigContent);
     $sphinxConfigContent = str_replace('%%MYSQL_PORT%%',        '3306', $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%INDEX_STORAGE%%',     conf::i()->sphinx['storage_path'], $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%LOG%%',               conf::i()->sphinx['log_searchd'], $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%LOG_QUERY%%',         conf::i()->sphinx['log_query'], $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%PID_FILE%%',          conf::i()->sphinx['pid'], $sphinxConfigContent);
-    $sphinxConfigContent = str_replace('%%PORT%%',              conf::i()->sphinx['port'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%INDEX_STORAGE%%',     conf::$conf['sphinx']['storage_path'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%LOG%%',               conf::$conf['sphinx']['log_searchd'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%LOG_QUERY%%',         conf::$conf['sphinx']['log_query'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%PID_FILE%%',          conf::$conf['sphinx']['pid'], $sphinxConfigContent);
+    $sphinxConfigContent = str_replace('%%PORT%%',              conf::$conf['sphinx']['port'], $sphinxConfigContent);
 
-    file_put_contents(conf::i()->sphinx['config_path'] . '/sphinx.' . ENVIRONMENT . '.conf', $sphinxConfigContent);
+    file_put_contents(conf::$conf['sphinx']['config_path'] . '/sphinx.' . ENVIRONMENT . '.conf', $sphinxConfigContent);
 }

@@ -69,12 +69,12 @@ class auth
 
 	static function init()
 	{
-		if (!conf::i()->application[APPLICATION]['auth'])
+		if (!conf::$conf['application'][APPLICATION]['auth'])
 		{
-			conf::i()->application[APPLICATION]['auth'] = array('server');
+			conf::$conf['application'][APPLICATION]['auth'] = array('server');
 		}
 
-		foreach(conf::i()->application[APPLICATION]['auth'] as $authEngine)
+		foreach(conf::$conf['application'][APPLICATION]['auth'] as $authEngine)
 		{
 			if (auth::i($authEngine)->id())
 			{
@@ -84,9 +84,9 @@ class auth
 
 		if (!auth::gateway())
 		{
-			if (is_array(conf::i()->application[APPLICATION]['auth']))
+			if (is_array(conf::$conf['application'][APPLICATION]['auth']))
 			{
-				auth::gateway(conf::i()->application[APPLICATION]['auth'][0]);
+				auth::gateway(conf::$conf['application'][APPLICATION]['auth'][0]);
 			}
 			else
 			{

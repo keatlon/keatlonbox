@@ -12,7 +12,7 @@ class _mongo
 	{
 		if (!self::$instances[$alias])
 		{
-			self::$instances[$alias] = new Mongo(conf::i()->mongo['servers'][$alias]['connection']);
+			self::$instances[$alias] = new Mongo(conf::$conf['mongo']['servers'][$alias]['connection']);
 		}
 
 		return self::$instances[$alias];
@@ -20,7 +20,7 @@ class _mongo
 
 	static function db($alias = 'master')
 	{
-		return _mongo::i($alias)->selectDB(conf::i()->mongo['servers'][$alias]['database']);
+		return _mongo::i($alias)->selectDB(conf::$conf['mongo']['servers'][$alias]['database']);
 	}
 
 	static function primary($id)

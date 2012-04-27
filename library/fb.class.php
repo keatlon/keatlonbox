@@ -13,14 +13,14 @@ class fb
 	{
 		if (!self::$instance)
 		{
-			require conf::i()->rootdir . conf::i()->facebook['lib'] . '/facebook.php';
+			require conf::$conf['rootdir'] . conf::$conf['facebook']['lib'] . '/facebook.php';
 
 			self::$instance = new Facebook(array
 			(
-				'appId'		=>	conf::i()->facebook['id'],
-				'secret'	=>	conf::i()->facebook['secret'],
-				'cookie'	=>	conf::i()->facebook['cookie'],
-				'domain'	=>	conf::i()->facebook['domain'],
+				'appId'		=>	conf::$conf['facebook']['id'],
+				'secret'	=>	conf::$conf['facebook']['secret'],
+				'cookie'	=>	conf::$conf['facebook']['cookie'],
+				'domain'	=>	conf::$conf['facebook']['domain'],
 			));
 		}
 
@@ -41,7 +41,7 @@ class fb
 	{
 		if (!$url)
 		{
-			$url	=	conf::i()->domains['web'] . '/account/signin';
+			$url	=	conf::$conf['domains']['web'] . '/account/signin';
 		}
 
 		return self::i()->getLoginUrl(array(
@@ -54,7 +54,7 @@ class fb
 	{
 		if (!$url)
 		{
-			$url	=	conf::i()->domains['web'] . '/account/signout';
+			$url	=	conf::$conf['domains']['web'] . '/account/signout';
 		}
 		
 		return self::i()->getLogoutUrl(array(
@@ -89,8 +89,8 @@ class fb
 	static function getAppToken()
 	{
 		$url	= sprintf('https://graph.facebook.com/oauth/access_token?client_id=%s&client_secret=%s&grant_type=client_credentials',
-			conf::i()->facebook['id'],  
-			conf::i()->facebook['secret']
+			conf::$conf['facebook']['id'],
+			conf::$conf['facebook']['secret']
 		);
 
 		$ch		=	curl_init($url);

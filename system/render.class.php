@@ -71,19 +71,13 @@ class render
 	 */
 	public static function partial($__template__, $__vars__ = array(), $__return__ = true)
 	{
-		if ($__vars__) {
-			foreach ($__vars__ as $__name__ => $__value__)
-			{
-				$$__name__ = $__value__;
-			}
-		}
-
 		if ($__return__)
 		{
 			ob_start();
 		}
 
-		include self::getTemplatePath($__template__);
+		extract($__vars__, EXTR_OVERWRITE);
+		require self::getTemplatePath($__template__);
 
 		if ($__return__)
 		{
@@ -114,14 +108,7 @@ class render
 
 		if ($__controller__->response['code'] == actionController::SUCCESS)
 		{
-			$__controller__vars = $__controller__->getActionVars();
-
-			if ($__controller__vars) {
-				foreach ($__controller__vars as $var_name => $var_value)
-				{
-					$data[$var_name] = $var_value;
-				}
-			}
+			extract($__controller__->getActionVars(), EXTR_OVERWRITE);
 		}
 
 		response::set('data', $data);
@@ -136,50 +123,10 @@ class render
 		}
 	}
 
-	protected static function xml(actionController $__controller__, $__view__ = false)
+	protected static function xml(actionController $__controller__)
 	{
-		/*
-		if ($__controller__->isLayout())
-		{
-		$__controller__->setActionVars(array_merge((array)$__controller__->getActionVars(), (array)application::getLastAction()->getActionVars()));
-		}
-		else
-		{
-		if (application::getLayoutAction())
-		{
-		$__controller__->setActionVars(array_merge((array)$__controller__->getActionVars(), (array)application::getLayoutAction()->getActionVars()));
-		}
-		}
-		*/
-
-		$__vars__ = $__controller__->getActionVars();
-
-		foreach ($__vars__ as $var_name => $var_value)
-		{
-			$$var_name = $var_value;
-		}
-
-		if (!$__view__)
-		{
-			if ($__controller__->viewName)
-			{
-				$__view__ = $__controller__->viewName;
-			}
-			else
-			{
-				$__view__ = $__controller__->getActionName();
-			}
-		}
-
-		$path = self::getTemplatePath($__controller__->getActionName(), $__controller__->getModuleName());
-
-		if (!file_exists($path))
-		{
-			$actionPath = router::get(get_class($__controller__));
-			$path       = substr($actionPath, 0, strpos($actionPath, '/action/')) . '/view/' . $__view__ . '.view.php';
-		}
-
-		include $path;
+		extract($__controller__->getActionVars(), EXTR_OVERWRITE);
+		require self::getTemplatePath($__controller__->getActionName(), $__controller__->getModuleName());
 	}
 
 	/**
@@ -194,12 +141,12 @@ class render
 	{
 		if (substr($action, 0, 2) == '//')
 		{
-			return conf::i()->rootdir . substr($action, 1) . '.view.php';
+			return conf::$conf['rootdir'] . substr($action, 1) . '.view.php';
 		}
 
 		if ($action[0] == '/')
 		{
-			return conf::i()->rootdir . '/apps' . $action . '.view.php';
+			return conf::$conf['rootdir'] . '/apps' . $action . '.view.php';
 		}
 
 		if (!$module)
@@ -207,7 +154,7 @@ class render
 			$module = stack::currentModule();
 		}
 
-		return conf::i()->rootdir . '/apps/' . APPLICATION . '/' . $module . '/view/' . $action . '.view.php';
+		return conf::$conf['rootdir'] . '/apps/' . APPLICATION . '/' . $module . '/view/' . $action . '.view.php';
 	}
 
 }

@@ -3,19 +3,19 @@ class url
 {
     static function parse($url)
     {
-		return call_user_func(conf::i()->application['url']['parser'], $_SERVER['REQUEST_URI']);
+		return call_user_func(conf::$conf['application']['url']['parser'], $_SERVER['REQUEST_URI']);
 	}
 
     static function build($module, $action, $params)
     {
-		return call_user_func(conf::i()->application['url']['builder'], $module, $action, $params);
+		return call_user_func(conf::$conf['application']['url']['builder'], $module, $action, $params);
 	}
 
     static function _parse($url)
     {
-		if (conf::i()->application[APPLICATION]['rewrite'])
+		if (conf::$conf['application'][APPLICATION]['rewrite'])
 		{
-			foreach(conf::i()->application[APPLICATION]['rewrite'] as $pattern => $replacement)
+			foreach(conf::$conf['application'][APPLICATION]['rewrite'] as $pattern => $replacement)
 			{
 				$url = preg_replace($pattern, $replacement, $url);
 			}
@@ -32,7 +32,7 @@ class url
 
         $parts	= explode('/', $url);
 
-		$defaultController = conf::i()->application[APPLICATION]['default'];
+		$defaultController = conf::$conf['application'][APPLICATION]['default'];
 
 		if (auth::id())
 		{

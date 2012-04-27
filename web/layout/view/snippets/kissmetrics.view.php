@@ -1,4 +1,4 @@
-<? if (conf::i()->counters['kissmetrics']['enabled']) : ?>
+<? if (conf::$conf['counters']['kissmetrics']['enabled']) : ?>
 <script type="text/javascript">
   var _kmq = _kmq || [];
   function _kms(u){

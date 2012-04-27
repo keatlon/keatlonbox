@@ -14,7 +14,7 @@ class instagram
 	{
 		if (!self::$instance)
 		{
-			self::$instance = new OAuth(conf::i()->instagram['key'], conf::i()->instagram['secret'], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
+			self::$instance = new OAuth(conf::$conf['instagram']['key'], conf::$conf['instagram']['secret'], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
 			self::$instance->disableSSLChecks();
 			self::$instance->enableDebug();
 		}
@@ -36,33 +36,33 @@ class instagram
 
 	static function getRequestToken($redirectUrl = false)
 	{
-		$redirectUrl = $redirectUrl ? $redirectUrl : conf::i()->domains['web'] . conf::i()->instagram['localAuthorizeUrl'];
+		$redirectUrl = $redirectUrl ? $redirectUrl : conf::$conf['domains']['web'] . conf::$conf['instagram']['localAuthorizeUrl'];
 
 		$params	=	array
 		(
-			'client_id'		=>	conf::i()->instagram['key'],
+			'client_id'		=>	conf::$conf['instagram']['key'],
 			'display'		=>	'touch',
 			'redirect_uri'	=>	$redirectUrl,
 			'response_type'	=>	'code'
 		);
 
-		return response::redirect(conf::i()->instagram['authorizeUrl'] . '/?' . self::array2uri($params));
+		return response::redirect(conf::$conf['instagram']['authorizeUrl'] . '/?' . self::array2uri($params));
 	}
 
 	static function getAccessToken($code, $redirectUrl = false)
 	{
-		$redirectUrl = $redirectUrl ? $redirectUrl : conf::i()->domains['web'] . conf::i()->instagram['localAuthorizeUrl'];
+		$redirectUrl = $redirectUrl ? $redirectUrl : conf::$conf['domains']['web'] . conf::$conf['instagram']['localAuthorizeUrl'];
 
 		$params	=	array
 		(
-			'client_id'		=>	conf::i()->instagram['key'],
-			'client_secret'	=>	conf::i()->instagram['secret'],
+			'client_id'		=>	conf::$conf['instagram']['key'],
+			'client_secret'	=>	conf::$conf['instagram']['secret'],
 			'redirect_uri'	=>	$redirectUrl,
 			'grant_type'	=>	'authorization_code',
 			'code'			=>	$code
 		);
 
-		$ch		=	curl_init(conf::i()->instagram['accessTokenUrl']);
+		$ch		=	curl_init(conf::$conf['instagram']['accessTokenUrl']);
 
 		curl_setopt_array($ch, array(
 			CURLOPT_CONNECTTIMEOUT	=>	10,

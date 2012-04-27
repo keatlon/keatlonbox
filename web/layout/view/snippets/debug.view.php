@@ -1,12 +1,16 @@
 <?
 	profiler::finish(profiler::getAppId());
-	$app	=	profiler::total(profiler::APPLICATION);
-	$sql		=	profiler::total(profiler::SQL);
 
+	$app		=	profiler::total(profiler::APPLICATION);
+	$render		=	profiler::total(profiler::RENDER);
+	$sql		=	profiler::total(profiler::SQL);
 	$sqlItems	=	profiler::get(profiler::SQL);
+
 ?>
 
+<a class="debug-total" onclick="$('.debug-total-items').toggle()" href="javascript:;">TOTAL: <?= ($app + $render) * 1000 ?>ms</a>
 <a class="debug-app" onclick="$('.debug-app-items').toggle()" href="javascript:;">APP: <?= $app * 1000 ?>ms</a>
+<a class="debug-render" onclick="$('.debug-render-items').toggle()" href="javascript:;">RENDER: <?= $render * 1000 ?>ms</a>
 <a class="debug-sql" onclick="$('.debug-sql-items').toggle()" href="javascript:;">DB: <?= $sql * 1000 ?>ms</a>
 
 

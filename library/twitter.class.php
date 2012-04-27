@@ -27,7 +27,7 @@ class twitter
 	{
 		if (!self::$instance)
 		{
-			self::$instance = new OAuth(conf::i()->twitter['key'], conf::i()->twitter['secret'], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
+			self::$instance = new OAuth(conf::$conf['twitter']['key'], conf::$conf['twitter']['secret'], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
 			self::$instance->disableSSLChecks();
 			self::$instance->enableDebug();
 		}
@@ -40,7 +40,7 @@ class twitter
 	{
 		try
 		{
-			$token = self::i()->getRequestToken(conf::i()->twitter['requestTokenUrl'], conf::i()->domains['web'] . conf::i()->twitter['localAuthorizeUrl']);
+			$token = self::i()->getRequestToken(conf::$conf['twitter']['requestTokenUrl'], conf::$conf['domains']['web'] . conf::$conf['twitter']['localAuthorizeUrl']);
 		}
 		catch(Exception $e)
 		{
@@ -67,7 +67,7 @@ class twitter
 
 		try
 		{
-			$token	=	self::i()->getAccessToken(conf::i()->twitter['accessTokenUrl']);
+			$token	=	self::i()->getAccessToken(conf::$conf['twitter']['accessTokenUrl']);
 
 			if ($token)
 			{

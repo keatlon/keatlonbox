@@ -4,7 +4,7 @@ abstract class emailStorage
 
 	static function insert($data)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return emailStorageMysql::insert($data);
@@ -16,7 +16,7 @@ abstract class emailStorage
 
 	static function get($id)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return emailStorageMysql::get($id);
@@ -28,7 +28,7 @@ abstract class emailStorage
 
 	static function delete($id)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return emailStorageMysql::delete($id);
@@ -40,7 +40,7 @@ abstract class emailStorage
 
 	static function getNew($limit)
 	{
-		switch(conf::i()->database['engine'])
+		switch(conf::$conf['database']['engine'])
 		{
 			case 'mysql':
 				return emailStorageMysql::getNew($limit);
