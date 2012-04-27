@@ -103,15 +103,13 @@ class render
 
 	protected static function json(actionController $__controller__)
 	{
-		$data = array();
 		response::set('status', $__controller__->response['code']);
 
 		if ($__controller__->response['code'] == actionController::SUCCESS)
 		{
-			extract($__controller__->getActionVars(), EXTR_OVERWRITE);
+			response::set('data', $__controller__->getActionVars());
 		}
 
-		response::set('data', $data);
 
 		if (request::get('KBOX_REQUEST_SRC') == 'iframe')
 		{
