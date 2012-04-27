@@ -1,18 +1,36 @@
 <?php
 class event
 {
-	protected   $period			= 0;
-	public      $data			= false;
-	public      $beforeDispatch = false;
-	public      $afterDispatch	= false;
+	const	EVENT_BEFORE_CONTROLLER		=	0;
+	const	EVENT_BEFORE_ACL 			=	1;
+	const	EVENT_BEFORE_RENDER			=	2;
 
-	function handle()
-	{
-		
-	}
+	static protected	$events			=	array();
 
-	function get()
+	/**
+	 * @static
+	 * @param $name
+	 * @param int $position
+	 */
+    public static function register( $name, $position = application::EVENT_BEFORE_CONTROLLER )
+    {
+        $eventClassName			=	$name . 'Event';
+        self::$events[ $name ]	=	new $eventClassName;
+		self::$events[ $name ]->position = $position;
+    }
+
+	/**
+	 * @static
+	 * @param $type
+	 */
+	static public function process($type)
 	{
-		return $this->data;
+		if (self::$events) foreach(self::$events as $event)
+		{
+			if ($event->position == $type)
+			{
+				$event->handle(request::get());
+			}
+		}
 	}
 }

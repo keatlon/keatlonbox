@@ -2,9 +2,9 @@
 
 abstract class actionController
 {
-	const		SUCCESS		= 'success';
-	const		ERROR		= 'error';
-	const		EXCEPTION	= 'exception';
+	const		SUCCESS			=	'success';
+	const		ERROR			=	'error';
+	const		EXCEPTION		=	'exception';
 
 	public		$response		=	false;
 	private		$moduleName		=	false;

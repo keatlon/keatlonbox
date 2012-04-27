@@ -1,9 +1,9 @@
 <?php
 class test
 {
-	static function assert($confition, $message)
+	static function assert($condition, $message)
 	{
-		if ($confition)
+		if ($condition)
 		{
 			$result = '<span style="color:green">ok</span>';
 		}

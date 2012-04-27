@@ -2,12 +2,6 @@
 
 class taskActionController extends actionController
 {
-    function __construct($moduleName, $actionName)
-    {
-        $this->moduleName = $moduleName;
-        $this->actionName = $actionName;
-    }
-
     public function dispatch($data)
     {
         try

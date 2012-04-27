@@ -38,10 +38,6 @@ class request
 		return self::$accept;
 	}
 
-	static function ajax($is = false)
-	{
-	}
-
 	protected static function set($key, $value)
 	{
 		self::$data['params'][$key] = $value;
@@ -76,68 +72,27 @@ class request
 	static public function init()
 	{
 		self::method($_SERVER['REQUEST_METHOD']);
-		self::setRenderer();
-		self::data(url::parse($_SERVER['REQUEST_URI']));
-	}
 
-	static function setRenderer()
-	{
 		switch($_SERVER['HTTP_KBOX_RENDERER'])
 		{
-			case 'html':
-				return application::setRenderer(rendererFactory::HTML);
-
 			case 'xml':
-				return application::setRenderer(rendererFactory::XML);
+				return render::type(renderer::XML);
 
 			case 'json':
-				return application::setRenderer(rendererFactory::JSON);
+				return render::type(renderer::JSON);
 
 			case 'dialog':
-				return application::setRenderer(rendererFactory::DIALOG);
+				return render::type(renderer::DIALOG);
 		}
 
-		if (conf::i()->application[application::$name]['renderer'])
+		if (self::isPost() || $_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
 		{
-			return application::setRenderer(conf::i()->application[application::$name]['renderer']);
+			return render::type(render::JSON);
 		}
 
-		if (self::isPost())
-		{
-			return application::setRenderer(rendererFactory::JSON);
-		}
+		render::type(render::XML);
 
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false)
-		{
-			return application::setRenderer(rendererFactory::HTML);
-		}
-
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') !== false)
-		{
-			return application::setRenderer(rendererFactory::XML);
-		}
-
-		if ($_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-		{
-			return application::setRenderer(rendererFactory::JSON);
-		}
-
-		return application::setRenderer(rendererFactory::HTML);
-	}
-
-	static function isHtml()
-	{
-		return (application::getRenderer() == rendererFactory::HTML);
-	}
-
-	static function isJson()
-	{
-		return (application::getRenderer() == rendererFactory::JSON);
-	}
-
-	static function isXml()
-	{
-		return (application::getRenderer() == rendererFactory::XML);
+		self::data(url::parse($_SERVER['REQUEST_URI']));
 	}
 
 	static function isPost()

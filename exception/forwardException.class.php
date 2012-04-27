@@ -13,7 +13,7 @@ class forwardException extends applicationException
 
 		if ($renderer)
 		{
-			application::setRenderer($renderer);
+			render::type($renderer);
 		}
 
 	}

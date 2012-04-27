@@ -4,18 +4,41 @@ class stack
 {
 	protected static $currentModule =	false;
 	protected static $stacks 		=	array();
-	protected static $partials 		=	array();
 
+	/**
+	 * Add controller to rendering stack
+	 *
+	 * @static
+	 * @param webActionController $action
+	 * @param string $stack
+	 * @return array
+	 */
 	static function push(webActionController $action, $stack = 'default')
 	{
 		self::$stacks[$stack][] = $action;
+		return $action;
 	}
 
+	/**
+	 * Add rendered template to stack
+	 *
+	 * @static
+	 * @param $template
+	 * @param $vars
+	 * @param string $stack
+	 */
 	static function partial($template, $vars, $stack = 'default')
 	{
-		self::$stacks[$stack][]	=	partial::render($template, $vars);
+		self::$stacks[$stack][]	=	render::partial($template, $vars);
 	}
 
+	/**
+	 * Render whole stack
+	 *
+	 * @static
+	 * @param string $stack
+	 * @return bool
+	 */
 	static function render($stack = 'default')
 	{
 		if (!self::$stacks[$stack])
@@ -23,14 +46,12 @@ class stack
 			return false;
 		}
 
-		$renderer	=	rendererFactory::create(application::getRenderer());
-
 		foreach(self::$stacks[$stack] as $controller)
 		{
 			if ($controller instanceof webActionController)
 			{
 				self::currentModule($controller->getModuleName());
-				$renderer->render($controller);
+				render::controller($controller);
 			}
 			else
 			{
@@ -40,15 +61,25 @@ class stack
 	}
 
 	/**
+	 * Get last dispatched controller
 	 *
 	 * @static
 	 * @return actionController
 	 */
-	static function last($name = 'default')
+	static function last($stack = 'default')
 	{
-		return self::$queue[count(application::$queue) - 1];
+		return (self::$stacks[$stack])  ? self::$stacks[$stack][count(self::$stacks[$stack]) - 1] : false;
 	}
 
+	/**
+	 * Find controller in a stack by module and action name
+	 *
+	 * @static
+	 * @param $module
+	 * @param bool $action
+	 * @param string $stack
+	 * @return bool
+	 */
 	static function hasController($module, $action = false, $stack = 'default')
 	{
 		if (!self::$stacks[$stack])
@@ -79,6 +110,13 @@ class stack
 		return false;
 	}
 
+	/**
+	 * Get current rendering moudle
+	 *
+	 * @static
+	 * @param bool $module
+	 * @return bool
+	 */
 	static function currentModule($module = false)
 	{
 		if ($module)
@@ -88,15 +126,4 @@ class stack
 
 		return self::$currentModule;
 	}
-
-	static function getLastController($stack = 'default')
-	{
-		if (!self::$stacks[$stack])
-		{
-			return false;
-		}
-
-		return self::$stacks[$stack][count(self::$stacks[$stack]) - 1];
-	}
-
 }

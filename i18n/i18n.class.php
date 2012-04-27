@@ -11,7 +11,7 @@ class i18n
         mb_internal_encoding("UTF-8");
         date_default_timezone_set('UTC');
 
-		self::$application	=	application::$name;
+		self::$application	=	APPLICATION;
 		self::$locale		=	self::getLocale();
 
 		if (conf::i()->i18n['enabled'])
@@ -36,7 +36,7 @@ class i18n
     {
         if (!$_COOKIE['locale'])
         {
-            $defaultLocale = conf::i()->application[application::$name]['i18n']['defaultLocale'];
+            $defaultLocale = conf::i()->application[APPLICATION]['i18n']['defaultLocale'];
             i18n::setLocale($defaultLocale);
             return $defaultLocale;
         }
@@ -163,7 +163,7 @@ class i18n
 	{
 		if (!$application)
 		{
-			$application = application::$name;
+			$application = APPLICATION;
 		}
 
 		switch(conf::i()->database['engine'])

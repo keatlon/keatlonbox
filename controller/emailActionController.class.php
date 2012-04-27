@@ -79,11 +79,6 @@ class emailActionController extends actionController
 		ob_start();
 	}
 
-	function render($view = false, $renderer = rendererFactory::HTML)
-	{
-		rendererFactory::create($renderer)->render($this, $view);
-	}
-
 	function afterRender()
 	{
 		$content	= ob_get_contents();

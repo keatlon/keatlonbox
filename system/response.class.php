@@ -17,7 +17,7 @@ class response
 			return self::$response[$key];
 		}
 
-		$controller		=	stack::getLastController();
+		$controller		=	stack::last();
 
 		$jsDispatcher	=	$controller->getActionName() .
 							ucfirst($controller->getModuleName()) .
@@ -28,7 +28,7 @@ class response
 		(
 			'module'	=>	$controller->getModuleName(),
 			'action'	=>	$controller->getActionName(),
-			'renderer'	=>	application::getRenderer(),
+			'renderer'	=>	render::type(),
 			'js'		=>	array
 			(
 				'dispatcher'	=>	$jsDispatcher,
@@ -37,7 +37,7 @@ class response
 			)
 		);
 
-		self::$response['vars']				=	jquery::getVariables();
+		self::$response['vars']	=	jquery::getVariables();
 
 		return self::$response;
 	}

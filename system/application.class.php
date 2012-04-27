@@ -2,18 +2,6 @@
 
 class application
 {
-	/**
-	 * @var actionController
-	 */
-	static protected	$layout		=	false;
-    static protected	$events		=	array();
-	static protected 	$renderer	=	false;
-    static public		$name		=	null;
-    static public		$i18n		=	null;
-
-	const	EVENT_BEFORE_CONTROLLER		= 0;
-	const	EVENT_BEFORE_ACL 			= 1;
-	const	EVENT_BEFORE_RENDER			= 2;
 
 	static public function init()
 	{
@@ -21,8 +9,6 @@ class application
 		{
 			ini_set($key, $value);
 		}
-
-        application::$name	= APPLICATION;
 
 		session	::	init();
         log		::	init();
@@ -32,28 +18,15 @@ class application
 		request	::	init();
 		head	::	init();
 
-		application::processEvent(application::EVENT_BEFORE_ACL);
+		event::process(event::EVENT_BEFORE_ACL);
 		acl		::	init();
 	}
 
-    public static function registerEvent( $name, $position = application::EVENT_BEFORE_CONTROLLER )
-    {
-        $eventClassName			=	$name . 'Event';
-        self::$events[ $name ]	=	new $eventClassName;
-		self::$events[ $name ]->position = $position;
-    }
 
-	static public function processEvent($type)
-	{
-		if (application::$events) foreach(application::$events as $event)
-		{
-			if ($event->position == $type)
-			{
-				$event->handle(request::get());
-			}
-		}
-	}
-
+	/**
+	 * @static
+	 *
+	 */
 	static public function run()
 	{
 		ob_start();
@@ -62,9 +35,9 @@ class application
         try
         {
 			acl::check();
-			application::processEvent(application::EVENT_BEFORE_CONTROLLER);
+			event::process(event::EVENT_BEFORE_CONTROLLER);
 			application::dispatch(request::module(), request::action());
-			application::processEvent(application::EVENT_BEFORE_RENDER);
+			event::process(event::EVENT_BEFORE_RENDER);
         }
 		catch (dbException $e)
 		{
@@ -81,56 +54,37 @@ class application
         catch (moduleException $e)
         {}
 
-
-		switch(self::getRenderer())
+		if (render::layout())
 		{
-			case	rendererFactory::HTML:
-
-				if (1)
-				{
-					jquery::init('html');
-					stack::push(actionControllerFactory::create('layout', 'index')->dispatch(request::get()), 'layout');
-					application::render('layout');
-				}
-				else
-				{
-					application::render();
-				}
-				break;
-
-			case	rendererFactory::DIALOG:
-			case	rendererFactory::JSON:
-				application::render();
-				break;
-
-			case	rendererFactory::XML:
-				header ("Content-Type:text/xml");
-				echo '<?xml version="1.0" encoding="UTF-8" ?>';
-				application::render();
-				break;
+			jquery::init('html');
+			stack::push(actionControllerFactory::create('layout', 'index')->dispatch(request::get()), 'layout');
+			render::stack('layout');
+		}
+		else
+		{
+			application::render();
 		}
 	}
-    
-    static public function dispatch($module, $action = 'index', $data = false, $application = false)
-    {
-		if ($application)
-		{
-			application::$name = $application;
-		}
 
-		application::push( actionControllerFactory::create($module, $action) )->dispatch($data ? $data : request::get());
+	/**
+	 * @static
+	 * @param $module
+	 * @param string $action
+	 * @param bool $data
+	 * @param bool $application
+	 */
+    static public function dispatch($module, $action = 'index', $data = false)
+    {
+		return stack::push(actionControllerFactory::create($module, $action) )->dispatch($data ? $data : request::get());
     }
 
-	static function push(actionController $actionController)
-	{
-		if ($actionController instanceof webActionController)
-		{
-			stack::push($actionController);
-		}
-
-		return $actionController;
-	}
-
+	/**
+	 * @static
+	 * @param $module
+	 * @param $task
+	 * @param bool $data
+	 * @return mixed
+	 */
     static public function execute($module, $task, $data = false)
     {
         try
@@ -160,30 +114,5 @@ class application
 
         return $code;
     }
-
-
-	/**
-	 * @static
-	 * @return actionController
-	 */
-	static function getLayoutAction()
-	{
-		return application::$layout;
-	}
-
-	static function render($stack = 'default')
-	{
-		stack::render($stack);
-	}
-
-	static function setRenderer($renderer)
-	{
-		self::$renderer	=	$renderer;
-	}
-
-	static function getRenderer()
-	{
-		return self::$renderer;
-	}
 }
 

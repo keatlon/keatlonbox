@@ -2,10 +2,13 @@
 abstract class webActionController extends actionController
 {
 	public		$response		=	false;
-	private		$viewName		=	false;
-	private		$selector		=	false;
-	private		$isLayout		=	false;
-	private		$hasLayout		=	true;
+	private		$render			=	render::XML;
+
+	function __construct($moduleName, $actionName)
+	{
+		$this->render(render::type());
+		parent::__construct($moduleName, $actionName);
+	}
 
 	public function dispatch($data)
 	{
@@ -78,11 +81,6 @@ abstract class webActionController extends actionController
 
 	}
 
-	public function setView($view)
-	{
-		$this->viewName = $view;
-	}
-
 	public function get($request)
 	{
 
@@ -131,6 +129,17 @@ abstract class webActionController extends actionController
 	{
 		request::method(request::GET);
 		return $this->forward($module , $action);
+	}
+
+
+	function render($type = false)
+	{
+		if ($type)
+		{
+			$this->render	=	$type;
+		}
+
+		return $this->render;
 	}
 
 	function view($view)

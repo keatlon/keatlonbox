@@ -47,7 +47,7 @@ class	jquery
 
 	static function render($selector, $template, $params, $init  = jquery::INIT_CHILDREN)
 	{
-		jquery::html($selector, partial::render($template, $params, true), $init);
+		jquery::html($selector, render::partial($template, $params, true), $init);
 	}
 
 	static function animate($selector, $method, $init  = jquery::INIT_SELF)
@@ -69,7 +69,7 @@ class	jquery
 		self::$commands[]	=	array(
 			'command'	=>	'append',
 			'selector'	=>	$selector,
-			'html'		=>	partial::render($template, $params, true)
+			'html'		=>	render::partial($template, $params, true)
 		);
 		
 		if ($init)
@@ -83,7 +83,7 @@ class	jquery
 		self::$commands[]	=	array(
 			'command'	=>	'prepend',
 			'selector'	=>	$selector,
-			'html'		=>	partial::render($template, $params, true)
+			'html'		=>	render::partial($template, $params, true)
 		);
 
 		if ($init)
@@ -97,7 +97,7 @@ class	jquery
 		self::$commands[]	=	array(
 			'command'	=>	'replace',
 			'selector'	=>	$selector,
-			'html'		=>	partial::render($template, $params, true)
+			'html'		=>	render::partial($template, $params, true)
 		);
 
 		if ($init)
@@ -119,7 +119,7 @@ class	jquery
 		self::$commands[]	=	array(
 			'command'	=>	'insert',
 			'selector'	=>	$selector,
-			'html'		=>	partial::render($template, $params, true),
+			'html'		=>	render::partial($template, $params, true),
 		);
 
 		if ($init)

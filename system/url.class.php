@@ -13,9 +13,9 @@ class url
 
     static function _parse($url)
     {
-		if (conf::i()->application[application::$name]['rewrite'])
+		if (conf::i()->application[APPLICATION]['rewrite'])
 		{
-			foreach(conf::i()->application[application::$name]['rewrite'] as $pattern => $replacement)
+			foreach(conf::i()->application[APPLICATION]['rewrite'] as $pattern => $replacement)
 			{
 				$url = preg_replace($pattern, $replacement, $url);
 			}
@@ -32,7 +32,7 @@ class url
 
         $parts	= explode('/', $url);
 
-		$defaultController = conf::i()->application[application::$name]['default'];
+		$defaultController = conf::i()->application[APPLICATION]['default'];
 
 		if (auth::id())
 		{

@@ -49,7 +49,7 @@ class acl
 
 		$current	=	array
 		(
-			'app'		=>	application::$name,
+			'app'		=>	APPLICATION,
 			'module'	=>	request::module(),
 			'action'	=>	request::action(),
 			'role'		=>	auth::role()
@@ -68,12 +68,6 @@ class acl
 								(($aclItem['module'] == '*') ? '*' :	$current['module'])	. '.' .
 								(($aclItem['action'] == '*') ? '*' :	$current['action'])	. '.' .
 								(($aclItem['role'] == '*')	? '*' :	$current['role']);
-
-
-			if (false)
-			{
-				d($currentPattern . ' == ' . $currentPath);
-			}
 
 			if ($currentPattern == $currentPath)
 			{
