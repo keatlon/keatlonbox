@@ -387,7 +387,6 @@ var applicationClass = function ()
 
 	this.log = function (message)
 	{
-		$('#jsdebug').append('<div class="sf-debug-item">' + message + '</div>');
 	}
 
 	this.url2key = function (url)
