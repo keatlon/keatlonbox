@@ -13,15 +13,15 @@ class stack
 	 * @param string $stack
 	 * @return array
 	 */
-	static function push(webActionController $action, $stack = 'default')
+	static function push(webActionController $controller, $stack = 'default')
 	{
-		if ($action->__forwarded)
+		if (!$controller instanceof webActionController)
 		{
 			return false;
 		}
 
-		self::$stacks[$stack][] = $action;
-		return $action;
+		self::$stacks[$stack][] = $controller;
+		return $controller;
 	}
 
 	/**
@@ -55,6 +55,11 @@ class stack
 		{
 			if ($controller instanceof webActionController)
 			{
+				if ($controller->__forwarded)
+				{
+					continue;
+				}
+
 				self::currentModule($controller->getModuleName());
 				render::controller($controller);
 			}

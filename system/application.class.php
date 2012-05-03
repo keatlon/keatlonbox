@@ -80,7 +80,7 @@ class application
 	 */
     static public function dispatch($module, $action = 'index', $data = false)
     {
-		return application::controller($module, $action)->dispatch($data ? $data : request::get());
+		return stack::push(application::controller($module, $action)->dispatch($data ? $data : request::get()));
     }
 
 	/**

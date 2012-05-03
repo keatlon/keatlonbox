@@ -70,7 +70,6 @@ abstract class webActionController extends actionController
 
     public function afterExecute()
     {
-		return stack::push($this);
 	}
 
 	public function beforeRender()
