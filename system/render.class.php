@@ -6,16 +6,17 @@ class render
 	const JSON		= 2;
 	const DIALOG	= 4;
 
-	protected static $layout 	= true;
+	protected static $layout 	= array('layout', 'index');
 	protected static $type 		= self::XML;
 
-	public static function layout($layout = null)
+	public static function getLayout()
 	{
-		if (isset($layout))
-		{
-			self::$layout	=	$layout;
-		}
+		return self::$layout;
+	}
 
+	public static function setLayout($module = false, $action = false)
+	{
+		self::$layout	=	$module ? array($module, $action) : false;
 		return self::$layout;
 	}
 
@@ -89,7 +90,7 @@ class render
 
 	protected static function dialog(actionController $__controller__)
 	{
-		response::set('status', $__controller__->response['code']);
+		response::set('status', $__controller__->__response['code']);
 		response::set('data', array());
 
 		ob_start();
@@ -103,7 +104,7 @@ class render
 
 	protected static function json(actionController $__controller__)
 	{
-		response::set('status', $__controller__->response['code']);
+		response::set('status', $__controller__->__response['code']);
 
 		if ($__controller__->response['code'] == actionController::SUCCESS)
 		{

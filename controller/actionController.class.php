@@ -6,17 +6,16 @@ abstract class actionController
 	const		ERROR			=	'error';
 	const		EXCEPTION		=	'exception';
 
-	public		$response		=	false;
-	private		$moduleName		=	false;
-	private		$actionName		=	false;
-
-	private		$actionVars	=	array();
+	public		$__response		=	false;
+	private		$__moduleName		=	false;
+	private		$__actionName		=	false;
+	private		$__actionVars	=	array();
 	
 	function __construct($moduleName, $actionName)
 	{
-		$this->moduleName = $moduleName;
-		$this->actionName = $actionName;
-		$this->response['code'] = actionController::SUCCESS;
+		$this->__moduleName = $moduleName;
+		$this->__actionName = $actionName;
+		$this->__response['code'] = actionController::SUCCESS;
 	}
 
 	public function dispatch($data)
@@ -35,10 +34,9 @@ abstract class actionController
 
 	function __set($name, $value)
 	{
-		if (!isset($this->$name) || isset($this->actionVars[$name]))
+		if (!isset($this->$name) || isset($this->__actionVars[$name]))
 		{
-			$this->actionVars[$name] = $value;
-
+			$this->__actionVars[$name] = $value;
 		}
 		else
 		{
@@ -48,9 +46,9 @@ abstract class actionController
 
 	function & __get($name)
 	{
-		if (!isset($this->$name) || isset($this->actionVars[$name]))
+		if (!isset($this->$name) || isset($this->__actionVars[$name]))
 		{
-			return $this->actionVars[$name];
+			return $this->__actionVars[$name];
 		}
 		else
 		{
@@ -60,47 +58,22 @@ abstract class actionController
 
 	function getModuleName()
 	{
-		return $this->moduleName;
+		return $this->__moduleName;
 	}
 	
 	function getActionName()
 	{
-		return $this->actionName;
+		return $this->__actionName;
 	}
 
 	function getActionVars()
 	{
-		return $this->actionVars;
+		return $this->__actionVars;
 	}
 
 	function setActionVars($vars)
 	{
-		$this->actionVars = $vars;
-	}
-
-	function isLayout($isLayout = null)
-	{
-		if (isset($isLayout))
-		{
-			$this->isLayout = $isLayout;
-		}
-
-		return $this->isLayout;
-	}
-
-	function hasLayout()
-	{
-		return $this->hasLayout;
-	}
-
-	function disableLayout()
-	{
-		$this->hasLayout = false;
-	}
-
-	function enableLayout()
-	{
-		$this->hasLayout = true;
+		$this->__actionVars = $vars;
 	}
 }
 

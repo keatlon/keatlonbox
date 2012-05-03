@@ -28,7 +28,6 @@ define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
 $rootdir        =   dirname(__FILE__) . "/..";
 
 include dirname(__FILE__) . "/conf/init.php";
-include dirname(__FILE__) . "/system/build.class.php";
 
 $cacheDir = $rootdir . conf::$conf['cachedir'];
 
@@ -312,7 +311,7 @@ function forms($rootdir, $application)
 
 		foreach($matches[1] as $action)
 		{
-			$classname		=	implode('', array_map('ucfirst', explode('/', $action))) . 'BaseForm';
+			$classname		=	implode('', array_map('ucfirst', explode('/', $action))) . 'form';
 			$classname{0}	=	strtolower($classname{0});
 			$classFilename	=	$formPath . '/' . $classname . '.class.php';
 

@@ -2,7 +2,7 @@
 <definition>
     <body><![CDATA[<?php
 
-class %BASECLASSNAME% extends baseForm
+class %BASECLASSNAME% extends form
 {
 	/**
 	 * @return %BASECLASSNAME%

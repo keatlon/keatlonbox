@@ -25,4 +25,9 @@ class taskActionController extends actionController
             log::exception($e);
        }
     }
+
+	public function execute($data)
+	{
+
+	}
 }

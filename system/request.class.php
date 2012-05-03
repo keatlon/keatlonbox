@@ -72,6 +72,7 @@ class request
 	static public function init()
 	{
 		self::method($_SERVER['REQUEST_METHOD']);
+		self::data(url::parse($_SERVER['REQUEST_URI']));
 
 		if (!$_SERVER['HTTP_KBOX_RENDERER'] && (self::isPost() || $_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false))
 		{
@@ -81,12 +82,12 @@ class request
 		switch($_SERVER['HTTP_KBOX_RENDERER'])
 		{
 			case 'json':
-				render::layout(false);
+				render::setLayout(false);
 				render::type(render::JSON);
 				break;
 
 			case 'dialog':
-				render::layout(false);
+				render::setLayout(false);
 				render::type(render::DIALOG);
 				break;
 
@@ -95,7 +96,6 @@ class request
 				render::type(render::XML);
 		}
 
-		self::data(url::parse($_SERVER['REQUEST_URI']));
 	}
 
 	static function isPost()

@@ -1,5 +1,5 @@
 <?php
-abstract class baseForm
+abstract class form
 {
 	static protected $instance = false;
 

@@ -1,8 +1,9 @@
 <?php
 abstract class webActionController extends actionController
 {
-	public		$response		=	false;
-	private		$render			=	render::XML;
+	public		$__response		=	false;
+	public		$__forwarded	=	false;
+	private		$__render		=	render::XML;
 
 	function __construct($moduleName, $actionName)
 	{
@@ -28,7 +29,7 @@ abstract class webActionController extends actionController
 			
 			if ($code)
 			{
-				$this->response['code'] = $code;
+				$this->__response['code'] = $code;
 			}
 
 			$this->afterExecute();
@@ -69,6 +70,7 @@ abstract class webActionController extends actionController
 
     public function afterExecute()
     {
+		return stack::push($this);
 	}
 
 	public function beforeRender()
@@ -91,37 +93,9 @@ abstract class webActionController extends actionController
 
 	}
 
-	function setTitle($title)
-	{
-		response::set('title', $title);
-	}
-
-	function setNotice($notice)
-	{
-		response::set('notice', $notice);
-	}
-
-	function setWarning($warning)
-	{
-		response::set('warning', $warning);
-	}
-
-	function setErrors($errors)
-	{
-		response::set('errors', $errors);
-		return self::ERROR;
-	}
-
-	function setError($field, $message)
-	{
-		$errors	=	response::get('errors');
-		$errors[$field]	=	$message;
-		response::set('errors', $errors);
-		return self::ERROR;
-	}
-
 	function forward($module , $action = 'index', $data = array())
 	{
+		$this->__forwarded = true;
 		throw new forwardException($module, $action, $data);
 	}
 
@@ -136,10 +110,10 @@ abstract class webActionController extends actionController
 	{
 		if ($type)
 		{
-			$this->render	=	$type;
+			$this->__render	=	$type;
 		}
 
-		return $this->render;
+		return $this->__render;
 	}
 
 	function view($view)

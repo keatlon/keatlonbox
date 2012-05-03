@@ -59,10 +59,10 @@ class application
 
 		profiler::start(profiler::RENDER);
 
-		if (render::layout())
+		if ($layout = render::getLayout())
 		{
 			jquery::init('html');
-			stack::push(actionControllerFactory::create('layout', 'index')->dispatch(request::get()), 'layout');
+			stack::push(application::controller($layout[0], $layout[1])->dispatch(request::get()), 'layout');
 			render::stack('layout');
 		}
 		else
@@ -80,7 +80,7 @@ class application
 	 */
     static public function dispatch($module, $action = 'index', $data = false)
     {
-		return stack::push(actionControllerFactory::create($module, $action) )->dispatch($data ? $data : request::get());
+		return application::controller($module, $action)->dispatch($data ? $data : request::get());
     }
 
 	/**
@@ -94,7 +94,7 @@ class application
     {
         try
         {
-            $context['controller']  = actionControllerFactory::create($module, $task);
+            $context['controller']  = application::controller($module, $task);
 
             if (!$data)
             {
@@ -118,6 +118,26 @@ class application
         }
 
         return $code;
+    }
+
+	/**
+	 *
+	 * @param $module module name
+	 * @param $action action name
+	 * @return actionController controller
+	 */
+    public static function controller($module, $action = 'index')
+    {
+		$controller = router::get($action . ucfirst($module) . 'Controller');
+
+        if (!$controller)
+        {
+            throw new controllerException('/' . $module . '/' . $action . ' does not exist');
+    	}
+
+        $actionClassName = $action . ucfirst($module) . 'Controller';
+
+        return new $actionClassName($module, $action);
     }
 }
 

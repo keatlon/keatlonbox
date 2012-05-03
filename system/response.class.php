@@ -42,11 +42,6 @@ class response
 		return self::$response;
 	}
 
-	static function header($header)
-	{
-		Header($header);
-	}
-
 	static function redirect($url, $direct = false)
 	{
 		if(request::isJson())
@@ -81,6 +76,40 @@ class response
 		$output .= '};';
 
 		return $output;
+	}
+
+	static function header($header)
+	{
+		Header($header);
+	}
+
+	static function title($text)
+	{
+		self::set('title', $text);
+	}
+
+	static function notice($text)
+	{
+		self::set('notice', $text);
+	}
+
+	static function warning($text)
+	{
+		self::set('warning', $text);
+	}
+
+	function errors($errors)
+	{
+		self::set('errors', $errors);
+		return actionController::ERROR;
+	}
+
+	function error($field, $message)
+	{
+		$errors	=	self::get('errors');
+		$errors[$field]	=	$message;
+		self::set('errors', $errors);
+		return actionController::ERROR;
 	}
 
 }

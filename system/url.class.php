@@ -3,7 +3,7 @@ class url
 {
     static function parse($url)
     {
-		return call_user_func(conf::$conf['application']['url']['parser'], $_SERVER['REQUEST_URI']);
+		return call_user_func(conf::$conf['application']['url']['parser'], $url);
 	}
 
     static function build($module, $action, $params)
@@ -13,76 +13,37 @@ class url
 
     static function _parse($url)
     {
-		if (conf::$conf['application'][APPLICATION]['rewrite'])
+		$info				=	parse_url($url);
+		$result				=	array('params' => array());
+
+		if (preg_match_all('|[^/]+|', $info['path'], $matches))
 		{
-			foreach(conf::$conf['application'][APPLICATION]['rewrite'] as $pattern => $replacement)
+			if(count($matches[0]) % 2)
 			{
-				$url = preg_replace($pattern, $replacement, $url);
+				array_splice($matches[0], 1, 0, array('index'));
 			}
-		}
 
-		$question = strpos($url, '?');
+			$result['module'] 	= array_shift($matches[0]);
+			$result['action'] 	= array_shift($matches[0]);
 
-		if ($question)
-		{
-			$url = substr($url, 0, $question);
-		}
-
-		$url	=	trim($url, '/');
-
-        $parts	= explode('/', $url);
-
-		$defaultController = conf::$conf['application'][APPLICATION]['default'];
-
-		if (auth::id())
-		{
-			$result['module'] 	= $defaultController['signedin'][0];
-			$result['action'] 	= $defaultController['signedin'][1];
+			while($matches[0])
+			{
+				$result['params'][array_shift($matches[0])] = array_shift($matches[0]);
+			}
 		}
 		else
 		{
-			$result['module'] 	= $defaultController['signedout'][0];
-			$result['action'] 	= $defaultController['signedout'][1];
-		}
+			$default = conf::$conf['application'][APPLICATION]['default'];
 
-        if (trim($url))
-		{
-			$odd	= count($parts) % 2;
-
-			if ($odd)
+			if (auth::id())
 			{
-				$module = array_shift($parts);
-				$action = 'index';
+				$result['module'] 	= $default['signedin'][0];
+				$result['action'] 	= $default['signedin'][1];
 			}
 			else
 			{
-				$module = array_shift($parts);
-				$action = array_shift($parts);
-			}
-
-			if (actionControllerFactory::check($module, $action))
-			{
-				$result['module'] 	= $module;
-				$result['action'] 	= $action;
-			}
-			else
-			{
-				if ($odd)
-				{
-					array_push($parts, $module);
-				}
-				else
-				{
-					array_push($parts, $module);
-					array_push($parts, $action);
-				}
-			}
-
-			$pairs	= count($parts) / 2;
-
-			for ($l = 0; $l < $pairs; $l++)
-			{
-				$result['params'][$parts[ $l * 2]] 	= $parts[ $l * 2 + 1 ];
+				$result['module'] 	= $default['signedout'][0];
+				$result['action'] 	= $default['signedout'][1];
 			}
 		}
 

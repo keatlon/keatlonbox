@@ -15,6 +15,11 @@ class stack
 	 */
 	static function push(webActionController $action, $stack = 'default')
 	{
+		if ($action->__forwarded)
+		{
+			return false;
+		}
+
 		self::$stacks[$stack][] = $action;
 		return $action;
 	}
@@ -129,7 +134,7 @@ class stack
 
 	static function clear($stack = 'default')
 	{
-		return self::$stacks[$stack] = false;
+		self::$stacks[$stack] = false;
 	}
 
 }

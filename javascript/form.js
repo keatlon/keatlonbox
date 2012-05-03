@@ -78,8 +78,11 @@
 					$('<div class="error"></div>').attr('id', errorSelector).insertAfter($(this));
 				}
 			});
-			
-			self._createIFrame();
+
+			if (this.options.method.toLowerCase() == 'post')
+			{
+				self._createIFrame();
+			}
 		},
 
 		_create	: function() {
