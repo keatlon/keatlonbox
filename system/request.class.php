@@ -74,27 +74,16 @@ class request
 		self::method($_SERVER['REQUEST_METHOD']);
 		self::data(url::parse($_SERVER['REQUEST_URI']));
 
-		if($_REQUEST['HTTP_KBOX_RENDER'])
-		{
-			$_SERVER['HTTP_KBOX_RENDER'] = $_REQUEST['HTTP_KBOX_RENDER'];
-		}
+		$render	=	$_SERVER['HTTP_KBOX_RENDER'] ? $_SERVER['HTTP_KBOX_RENDER'] :
+		(
+			$_REQUEST['HTTP_KBOX_RENDER'] ? $_REQUEST['HTTP_KBOX_RENDER'] :
+			(
+				// todo: choose render based on accept header
+				(strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ? 'json' : 'xml'
+			)
+		);
 
-		if(!$_SERVER['HTTP_KBOX_RENDER'])
-		{
-			$_SERVER['HTTP_KBOX_RENDER'] = 'xml';
-		}
-
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-		{
-			$_SERVER['HTTP_KBOX_RENDER'] = 'json';
-		}
-
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-		{
-			$_SERVER['HTTP_KBOX_RENDER'] = 'json';
-		}
-
-		switch($_SERVER['HTTP_KBOX_RENDER'])
+		switch($render)
 		{
 			case 'json':
 				render::setLayout(false);
