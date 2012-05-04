@@ -74,28 +74,42 @@ class request
 		self::method($_SERVER['REQUEST_METHOD']);
 		self::data(url::parse($_SERVER['REQUEST_URI']));
 
-		if (!$_SERVER['HTTP_KBOX_RENDERER'] && (self::isPost() || $_FILES || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false))
+		if($_REQUEST['HTTP_KBOX_RENDER'])
 		{
-			$_SERVER['HTTP_KBOX_RENDERER'] = 'json';
+			$_SERVER['HTTP_KBOX_RENDER'] = $_REQUEST['HTTP_KBOX_RENDER'];
 		}
 
-		switch($_SERVER['HTTP_KBOX_RENDERER'])
+		if(!$_SERVER['HTTP_KBOX_RENDER'])
+		{
+			$_SERVER['HTTP_KBOX_RENDER'] = 'xml';
+		}
+
+		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+		{
+			$_SERVER['HTTP_KBOX_RENDER'] = 'json';
+		}
+
+		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+		{
+			$_SERVER['HTTP_KBOX_RENDER'] = 'json';
+		}
+
+		switch($_SERVER['HTTP_KBOX_RENDER'])
 		{
 			case 'json':
 				render::setLayout(false);
 				render::type(render::JSON);
-				break;
+				return;
 
 			case 'dialog':
 				render::setLayout(false);
 				render::type(render::DIALOG);
-				break;
+				return;
 
 			case 'xml':
-			default:
 				render::type(render::XML);
+				return;
 		}
-
 	}
 
 	static function isPost()

@@ -42,12 +42,19 @@
 				attr("value", "iframe")
 			);
 
+			self.element.append(
+				$('<input type="hidden">').
+				attr("name", "HTTP_KBOX_RENDER").
+				attr("value", "json")
+			);
+
 			self.options.iframeId	=	this._getIFrameSelector(this.options.action);
 			self.options.iframe		=	$('<iframe>').
 			attr("id", self.options.iframeId).
 			attr('name', self.options.iframeId).
 			css({ position: 'absolute', top: '-1000px', left: '-1000px' });
 
+			self.element.attr('accept', 'application/json');
 			self.element.attr('target', self.options.iframeId);
 			$('body').append(self.options.iframe);
 
@@ -115,7 +122,6 @@
 
 			self.element.bind('submit', function (event)
 			{
-				
 				if (self.options.onSubmit)
 				{
 					if (!self.options.onSubmit())
