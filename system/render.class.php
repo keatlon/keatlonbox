@@ -106,7 +106,7 @@ class render
 	{
 		response::set('status', $__controller__->__response['code']);
 
-		if ($__controller__->response['code'] == actionController::SUCCESS)
+		if ($__controller__->__response['code'] == actionController::SUCCESS)
 		{
 			response::set('data', $__controller__->getActionVars());
 		}
