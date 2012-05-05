@@ -1,0 +1,47 @@
+/**************************************************************************
+*			DEBUG PANEL
+**************************************************************************/
+
+.debug-panel
+{
+	position:fixed;
+	left:0px;
+	top:4px;
+}
+
+.debug-app, .debug-sql, .debug-render, .debug-total
+{
+	z-index:5000;
+    top:0px;
+    left:0px;
+	position:fixed;
+	padding:2px 8px;
+	background-color: #a00;
+	color:#fff;
+	font-size:11px;
+	text-decoration: none;
+	text-shadow: none;
+	display:none;
+}
+.debug-total	{	display: block;}
+.debug-app		{	top:30px; background-color: #6000E0; }
+.debug-render	{	top:60px; background-color: #c65d09;	}
+.debug-sql		{	top:90px; background-color: #666666;	}
+
+.debug-items
+{
+    z-index: 10000;
+	position:fixed;
+	top:5px;
+	left: 100px;
+	padding:10px;
+	background: #fff;
+}
+
+.debug-items div
+{
+	margin-bottom:10px;
+	color:#222;
+	padding:3px 8px;
+	.radius(3px);
+}

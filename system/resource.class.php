@@ -42,7 +42,7 @@ class resource
 			case self::CSS:
 				self::$css[] = sprintf
 				(
-					'<link rel="stylesheet" href="%s" type="text/css" media="%s"/>', $href, 'screen'
+					'<link rel="stylesheet" href="%s"/>', $href, 'screen'
 				);
 				break;
 		}

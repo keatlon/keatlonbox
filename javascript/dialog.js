@@ -1,8 +1,9 @@
-var dialogClass = function()
+var dialogSelector = function()
 {
-	var contentContainer = 'dialog';
+	var dialogSelector = '#dialog';
 	this.options =
 	{
+		framework	:	'ui',
 		width		:	'auto',
 		height		:	'auto',
 		autoOpen	:	false,
@@ -27,13 +28,26 @@ var dialogClass = function()
 
 	this.configure = function(config)
 	{
-		$('body').append('<div id="dialog"></div>');
-		$('#dialog').dialog(dialog.options);
+		this.options.framework	=	(typeof $.fn.dialog == 'function') ? 'ui' : 'bootstrap';
+
+		if (this.options.framework == 'ui')
+		{
+			$('body').append('<div id="dialog"></div>');
+			$('#dialog').dialog(dialog.options);
+		}
 	}
 
 	this.close = function ( )
 	{
-		$('#dialog').dialog('close');
+		if (this.options.framework == 'ui')
+		{
+			$('#dialog').dialog('close');
+		}
+
+		if (this.options.framework == 'bootstrap')
+		{
+			$(dialogSelector).hide();
+		}
 	}
 
 	this.process = function ( response )
@@ -43,15 +57,24 @@ var dialogClass = function()
 			return false;
 		}
 
-		if (typeof response.options != 'undefined')
+
+		if (this.options.framework == 'ui')
 		{
-			$('#dialog').dialog('option', response.options);
+			if (typeof response.options != 'undefined')
+			{
+					$('#dialog').dialog('option', response.options);
+			}
+
+			dialog.show(response.title, response.body);
 		}
 
-		dialog.show(response.title, response.body);
+		if (this.options.framework == 'bootstrap')
+		{
+			$(dialogSelector).show();
+		}
 
 		response.application.js.selectors.push({
-			'selector'	:	'#' + contentContainer,
+			'selector'	:	dialogSelector,
 			'init'		:	2
 		});
 	}
@@ -63,11 +86,19 @@ var dialogClass = function()
 
     this.show = function ( title, content )
 	{
-        $('#' + contentContainer).html( content );
+		if (this.options.framework == 'ui')
+		{
+			$(dialogSelector).html( content );
+			$('#ui-dialog-title-dialog').html( title );
+	        $('#dialog').dialog('open');
+		}
 
-        $('#ui-dialog-title-dialog').html( title );
-        $('#dialog').dialog('open');
+		if (this.options.framework == 'boostrap')
+		{
+			content;
+			title;
+		}
     }
 };
 
-var dialog = new dialogClass;
+var dialog = new dialogSelector;
