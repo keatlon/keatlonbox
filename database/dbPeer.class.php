@@ -27,19 +27,24 @@ abstract class dbPeer
 	 * @param integer $primaryKey
 	 * @return array
 	 */
-	public function doGetItem($primaryKey)
+	public function doGetItem($pk)
 	{
-		if (is_array($primaryKey))
+		if (is_array($pk))
 		{
-			$primaryKey	=	$primaryKey[0];
+			foreach ($pk as $pkid)
+			{
+				$result[] = $this->doGetItem($pkid);
+			}
+
+			return $result;
 		}
 
-		if (!$primaryKey)
+		if (!$pk)
 		{
 			return false;
 		}
 
-		$row = db::row('SELECT * FROM ' . $this->tableName . " WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($primaryKey), $this->connectionName);
+		$row = db::row('SELECT * FROM ' . $this->tableName . " WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($pk), $this->connectionName);
 
 		if ($row['meta'])
 		{

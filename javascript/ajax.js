@@ -50,7 +50,7 @@ var ajaxClass = function()
 			type		:	'GET',
 			data 		:	params,
 			dataType	:	'json',
-			headers		:	{ 'KBox-Renderer' : renderer},
+			headers		:	{ 'KBox-Render' : renderer},
 			success		:	function(response, textStatus, jqXHR)
 			{
 				application.dispatch(response);

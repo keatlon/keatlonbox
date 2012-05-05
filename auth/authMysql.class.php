@@ -4,7 +4,7 @@ class authMysql extends authBase
 {
     function authorize($data)
 	{
-        $user = userPeer::getItem(userPeer::getList( array('status' => 'active', 'email' => $data['email'])));
+        $user = userPeer::get(userPeer::getList( array('status' => 'active', 'email' => $data['email'])));
 		
         if (!$user)
 		{

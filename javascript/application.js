@@ -221,7 +221,7 @@ var applicationClass = function ()
 
 	this.initUrl	=	function(selector, init)
 	{
-		this.getElements('a:not(.sf-usual)', selector, init).click(function() {
+		this.getElements('[href]:not(.sf-usual)', selector, init).click(function() {
 
 			if (typeof $(this).attr('repeat') != 'undefined')
 			{
