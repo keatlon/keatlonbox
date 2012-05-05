@@ -3,7 +3,7 @@ class googleI18nController extends taskActionController
 {
     function execute($params)
     {
-        $items = translationPeer::getItems(translationPeer::getList(array('status' => 'pending')));
+        $items = translationPeer::get(translationPeer::getList(array('status' => 'pending')));
         
         foreach($items as $item)
         {

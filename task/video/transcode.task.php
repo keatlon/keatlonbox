@@ -20,7 +20,7 @@ class transcodeVideoController extends taskActionController
 
 		foreach($list as $id)
 		{
-			$item = videoPeer::getItem($id);
+			$item = videoPeer::get($id);
 
 			if ($item['status'] != 'pending')
 			{

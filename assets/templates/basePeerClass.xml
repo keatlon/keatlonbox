@@ -33,23 +33,6 @@ class %BASECLASSNAME% extends dbPeer
     }
 
     /**
-     * get full row from table
-     *
-     * @param integer $primaryKey
-     * @return array
-     */
-    public static function  getItem( $primaryKey )
-    {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetItem( $primaryKey );
-    }
-
-
-    public static function  getItems( $primaryKeys )
-    {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetItems( $primaryKeys );
-    }
-
-    /**
      * get array of primary keys
      *
      * @param array $where
