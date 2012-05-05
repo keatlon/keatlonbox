@@ -1,8 +1,8 @@
 var dialogSelector = function()
 {
-	var dialogSelector = '#dialog';
 	this.options =
 	{
+		element		:	false,
 		framework	:	'ui',
 		width		:	'auto',
 		height		:	'auto',
@@ -13,6 +13,7 @@ var dialogSelector = function()
 		show		:	{effect:'fadeup', duration:250},
 		hide		:	{effect:'fadedown', duration:250},
 		resizable	:	false,
+		id			:	'dialog',
 		minHeight	:	0,
 		position	:	['center', 80],
 		closeText	:	'Close',
@@ -32,21 +33,28 @@ var dialogSelector = function()
 
 		if (this.options.framework == 'ui')
 		{
-			$('body').append('<div id="dialog"></div>');
-			$('#dialog').dialog(dialog.options);
+			this.options.element	=	$('<div id="dialog"></div>').attr('id', this.options.id);
+			$('body').append(this.options.element);
+			this.options.element.dialog(dialog.options);
 		}
+
+		if (this.options.framework == 'bootstrap')
+		{
+			this.options.element	=	$('#' + this.options.id);
+		}
+
 	}
 
 	this.close = function ( )
 	{
 		if (this.options.framework == 'ui')
 		{
-			$('#dialog').dialog('close');
+			this.options.element.dialog('close');
 		}
 
 		if (this.options.framework == 'bootstrap')
 		{
-			$(dialogSelector).hide();
+			this.options.element.hide();
 		}
 	}
 
@@ -57,24 +65,18 @@ var dialogSelector = function()
 			return false;
 		}
 
-
 		if (this.options.framework == 'ui')
 		{
 			if (typeof response.options != 'undefined')
 			{
-					$('#dialog').dialog('option', response.options);
+				this.options.element.dialog('option', response.options);
 			}
-
-			dialog.show(response.title, response.body);
 		}
 
-		if (this.options.framework == 'bootstrap')
-		{
-			$(dialogSelector).show();
-		}
+		dialog.show(response.title, response.body);
 
 		response.application.js.selectors.push({
-			'selector'	:	dialogSelector,
+			'selector'	:	'#' + this.options.id,
 			'init'		:	2
 		});
 	}
@@ -88,15 +90,18 @@ var dialogSelector = function()
 	{
 		if (this.options.framework == 'ui')
 		{
-			$(dialogSelector).html( content );
+			$(this.options.selector).html( content );
 			$('#ui-dialog-title-dialog').html( title );
-	        $('#dialog').dialog('open');
+	        $(this.options.selector).dialog('open');
 		}
 
-		if (this.options.framework == 'boostrap')
+
+		if (this.options.framework == 'bootstrap')
 		{
-			content;
-			title;
+			this.options.element.show();
+
+			$('.modal-header h3', this.options.element).html(title);
+			$('.modal-body', this.options.element).html(content);
 		}
     }
 };
