@@ -11,7 +11,7 @@ class cropImageController extends taskActionController
 
 		$destinationType	= $params[5];
 
-		$list = imagePeer::getList();
+		$list = imagePeer::cols();
 
 		foreach($list as $imageId)
 		{

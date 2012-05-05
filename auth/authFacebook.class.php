@@ -10,7 +10,7 @@ class authFacebook extends authBase
 			return false;
 		}
 
-		$fbUser = userPeer::get(userPeer::getList(array('facebook_id' => $fbUserId)));
+		$fbUser = userPeer::row(userPeer::cols(array('facebook_id' => $fbUserId)));
 
 		if (!$fbUser)
 		{

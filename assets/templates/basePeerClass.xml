@@ -10,9 +10,7 @@ class %BASECLASSNAME% extends dbPeer
     protected	$primaryKey		=	%PRIMARYKEY%;
     protected	$primaryTKey	=	%PRIMARYTKEY%;
     protected	$primaryOKey	=	%PRIMARYOKEY%;
-
 	protected	$fields			=	array(%FIELDS%);
-
     protected	$primaryBind	=	"%PRIMARYBIND%";
     protected	$multiPrimary	=	%MULTIPRIMARY%;
 
@@ -27,9 +25,20 @@ class %BASECLASSNAME% extends dbPeer
      * @param integer $primaryKey
      * @return array
      */
-    public static function  get( $primaryKey )
+    public static function  row( $primaryKey )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetItem( $primaryKey );
+        return dbPeer::getInstance('%CLASSNAME%')->doRow( $primaryKey );
+    }
+
+    /**
+     * get full rows from table
+     *
+     * @param integer $primaryKey
+     * @return array
+     */
+    public static function  rows( $primaryKeys )
+    {
+        return dbPeer::getInstance('%CLASSNAME%')->doRows( $primaryKeys );
     }
 
     /**
@@ -41,25 +50,11 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $limit
      * @return array
      */
-    public static function  getList( $where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false )
+    public static function  cols( $where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, $order, $limit, $offset, $total, $more);
+        return dbPeer::getInstance('%CLASSNAME%')->doCols( $where, $order, $limit, $offset, $total, $more);
     }
 
-
-    /**
-     * get array of primary keys
-     *
-     * @param array $where
-     * @param array $bind
-     * @param array $order
-     * @param array $limit
-     * @return array
-     */
-    public static function  getSlicedList( $where = array(), $offset = false, $limit = false, &$total = false )
-    {
-        return dbPeer::getInstance('%CLASSNAME%')->doGetList( $where, false, $limit, $offset, $total );
-    }
 
     /**
      * insert row
@@ -74,7 +69,7 @@ class %BASECLASSNAME% extends dbPeer
 
 
     /**
-     * insert row
+     * Replace row
      *
      * @param array $data
      * @return integer
@@ -109,7 +104,7 @@ class %BASECLASSNAME% extends dbPeer
 
 	static function setMeta($id, $values)
 	{
-		$item	=	dbPeer::getInstance('%CLASSNAME%')->doGetItem($id);
+		$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id);
 		$meta	=	$item['meta'];
 
 		foreach ($values as $key => $value)
@@ -124,7 +119,7 @@ class %BASECLASSNAME% extends dbPeer
 	{
 		if (!$item)
 		{
-			$item	=	dbPeer::getInstance('%CLASSNAME%')->doGetItem($id);
+			$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id);
 		}
 
 		if ($item['meta'])

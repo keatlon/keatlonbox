@@ -3,7 +3,7 @@ class resendEmailController extends taskActionController
 {
     public function execute($params)
     {
-		$items = mailPeer::get(mailPeer::getList(array('processed' => 0)));
+		$items = mailPeer::row(mailPeer::cols(array('processed' => 0)));
 
 		foreach($items as $item)
 		{

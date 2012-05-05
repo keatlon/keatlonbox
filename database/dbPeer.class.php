@@ -27,21 +27,16 @@ abstract class dbPeer
 	 * @param integer $primaryKey
 	 * @return array
 	 */
-	public function doGetItem($pk)
+	public function doRow($pk)
 	{
-		if (is_array($pk))
-		{
-			foreach ($pk as $pkid)
-			{
-				$result[] = $this->doGetItem($pkid);
-			}
-
-			return $result;
-		}
-
 		if (!$pk)
 		{
 			return false;
+		}
+
+		if (is_array($pk))
+		{
+			$pk = $pk[0];
 		}
 
 		$row = db::row('SELECT * FROM ' . $this->tableName . " WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($pk), $this->connectionName);
@@ -54,7 +49,7 @@ abstract class dbPeer
 		return $row;
 	}
 
-	public function doGetItems($primaryKeys)
+	public function doRows($primaryKeys)
 	{
 		if (!is_array($primaryKeys) || !$primaryKeys)
 		{
@@ -63,7 +58,7 @@ abstract class dbPeer
 
 		foreach ($primaryKeys as $primaryKey)
 		{
-			$result[] = $this->doGetItem($primaryKey);
+			$result[] = $this->doRow($primaryKey);
 		}
 
 		return $result;
@@ -78,7 +73,7 @@ abstract class dbPeer
 	 * @param array $limit
 	 * @return array
 	 */
-	public function doGetList($where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false)
+	public function doCols($where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false)
 	{
 		$bind			= array();
 		$where_clause	= array();

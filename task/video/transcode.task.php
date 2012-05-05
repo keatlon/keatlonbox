@@ -10,7 +10,7 @@ class transcodeVideoController extends taskActionController
 
         lock::add('video');
         
-		$list = videoPeer::getList(array('status' => 'pending'), array(), false, 10);
+		$list = videoPeer::cols(array('status' => 'pending'), array(), false, 10);
 		
 		if (!$list)
 		{
@@ -20,7 +20,7 @@ class transcodeVideoController extends taskActionController
 
 		foreach($list as $id)
 		{
-			$item = videoPeer::get($id);
+			$item = videoPeer::row($id);
 
 			if ($item['status'] != 'pending')
 			{

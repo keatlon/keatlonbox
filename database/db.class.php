@@ -75,6 +75,6 @@ class db
 	
 	public static function lastId()
 	{
-		return dbConnection::get( $connection_name )->lastInsertId();
+		return dbConnection::get()->lastInsertId();
 	}
 }

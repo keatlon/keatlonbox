@@ -5,7 +5,7 @@ class buildI18nController extends taskActionController
     {
         $ns = $params[4];
 
-        $items = translationPeer::get(translationPeer::getList());
+        $items = translationPeer::row(translationPeer::cols());
         foreach($items as $item)
         {
             $translationData .= "'" . $item['hash'] . "' => array (\n\r\t'ru_RU'    => '" . str_replace("'", "\'", $item['ru_RU']) . "',\n\t'ua_UA'    => '" . str_replace("'", "\'", $item['ua_UA']). "'),\n\n";
