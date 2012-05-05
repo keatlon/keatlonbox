@@ -258,18 +258,6 @@ var applicationClass = function ()
 				return false;
 			}
 		});
-
-		this.getElements('input[type="button"][href]', selector, init).click(function ()
-		{
-			if ($(this).attr('target') == 'post')
-			{
-				ajax.put($(this).attr('href'));
-				return false;
-			}
-
-			dialog.load($(this).attr('href'));
-		});
-
 	}
 
 	this.initForms = function(selector, init)
