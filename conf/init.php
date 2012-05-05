@@ -28,7 +28,6 @@ class conf
     static $conf = false;
 }
 
-
 /**************************************************************
 * 		BUILD CONFIG
 ***************************************************************/
@@ -42,7 +41,7 @@ $recompile				=	false;
 $metaFile				=	ROOTDIR . '/~cache/conf.meta';
 $jsonFile				=	ROOTDIR . '/~cache/conf.json';
 
-$changed				=	max(filemtime($globalConfig), filemtime($productConfig), filemtime($environmentConfig));
+$changed				=	max(filemtime($globalConfigFile), filemtime($productConfigFile), filemtime($environmentConfigFile));
 $compiled				=	file_get_contents($metaFile);
 
 if (!file_exists($metaFile) || !file_exists($jsonFile) || ($changed > $compiled))

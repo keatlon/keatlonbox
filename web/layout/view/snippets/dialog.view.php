@@ -8,6 +8,5 @@
   </div>
   <div class="modal-footer">
     <a href="#" onclick="dialog.close()" class="btn">Close</a>
-    <a href="#" class="btn btn-primary">Save changes</a>
   </div>
 </div>
