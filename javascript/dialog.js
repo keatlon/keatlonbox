@@ -1,4 +1,4 @@
-var dialogSelector = function()
+var dialogClass = function()
 {
 	this.options =
 	{
@@ -33,7 +33,7 @@ var dialogSelector = function()
 
 		if (this.options.framework == 'ui')
 		{
-			this.options.element	=	$('<div id="dialog"></div>').attr('id', this.options.id);
+			this.options.element	=	$('<div>').attr('id', this.options.id);
 			$('body').append(this.options.element);
 			this.options.element.dialog(dialog.options);
 		}
@@ -90,9 +90,9 @@ var dialogSelector = function()
 	{
 		if (this.options.framework == 'ui')
 		{
-			$(this.options.selector).html( content );
+			$(this.options.element).html( content );
 			$('#ui-dialog-title-dialog').html( title );
-	        $(this.options.selector).dialog('open');
+	        $(this.options.element).dialog('open');
 		}
 
 
@@ -106,4 +106,4 @@ var dialogSelector = function()
     }
 };
 
-var dialog = new dialogSelector;
+var dialog = new dialogClass;

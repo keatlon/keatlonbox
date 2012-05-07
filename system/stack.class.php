@@ -13,15 +13,15 @@ class stack
 	 * @param string $stack
 	 * @return array
 	 */
-	static function push(webActionController $controller, $stack = 'default')
+	static function push($template, $stack = 'default')
 	{
-		if (!$controller instanceof webActionController)
+		if (!$template instanceof webActionController)
 		{
 			return false;
 		}
 
-		self::$stacks[$stack][] = $controller;
-		return $controller;
+		self::$stacks[$stack][] = $template;
+		return $template;
 	}
 
 	/**

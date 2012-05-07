@@ -6,6 +6,49 @@ class aql
 	protected static $pattern	=	false;
 	protected static $search	=	false;
 
+	/**
+	 * @static
+	 * @param $field
+	 * @param $mainList
+	 * @param $mainKey
+	 * @param $sourceList
+	 * @param $sourceKey
+	 * @return mixed
+	 */
+	static public function join($mainList, $extraList, $mainId, $extraId, $field)
+    {
+		$extraList = self::assoc($extraId, $extraList);
+
+		foreach($mainList as &$mainItem)
+		{
+			$mainItem[$field] = $extraList[$mainItem[$mainId]];
+		}
+
+		return $mainList;
+	}
+
+	static public function assoc($key, $array)
+    {
+		return array_combine(self::cols($key, $array), $array);
+	}
+
+	static public function cols($key, $array)
+	{
+		$result = array();
+
+		if (!is_array($array))
+		{
+			return $result;
+		}
+
+		foreach($array as $item)
+		{
+			$result[] = $item[$key];
+		}
+
+		return $result;
+	}
+
 	static function fetch($array, $pattern, $search = null)
 	{
 		self::$search	=	$search;
