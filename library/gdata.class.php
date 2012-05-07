@@ -2,8 +2,33 @@
 
 class gdata
 {
-	static protected $instance = false;
+	static protected $sessionKey 	= 'gdatatoken';
+	static protected $instance 		= false;
+	static protected $user 			= false;
 
+	/**
+	 * Get google user id
+	 *
+	 * @static
+	 *
+	 */
+	static function user()
+	{
+		if (!self::$user)
+		{
+			self::$user = gdata::get('https://www.googleapis.com/oauth2/v1/userinfo', self::access());
+		}
+
+		return self::$user;
+	}
+
+	/**
+	 * Refresh access token
+	 *
+	 * @static
+	 * @param $token
+	 * @return bool|mixed
+	 */
 	static function refresh($token)
 	{
 		$response	=	json_decode(self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
@@ -17,13 +42,44 @@ class gdata
 		return (!$response || $response['error']) ? false : $response;
 	}
 
-	static function revoke($token)
+	/**
+	 * Revoke access token
+	 *
+	 * @static
+	 * @param $token
+	 * @return mixed
+	 */
+	static function revoke()
 	{
-		return self::curl(conf::$conf['gdata']['oauth2_revoke_uri'] . '?token=' . $token);
+		self::curl(conf::$conf['gdata']['oauth2_revoke_uri'] . '?token=' . self::access());
+		session::delete(self::$sessionKey);
 	}
 
-	static function token($code)
+	static function access($id = false)
 	{
+		if ($id)
+		{
+			return userPeer::getMeta($id, 'access_token');
+		}
+
+		$token	=	session::get(self::$sessionKey);
+		return $token['access_token'];
+	}
+
+	/**
+	 * Get access token
+	 *
+	 * @static
+	 * @param $code
+	 * @return bool|mixed
+	 */
+	static function token($code = false)
+	{
+		if (!$code)
+		{
+			return session::get(self::$sessionKey);
+		}
+
 		$response	=	json_decode(self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
 		(
 			'code'			=>	$code,
@@ -33,9 +89,15 @@ class gdata
 			'grant_type'	=>	'authorization_code'
 		)), true);
 
-		return (!$response || $response['error']) ? false : $response;
+		return (!$response || $response['error']) ? false : session::set(self::$sessionKey, $response);
 	}
 
+	/**
+	 * Build google authorization URL
+	 *
+	 * @param bool $state
+	 * @return string
+	 */
 	static function authorize($state = false)
 	{
 		$params = array('response_type=code',
@@ -54,13 +116,35 @@ class gdata
 	}
 
 
-
-	static function api($url, $accessToken)
+	/**
+	 * Execute api call
+	 *
+	 * @static
+	 * @param $url
+	 * @param $accessToken
+	 * @return mixed
+	 */
+	static function get($url, $access)
 	{
-		return self::curl($url . '?access_token=' . $accessToken);
+		$response	=	self::curl($url . '?access_token=' . $access);
+		$result 	= 	json_decode($response, true);
+
+		if (!$result)
+		{
+			log::push(json_encode($result), 'GDATA');
+			return false;
+		}
+
+		if ($result['error'])
+		{
+			log::push($response, 'GDATA');
+			return false;
+		}
+
+		return $result;
 	}
 
-	static function post()
+	static function post($url, $params, $token)
 	{
 	}
 

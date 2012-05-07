@@ -2,5 +2,3 @@
 class databaseExceptionController extends webActionController
 {
 }
-
-

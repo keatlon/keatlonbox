@@ -70,6 +70,11 @@ var notificationClass = function()
 		}
 	}
 
+	this.critical = function (message)
+	{
+		this.show(message, 'critical', 20000);
+	}
+
 	this.success = function (message)
 	{
 		this.show(message, 'notice');

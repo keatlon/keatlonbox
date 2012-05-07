@@ -50,13 +50,19 @@ class application
 		}
         catch (controllerException $e)
         {
-            application::dispatch('exception', 'webserver');
+            application::dispatch('exception', 'controller', $e);
         }
-        catch (moduleException $e)
-        {}
+		catch (badResourceException $e)
+		{
+			return application::dispatch('exception', 'badResource', $e);
+		}
+		catch (Exception $e)
+		{
+			log::exception($e);
+			return application::dispatch('exception', 'application', $e);
+		}
 
 		profiler::finish($pid);
-
 		profiler::start(profiler::RENDER);
 
 		if ($layout = render::getLayout())
@@ -69,6 +75,7 @@ class application
 		{
 			render::stack();
 		}
+
 	}
 
 	/**
@@ -111,9 +118,6 @@ class application
             $code = $context['controller']->dispatch($context['data']);
         }
         catch (controllerException $e)
-        {
-        }
-        catch (moduleException $e)
         {
         }
 

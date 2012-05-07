@@ -2,5 +2,3 @@
 class badResourceExceptionController extends webActionController
 {
 }
-
-

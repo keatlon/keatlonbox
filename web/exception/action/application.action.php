@@ -2,5 +2,3 @@
 class applicationExceptionController extends webActionController
 {
 }
-
-

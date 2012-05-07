@@ -41,7 +41,14 @@ class session
     public static function set($key, $value)
     {
         $_SESSION[$key] = $value;
+		return $value;
     }
+
+	public static function delete($key)
+	{
+		unset($_SESSION[$key]);
+	}
+
 }
 
 class sessionHandler

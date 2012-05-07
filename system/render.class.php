@@ -40,7 +40,7 @@ class render
 	{
 		$controller->beforeRender();
 
-		switch($controller->render())
+		switch(render::type())
 		{
 			case self::XML:
 				self::xml($controller);
@@ -56,7 +56,6 @@ class render
 		}
 
 		$controller->afterRender();
-
 	}
 
 	/**
@@ -90,7 +89,7 @@ class render
 
 	protected static function dialog(actionController $__controller__)
 	{
-		response::set('status', $__controller__->__response['code']);
+		response::set('status', response::code());
 		response::set('data', array());
 
 		ob_start();
@@ -104,22 +103,12 @@ class render
 
 	protected static function json(actionController $__controller__)
 	{
-		response::set('status', $__controller__->__response['code']);
+		response::set('status', response::code());
+		response::set('data', $__controller__->getActionVars());
 
-		if ($__controller__->__response['code'] == actionController::SUCCESS)
-		{
-			response::set('data', $__controller__->getActionVars());
-		}
-
-
-		if (request::get('KBOX_REQUEST_SRC') == 'iframe')
-		{
-			echo '<textarea>' . json_encode(response::get()) . '</textarea>';
-		}
-		else
-		{
-			echo json_encode(response::get());
-		}
+		echo 	(request::get('KBOX_REQUEST_SRC') == 'iframe') ?
+				'<textarea>' . json_encode(response::get()) . '</textarea>' :
+				json_encode(response::get());
 	}
 
 	protected static function xml(actionController $__controller__)

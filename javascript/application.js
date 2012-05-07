@@ -1,10 +1,8 @@
 var applicationClass = function ()
 {
 
-	this.RENDERER_BASE      =	0;
-	this.RENDERER_HTML      =	1;
+	this.RENDERER_XML		=	1;
 	this.RENDERER_JSON      =	2;
-	this.RENDERER_XML		=	3;
 	this.RENDERER_DIALOG    =	4;
 
 	this.config			=	{};
@@ -77,19 +75,21 @@ var applicationClass = function ()
 			notification.warning(response.warning);
 		}
 
-		if (response.status == 'exception')
+		if (response.status == 500)
 		{
-			console.log('Exception', response.errors);
+			notification.critical(response.exception);
+			console.log('Exception', response.exception);
+			return;
 		}
 
-		if (response.status == 'error')
+		if (response.status == 201)
 		{
 			console.log('Error', response.errors);
 		}
 
 		switch(response.application.renderer)
 		{
-			case	this.RENDERER_HTML:
+			case	this.RENDERER_XML:
 				this.contexts.global	=	response.application.module + response.application.action;
 				break;
 

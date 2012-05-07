@@ -2,8 +2,23 @@
 
 class response
 {
+	const		RESPONSE_OK			=	200;
+	const		RESPONSE_ERROR		=	201;
+	const		RESPONSE_EXCEPTION	=	500;
+
+	protected	static	$code		=	response::RESPONSE_OK;
 	protected	static	$js			=	false;
 	protected	static	$response	=	array();
+
+	static function code($value = false)
+	{
+		if ($value)
+		{
+			self::$code = $value;
+		}
+
+		return self::$code;
+	}
 
 	static function set($key, $value)
 	{
@@ -18,7 +33,6 @@ class response
 		}
 
 		$controller		=	stack::last();
-
 		$jsDispatcher	=	$controller->getActionName() .
 							ucfirst($controller->getModuleName()) .
 							'Controller' .
@@ -101,7 +115,7 @@ class response
 	function errors($errors)
 	{
 		self::set('errors', $errors);
-		return actionController::ERROR;
+		self::code(self::RESPONSE_ERROR);
 	}
 
 	function error($field, $message)
@@ -109,7 +123,12 @@ class response
 		$errors	=	self::get('errors');
 		$errors[$field]	=	$message;
 		self::set('errors', $errors);
-		return actionController::ERROR;
+		self::code(self::RESPONSE_ERROR);
 	}
 
+	function exception($message)
+	{
+		self::set('exception', $message);
+		self::code(self::RESPONSE_EXCEPTION);
+	}
 }

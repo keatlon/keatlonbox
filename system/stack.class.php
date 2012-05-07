@@ -15,11 +15,6 @@ class stack
 	 */
 	static function push($template, $stack = 'default')
 	{
-		if (!$template instanceof webActionController)
-		{
-			return false;
-		}
-
 		self::$stacks[$stack][] = $template;
 		return $template;
 	}

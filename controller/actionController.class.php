@@ -2,11 +2,6 @@
 
 abstract class actionController
 {
-	const		SUCCESS			=	'success';
-	const		ERROR			=	'error';
-	const		EXCEPTION		=	'exception';
-
-	public		$__response		=	false;
 	private		$__moduleName		=	false;
 	private		$__actionName		=	false;
 	private		$__actionVars	=	array();
@@ -15,7 +10,6 @@ abstract class actionController
 	{
 		$this->__moduleName = $moduleName;
 		$this->__actionName = $actionName;
-		$this->__response['code'] = actionController::SUCCESS;
 	}
 
 	public function dispatch($data)
