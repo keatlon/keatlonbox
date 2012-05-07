@@ -49,13 +49,17 @@
 			);
 
 			self.options.iframeId	=	this._getIFrameSelector(this.options.action);
+
+			if ($('#' + self.options.iframeId).length)
+			{
+				$('#' + self.options.iframeId).remove();
+			}
+
 			self.options.iframe		=	$('<iframe>').
 			attr("id", self.options.iframeId).
 			attr('name', self.options.iframeId).
 			css({ position: 'absolute', top: '-1000px', left: '-1000px' });
 
-			self.element.attr('accept', 'application/json');
-			self.element.attr('target', self.options.iframeId);
 			$('body').append(self.options.iframe);
 
 			self.options.iframe.bind('load', function (){
@@ -70,6 +74,7 @@
 				self._onResponse(response);
 			});
 
+			self.element.attr('target', self.options.iframeId);
 		},
 
 		_markup	: function() {
