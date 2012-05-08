@@ -2,9 +2,14 @@
 
 class gdata
 {
-	static protected $sessionKey 	= 'gdatatoken';
-	static protected $instance 		= false;
-	static protected $user 			= false;
+	static protected $token 		= 	array();
+	static protected $sessionKey 	= 	'gdatatoken';
+	static protected $instance 		= 	false;
+	static protected $user 			= 	false;
+
+	static function init($accessToken = false, $refreshToken = false)
+	{
+	}
 
 	/**
 	 * Get google user id
@@ -16,7 +21,7 @@ class gdata
 	{
 		if (!self::$user)
 		{
-			self::$user = gdata::get('https://www.googleapis.com/oauth2/v1/userinfo', array(), self::access());
+			self::$user = gdata::get('https://www.googleapis.com/oauth2/v1/userinfo', array());
 		}
 
 		return self::$user;
@@ -29,11 +34,16 @@ class gdata
 	 * @param $token
 	 * @return bool|mixed
 	 */
-	static function refresh($token)
+	static function refresh($refreshToken = false)
 	{
-		$response	=	json_decode(self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
+		if (!$refreshToken)
+		{
+			$refreshToken	=	self::getSessionToken('refresh_token');
+		}
+
+		$response		=	json_decode(self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
 		(
-			'refresh_token'	=>	$token,
+			'refresh_token'	=>	$refreshToken,
 			'client_id'		=> 	conf::$conf['gdata']['id'],
 			'client_secret' => 	conf::$conf['gdata']['secret'],
 			'grant_type'	=>	'refresh_token'
@@ -51,19 +61,19 @@ class gdata
 	 */
 	static function revoke()
 	{
-		self::curl(conf::$conf['gdata']['oauth2_revoke_uri'] . '?token=' . self::access());
+		self::curl(conf::$conf['gdata']['oauth2_revoke_uri'] . '?token=' . self::getSessionToken());
 		session::delete(self::$sessionKey);
 	}
 
-	static function access($id = false)
+	static function getSessionToken($key = 'access_token')
 	{
-		if ($id)
-		{
-			return userPeer::getMeta($id, 'access_token');
-		}
+		$token = session::get(self::$sessionKey);
+		return ($key) ? $token[$key] : $token;
+	}
 
-		$token	=	session::get(self::$sessionKey);
-		return $token['access_token'];
+	static function setSessionToken($token)
+	{
+		return session::set(self::$sessionKey, $token);
 	}
 
 	/**
@@ -73,7 +83,7 @@ class gdata
 	 * @param $code
 	 * @return bool|mixed
 	 */
-	static function token($code = false)
+	static function createAccessToken($code = false)
 	{
 		if (!$code)
 		{
@@ -89,7 +99,12 @@ class gdata
 			'grant_type'	=>	'authorization_code'
 		)), true);
 
-		return (!$response || $response['error']) ? false : session::set(self::$sessionKey, $response);
+		if ($response && $response['access_token'])
+		{
+			return self::setSessionToken($response);
+		}
+
+		return false;
 	}
 
 	/**
@@ -98,7 +113,7 @@ class gdata
 	 * @param bool $state
 	 * @return string
 	 */
-	static function authorize($state = false)
+	static function createAuthorizeUrl($state = false)
 	{
 		$params = array('response_type=code',
 			'redirect_uri=' 	. urlencode(conf::$conf['gdata']['redirect']),
@@ -124,9 +139,9 @@ class gdata
 	 * @param $accessToken
 	 * @return mixed
 	 */
-	static function get($url, $params = array(), $accessToken)
+	static function get($url, $params = array())
 	{
-		$params['access_token'] = 	$accessToken;
+		$params['access_token'] = 	self::getSessionToken();
 		$params['alt'] 			= 	'json';
 		$params['v'] 			= 	'2';
 
@@ -136,20 +151,39 @@ class gdata
 		}
 
 		$url 		=	$url . '?' . implode('&', $rawParams);
-		$response	=	self::curl($url);
+		$response	=	self::curl($url, array(), $info);
 		$result 	= 	json_decode($response, true);
 
-		if (!$result)
+		switch($info['http_code'])
 		{
-			log::push(json_encode($result), 'GDATA');
-			return false;
+			case 200:
+				if (!$result)
+				{
+					log::push($response, 'GDATA');
+					return false;
+				}
+
+				if ($result['error'])
+				{
+					log::push($response, 'GDATA');
+					return false;
+				}
+				break;
+
+			case 401:
+
+				$newToken = gdata::refresh();
+
+				if ($newToken)
+				{
+					throw new tokenRefreshedException($newToken);
+				}
+
+				throw new badResourceException;
+
+				break;
 		}
 
-		if ($result['error'])
-		{
-			log::push($response, 'GDATA');
-			return false;
-		}
 
 		return $result;
 	}
@@ -158,7 +192,7 @@ class gdata
 	{
 	}
 
-	static protected function curl($url, $post = array())
+	static protected function curl($url, $post = array(), &$info = false)
 	{
 		$curl	=	curl_init($url);
 		$params	=	array
@@ -173,14 +207,15 @@ class gdata
 
 		if ($post)
 		{
-
 			$params[CURLOPT_POST]		=	true;
 			$params[CURLOPT_POSTFIELDS]	=	$post;
 		}
 
 		curl_setopt_array($curl, $params);
 
-		$response = curl_exec($curl);
+		$response 	= 	curl_exec($curl);
+		$info		=	curl_getinfo($curl);
+
 		curl_close($curl);
 		return $response;
 	}
