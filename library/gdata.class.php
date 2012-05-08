@@ -16,7 +16,7 @@ class gdata
 	{
 		if (!self::$user)
 		{
-			self::$user = gdata::get('https://www.googleapis.com/oauth2/v1/userinfo', self::access());
+			self::$user = gdata::get('https://www.googleapis.com/oauth2/v1/userinfo', array(), self::access());
 		}
 
 		return self::$user;
@@ -124,9 +124,19 @@ class gdata
 	 * @param $accessToken
 	 * @return mixed
 	 */
-	static function get($url, $access)
+	static function get($url, $params = array(), $accessToken)
 	{
-		$response	=	self::curl($url . '?access_token=' . $access);
+		$params['access_token'] = 	$accessToken;
+		$params['alt'] 			= 	'json';
+		$params['v'] 			= 	'2';
+
+		foreach($params as $key => $value)
+		{
+			$rawParams[] = $key . '=' . $value;
+		}
+
+		$url 		=	$url . '?' . implode('&', $rawParams);
+		$response	=	self::curl($url);
 		$result 	= 	json_decode($response, true);
 
 		if (!$result)
