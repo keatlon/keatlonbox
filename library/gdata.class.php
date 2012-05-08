@@ -5,7 +5,6 @@ class gdata
 	static protected $token 		= 	array();
 	static protected $sessionKey 	= 	'gdatatoken';
 	static protected $instance 		= 	false;
-	static protected $user 			= 	false;
 
 	static function init($accessToken = false, $refreshToken = false)
 	{
@@ -19,12 +18,52 @@ class gdata
 	 */
 	static function user()
 	{
-		if (!self::$user)
+		return gdata::get('https://www.googleapis.com/oauth2/v1/userinfo');
+	}
+
+	static function isError($response, $info)
+	{
+		$json = json_decode($response, true);
+
+		switch($info['http_code'])
 		{
-			self::$user = gdata::get('https://www.googleapis.com/oauth2/v1/userinfo', array());
+			case 200:
+				if (!$json)
+				{
+					log::push($response, 'GDATA');
+					return true;
+				}
+
+				if ($json['error'])
+				{
+					log::push($response, 'GDATA');
+					return true;
+				}
+				break;
+
+			case 400: // exception
+				log::push($response, 'GDATA');
+				return true;
+
+			case 401:
+
+				log::push($response, 'GDATA');
+
+				$newToken = gdata::refresh();
+
+				if ($newToken)
+				{
+					throw new tokenRefreshedException($newToken);
+				}
+
+				throw new badResourceException;
+
+				return true;
+
+				break;
 		}
 
-		return self::$user;
+		return false;
 	}
 
 	/**
@@ -41,15 +80,20 @@ class gdata
 			$refreshToken	=	self::getSessionToken('refresh_token');
 		}
 
-		$response		=	json_decode(self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
+		$response		=	self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
 		(
 			'refresh_token'	=>	$refreshToken,
 			'client_id'		=> 	conf::$conf['gdata']['id'],
 			'client_secret' => 	conf::$conf['gdata']['secret'],
 			'grant_type'	=>	'refresh_token'
-		)), true);
+		), $info);
 
-		return (!$response || $response['error']) ? false : $response;
+		if (self::isError($response, $info))
+		{
+			return false;
+		}
+
+		return json_decode($response, true);
 	}
 
 	/**
@@ -83,28 +127,23 @@ class gdata
 	 * @param $code
 	 * @return bool|mixed
 	 */
-	static function createAccessToken($code = false)
+	static function createAccessToken($code)
 	{
-		if (!$code)
-		{
-			return session::get(self::$sessionKey);
-		}
-
-		$response	=	json_decode(self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
+		$response	=	self::curl(conf::$conf['gdata']['oauth2_token_uri'], array
 		(
 			'code'			=>	$code,
 			'client_id'		=> 	conf::$conf['gdata']['id'],
 			'client_secret' => 	conf::$conf['gdata']['secret'],
 			'redirect_uri'	=> 	conf::$conf['gdata']['redirect'],
 			'grant_type'	=>	'authorization_code'
-		)), true);
+		), $info);
 
-		if ($response && $response['access_token'])
+		if (self::isError($response, $info))
 		{
-			return self::setSessionToken($response);
+			return false;
 		}
 
-		return false;
+		return self::setSessionToken(json_decode($response, true));
 	}
 
 	/**
@@ -141,6 +180,11 @@ class gdata
 	 */
 	static function get($url, $params = array())
 	{
+		if(!self::getSessionToken())
+		{
+			return false;
+		}
+
 		$params['access_token'] = 	self::getSessionToken();
 		$params['alt'] 			= 	'json';
 		$params['v'] 			= 	'2';
@@ -152,40 +196,15 @@ class gdata
 
 		$url 		=	$url . '?' . implode('&', $rawParams);
 		$response	=	self::curl($url, array(), $info);
-		$result 	= 	json_decode($response, true);
 
-		switch($info['http_code'])
+		if (self::isError($response, $info))
 		{
-			case 200:
-				if (!$result)
-				{
-					log::push($response, 'GDATA');
-					return false;
-				}
-
-				if ($result['error'])
-				{
-					log::push($response, 'GDATA');
-					return false;
-				}
-				break;
-
-			case 401:
-
-				$newToken = gdata::refresh();
-
-				if ($newToken)
-				{
-					throw new tokenRefreshedException($newToken);
-				}
-
-				throw new badResourceException;
-
-				break;
+			return false;
 		}
 
+		$json	= json_decode($response, true);
 
-		return $result;
+		return $json;
 	}
 
 	static function post($url, $params, $token)
