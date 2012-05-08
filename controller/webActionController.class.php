@@ -2,13 +2,14 @@
 abstract class webActionController extends actionController
 {
 	public		$__forwarded	=	false;
+	protected	$__data			=	array();
 
 	public function dispatch($data)
 	{
 		try
 		{
 			$this->beforeExecute();
-			
+
 			if (request::method() == request::POST)
 			{
 				$this->post($data);
@@ -18,17 +19,10 @@ abstract class webActionController extends actionController
 			{
 				$this->get($data);
 			}
-			
+
 			$this->afterExecute();
 		}
-		catch (redirectException $e)
-		{
-			$this->afterExecute();
-		}
-		catch (forwardException $e)
-		{
-			return application::dispatch($e->module, $e->action, $data);
-		}
+		catch (redirectException $e) {}
 
 		return $this;
 	}
@@ -57,10 +51,10 @@ abstract class webActionController extends actionController
 
 	}
 
-	function forward($module , $action = 'index', $data = array())
+	function forward($module , $action = 'index', $method = false, $render = false)
 	{
 		$this->__forwarded = true;
-		throw new forwardException($module, $action, $data);
+		throw new forwardException($module, $action, $method, $render, $this->__data);
 	}
 
 	function dialog($module , $action = 'index')

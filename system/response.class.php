@@ -60,6 +60,8 @@ class response
 	{
 		if(request::isJson())
 		{
+			render::setLayout(false);
+
 			if ($direct)
 			{
 				response::set('redirect', $url);

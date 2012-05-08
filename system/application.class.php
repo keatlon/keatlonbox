@@ -56,6 +56,10 @@ class application
 		{
 			return application::dispatch('exception', 'badResource', $e);
 		}
+		catch (forwardException $e)
+		{
+			application::dispatch($e->module, $e->action, $e->data);
+		}
 		catch (Exception $e)
 		{
 			log::exception($e);
