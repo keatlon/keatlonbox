@@ -123,17 +123,25 @@ class resource
 		$in 		= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . 'm';
 		$out		=	conf::$conf['rootdir'] . conf::$conf['static']['compiled'] . '/' . $filename;
 
-		$cmd	=	sprintf
-		(
-			'%s -jar %s --type %s %s > %s',
-			conf::$conf['system']['java'],
-			conf::$conf['static']['yuicompressor'],
-			$type,
-			$in,
-			$out
-		);
+		if (conf::$conf['static']['compile'])
+		{
+			$cmd	=	sprintf
+			(
+				'%s -jar %s --type %s %s > %s',
+				conf::$conf['system']['java'],
+				conf::$conf['static']['yuicompressor'],
+				$type,
+				$in,
+				$out
+			);
 
-		exec($cmd);
+			exec($cmd);
+		}
+		else
+		{
+			copy($in, $out);
+		}
+
 		unlink($in);
 		file_put_contents(conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.meta', $touched);
 

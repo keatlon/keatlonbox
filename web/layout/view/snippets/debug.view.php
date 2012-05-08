@@ -16,7 +16,7 @@
 
 
 <? if ($sqlItems) : ?>
-<div class="debug-sql-items debug-items hidden">
+<div class="debug-sql-items debug-items" style="display:none;">
 	<? foreach($sqlItems as $item) : ?>
 		<div>
 			<?= ($item['time'] * 1000) ?>ms
