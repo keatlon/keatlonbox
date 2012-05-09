@@ -54,7 +54,7 @@ class application
         }
 		catch (badResourceException $e)
 		{
-			return application::dispatch('exception', 'badResource', $e);
+			application::dispatch('exception', 'badResource', $e);
 		}
 		catch (forwardException $e)
 		{
@@ -63,7 +63,7 @@ class application
 		catch (Exception $e)
 		{
 			log::exception($e);
-			return application::dispatch('exception', 'application', $e);
+			application::dispatch('exception', 'application', $e);
 		}
 
 		profiler::finish($pid);

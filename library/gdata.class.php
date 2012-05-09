@@ -10,17 +10,6 @@ class gdata
 	{
 	}
 
-	/**
-	 * Get google user id
-	 *
-	 * @static
-	 *
-	 */
-	static function user()
-	{
-		return gdata::get('https://www.googleapis.com/oauth2/v1/userinfo');
-	}
-
 	static function isError($response, $info)
 	{
 		$json = json_decode($response, true);
@@ -56,7 +45,7 @@ class gdata
 					throw new tokenRefreshedException($newToken);
 				}
 
-				throw new badResourceException;
+				throw new gdataBadRefreshTokenException;
 
 				return true;
 
