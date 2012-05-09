@@ -4,8 +4,6 @@ var ajaxClass = function()
 	{
 		$('body').ajaxStart(function()
 		{
-			$('#ajax_wrapper').fadeIn(200);
-			$('#ajax_loading').show();
 		});
 
 		$("body").ajaxError(function(event, request, settings)

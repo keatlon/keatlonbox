@@ -17,26 +17,10 @@ var applicationClass = function ()
 	{
 		this.config = config;
 
-		if (typeof ajax != 'undefined')
+		for(var component in config)
 		{
-			ajax.configure(config.ajax);
+			eval(' if (typeof ' + component + ' != "undefined") ' + component + '.configure(config[component])');
 		}
-
-		if (typeof dialog != 'undefined')
-		{
-			dialog.configure(config.dialog);
-		}
-
-		if (typeof notification != 'undefined')
-		{
-			notification.configure(config.notification);
-		}
-
-		if (typeof comet != 'undefined')
-		{
-			comet.configure(config.comet);
-		}
-
 	}
 
 	this.getGlobalContext	=	function()
