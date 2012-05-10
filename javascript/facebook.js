@@ -1,5 +1,9 @@
 var facebookClass = function ()
 {
+	this.configure = function(options)
+	{
+
+	},
 
 	this.connect = function(perms, callback, url)
 	{
