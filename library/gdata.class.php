@@ -14,29 +14,28 @@ class gdata
 	{
 		$json = json_decode($response, true);
 
+		if ($info['http_code'] <> 200)
+		{
+			log::push($response, 'GDATA');
+		}
+
 		switch($info['http_code'])
 		{
 			case 200:
-				if (!$json)
+				if (!$json || $json['error'])
 				{
-					log::push($response, 'GDATA');
-					return true;
-				}
-
-				if ($json['error'])
-				{
-					log::push($response, 'GDATA');
 					return true;
 				}
 				break;
 
-			case 400: // exception
-				log::push($response, 'GDATA');
+			case 400:
 				return true;
 
 			case 401:
-
-				log::push($response, 'GDATA');
+				if (strpos($response, 'NoLinkedYouTubeAccount') != false)
+				{
+					throw new gdataNoLinkedAccountException;
+				}
 
 				$newToken = gdata::refresh();
 
@@ -50,6 +49,10 @@ class gdata
 				return true;
 
 				break;
+
+			case 403:
+				break;
+
 		}
 
 		return false;
