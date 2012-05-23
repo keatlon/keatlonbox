@@ -271,7 +271,7 @@ return array
 
     'captcha' => array
     (
-		'lib'		=>	'/lib/php/recaptcha',
+		'lib'		=>	'/lib/plugins/recaptcha',
 		'public_key'	=> 	'',
 		'private_key'	=> 	'',
     ),
@@ -283,7 +283,7 @@ return array
 
     'facebook' => array
     (
-		'lib'		=>	'/lib/php/facebook',
+		'lib'		=>	'/lib/plugins/facebook',
 		'id'		=> 	'',
 		'key'		=> 	'',
 		'secret'	=> 	'',
@@ -334,7 +334,7 @@ return array
 
 	'lessphp' => array
 	(
-		'lib'				=>	'/lib/php/lessphp',
+		'lib'				=>	'/lib/plugins/lessphp',
 	),
 
 	/***********************************************************
@@ -343,7 +343,7 @@ return array
 
 	'purifier' => array
 	(
-		'lib'				=>	'/lib/php/htmlpurifier',
+		'lib'				=>	'/lib/plugins/htmlpurifier',
 	),
 
 	/***********************************************************

@@ -78,22 +78,6 @@ class response
 		exit;
 	}
 
-    static function slicer()
-    {
-		$output = 'var slicers = {';
-		if ($slicers = slicer::iterate())
-		{
-			foreach($slicers as $name => $slicer)
-			{
-				$generatedSlicers[] = "'" . $name . "' : {name: '" . $name . "', mode: '" . $slicer->mode . "', page: " . (int)$slicer->page . ", maxPage : " . (int)$slicer->maxPage . ", enableKeys: " . (int)$slicer->enableKeys . ",obj: null}";
-			}
-			$output .= implode(',', $generatedSlicers);
-		}
-		$output .= '};';
-
-		return $output;
-	}
-
 	static function header($header)
 	{
 		Header($header);

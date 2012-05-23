@@ -163,7 +163,6 @@ var applicationClass = function ()
 	this.initUi = function(selector, init)
 	{
 		this.initForms(selector, init);
-		this.initSlicers(selector, init);
 		this.initUrl(selector, init);
 
 		this.getElements('[data-plugin]', selector, init).each(function(){
@@ -246,21 +245,7 @@ var applicationClass = function ()
 
 	this.initForms = function(selector, init)
 	{
-		this.getElements('form[action]', selector, init).form();
-	}
-
-	this.initSlicers = function(selector, init)
-	{
-		if (typeof slicers == 'undefined')
-		{
-			return false;
-		}
-
-		for(l in slicers)
-		{
-			slicers[l].obj = new slicer( slicers[l]);
-			slicers[l].obj.init();
-		}
+		this.getElements('form:not(.ignore)[action]', selector, init).form();
 	}
 
 	function initAjaxNavigation()
