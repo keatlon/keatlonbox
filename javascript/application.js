@@ -167,9 +167,14 @@ var applicationClass = function ()
 
 		this.getElements('[data-plugin]', selector, init).each(function(){
 
-			if ($(this).data('plugin'))
+			var plugins = $(this).data('plugin').split(',');
+
+			if (plugins)
 			{
-				eval ("$(this)." + $(this).data('plugin') + "();");
+				for(var l in plugins)
+				{
+					eval ("$(this)." + plugins[l] + "();");
+				}
 			}
 		});
 
