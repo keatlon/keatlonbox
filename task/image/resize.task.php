@@ -89,7 +89,6 @@ class resizeImageController extends taskActionController
 
         if ($ifModifiedSince)
         {
-            header('HTTP/1.1 304 Not Modified');
             header('Content-Type: image/jpeg');
             header("Last-Modified: Tue, 12 Dec 2006 03:03:59 GMT");
 			header("Cache-Control: max-age=86400");
