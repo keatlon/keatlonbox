@@ -12,7 +12,6 @@ class profiler
 	protected 	static $counters	= array();
 	protected 	static $totals		= array();
 	protected 	static $counter		= 0;
-	protected 	static $firephp	=	 false;
 
 	public static function start($type = self::SYSTEM, $message = false, $extra = false, $ts = false)
 	{
@@ -20,11 +19,7 @@ class profiler
 		{
 			foreach((array)$extra as $sqlParamKey => $sqlParamValue)
 			{
-				if (is_array($sqlParamValue))
-				{
-					$sqlParamValue = implode(',', $sqlParamValue);
-				}
-
+				$sqlParamValue = is_array($sqlParamValue) ? implode(',', $sqlParamValue) : $sqlParamValue;
 				$message = str_replace(':' . $sqlParamKey, "'" . htmlspecialchars($sqlParamValue) . "'", $message);
 			}
 		}

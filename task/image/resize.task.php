@@ -84,19 +84,6 @@ class resizeImageController extends taskActionController
             die();
         }
 
-        $ifModifiedSince    = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
-        $ifNoneMatch        = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
-
-        if ($ifModifiedSince)
-        {
-            header('HTTP/1.1 304 Not Modified');
-            header('Content-Type: image/jpeg');
-            header("Last-Modified: Tue, 12 Dec 2006 03:03:59 GMT");
-			header("Cache-Control: max-age=86400");
-			header("Expires: " . gmdate("D, d M Y H:i:s", date("U") - 86400 * 10) . " GMT");
-            return;
-        }
-
 		if (!$params['convert'])
 		{
 	        $content = file_get_contents($cachePath);
