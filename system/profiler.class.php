@@ -20,6 +20,11 @@ class profiler
 		{
 			foreach((array)$extra as $sqlParamKey => $sqlParamValue)
 			{
+				if (is_array($sqlParamValue))
+				{
+					$sqlParamValue = implode(',', $sqlParamValue);
+				}
+
 				$message = str_replace(':' . $sqlParamKey, "'" . htmlspecialchars($sqlParamValue) . "'", $message);
 			}
 		}
