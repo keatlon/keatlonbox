@@ -7,10 +7,17 @@ class	jquery
 	static private $commands	=	array();
 	static private $vars		=	array();
 	static private $selectors	=	array();
+	static private $_selectors	=	array();
 
 	static function init($selector, $init = jquery::INIT_CHILDREN)
 	{
+		if (in_array($selector, self::$_selectors))
+		{
+			return true;
+		}
+
 		self::$selectors[]	=	array('selector' => $selector, 'init' => $init);
+		self::$_selectors[]	=	$selector;
 	}
 
 	static function getSelectors()
