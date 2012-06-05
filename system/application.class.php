@@ -50,6 +50,7 @@ class application
 		}
         catch (controllerException $e)
         {
+			stack::clear();
             application::dispatch('exception', 'controller', $e);
         }
 		catch (badResourceException $e)
