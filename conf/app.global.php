@@ -323,7 +323,6 @@ return array
 
 	'vkontakte' => array
 	(
-		'lib'				=>	'',
 		'id'				=>	'',
 		'key'				=>	''
 	),
