@@ -179,7 +179,7 @@ abstract class dbPeer
 	 * @param array $data
 	 * @return integer
 	 */
-	public function doInsert($data, $multi = false)
+	public function doInsert($data, $multi = false, $ignore = false)
 	{
 
 		if ($multi)
@@ -206,7 +206,9 @@ abstract class dbPeer
 
 			$columns[]	=	'created';
 			$sqlColumns	=	implode(",", $columns);
-			return db::exec('INSERT INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $this->connectionName);
+			$ignore		=	$ignore ? 'IGNORE' : '';
+
+			return db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $this->connectionName);
 		}
 
 		$data['created'] = time();
