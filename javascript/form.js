@@ -81,7 +81,7 @@
 			
 			var self					=	this;
 			
-			$(':input,:file', this.element).not('[type=submit],[type=hidden],.ignore').each(function(){
+			$(':input,:file', this.element).not('[type=button],[type=submit],[type=hidden],.ignore').each(function(){
 
 				var	errorSelector	=	self._getErrorSelector(self.options.action, self._exractFieldName($(this).attr('name')));
 
