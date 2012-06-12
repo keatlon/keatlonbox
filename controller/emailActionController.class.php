@@ -1,110 +1,41 @@
 <?php
 
-class emailActionController extends actionController
+class emailActionController extends webActionController
 {
-    const HANDLER_SENDMAIL      =	'sendmail';
-    const HANDLER_PRINT         =	'print';
-    const HANDLER_IGNORE        =	'ignore';
-
-    public		$handler        =	emailActionController::HANDLER_SENDMAIL;
-    protected	$subject		=	'';
-    protected	$name			=	'';
-    protected	$email			=	'';
-
-    function __construct($moduleName, $actionName)
-    {
-        $this->moduleName   = $moduleName;
-        $this->actionName   = $actionName;
-    }
+    protected	$__subject		=	'';
+    protected	$__name			=	'';
+    protected	$__email		=	'';
+	protected	$__render		=	render::XML;
+	protected	$__stream		=	render::STREAM_SMTP;
 
     public function dispatch($data)
     {
-        try
-        {
-            $handler = $this->compose($data);
+		$this->compose($data);
 
-			if ($handler)
-			{
-				$this->handler = $handler;
-			}
+		$v = new emailValidator('');
 
-    		if ($this->handler == self::HANDLER_IGNORE)
-			{
-		       return $this->response['code'];
-			}
+		if (!$this->__email || !$v->isValid($this->__email))
+		{
+			return response::exception('Bad e-mail [' . $this->__email . ']');
+		}
 
-			$v = new stringValidator(validatorRules::EMAIL, '');
+		render::controller($this);
 
-			if (!$this->email || !$v->isValid($this->email))
-			{
-	            $this->response['code'] = self::EXCEPTION;
-				return $this->response['code'];
-			}
-
-			$this->render();
-        }
-        catch (dbException $e)
-        {
-			log::exception($e);
-            $this->response['code'] = self::EXCEPTION;
-            $this->response['errors']       = $e->getMessage();
-        }
-        catch (Exception $e)
-        {
-            $this->response['code'] = self::EXCEPTION;
-            $this->response['errors']       = $e->getMessage();
-            log::exception($e);
-       }
-
-       return $this->response['code'];
+       	return true;
     }
 
     public function setName($value)
     {
-        $this->name = $value;
+        $this->__name = $value;
     }
 
     function setSubject($value)
     {
-        $this->subject = $value;
+        $this->__subject = $value;
     }
 
     public function setEmail($value)
     {
-        $this->email = $value;
+        $this->__email = $value;
     }
-
-	function beforeRender()
-	{
-		ob_start();
-	}
-
-	function afterRender()
-	{
-		$content	= ob_get_contents();
-		ob_end_clean();
-
-		$actionVars	= $this->getActionVars();
-
-        if ($actionVars)
-        {
-            foreach($actionVars as $var_name => $var_value)
-            {
-				$params[$var_name] = $var_value;
-            }
-        }
-
-		$content	=	textHelper::smartParse($content, $params);
-
-		if (!conf::$conf['email']['enabled'])
-		{
-			return;
-		}
-
-        if ($this->handler == emailActionController::HANDLER_SENDMAIL)
-        {
-            return email::send($this->email, $this->subject, $content);
-        }
-	}
-
 }

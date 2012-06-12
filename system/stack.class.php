@@ -48,7 +48,7 @@ class stack
 
 		foreach(self::$stacks[$stack] as $controller)
 		{
-			if ($controller instanceof webActionController)
+			if ($controller instanceof actionController)
 			{
 				if ($controller->__forwarded)
 				{

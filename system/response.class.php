@@ -98,13 +98,13 @@ class response
 		self::set('warning', $text);
 	}
 
-	function errors($errors)
+	static function errors($errors)
 	{
 		self::set('errors', $errors);
 		self::code(self::RESPONSE_ERROR);
 	}
 
-	function error($field, $message)
+	static function error($field, $message)
 	{
 		$errors	=	self::get('errors');
 		$errors[$field]	=	$message;
@@ -112,7 +112,7 @@ class response
 		self::code(self::RESPONSE_ERROR);
 	}
 
-	function exception($message)
+	static function exception($message)
 	{
 		self::set('exception', $message);
 		self::code(self::RESPONSE_EXCEPTION);

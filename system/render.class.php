@@ -6,8 +6,12 @@ class render
 	const JSON		= 2;
 	const DIALOG	= 4;
 
+	const STREAM_STDOUT	= 1;
+	const STREAM_SMTP	= 2;
+
 	protected static $layout 	= array('layout', 'index');
 	protected static $type 		= self::XML;
+	protected static $stream	= self::STREAM_STDOUT;
 
 	public static function getLayout()
 	{
@@ -30,16 +34,26 @@ class render
 		return self::$type;
 	}
 
+	public static function stream($stream = false)
+	{
+		if ($stream)
+		{
+			self::$stream	=	$stream;
+		}
+
+		return self::$stream;
+	}
+
 	public static function stack($stack = 'default')
 	{
 		stack::render($stack);
 	}
 
-	public static function controller(webActionController $controller)
+	public static function controller(actionController $controller)
 	{
 		$controller->beforeRender();
 
-		switch(render::type())
+		switch($controller->render())
 		{
 			case self::XML:
 				self::xml($controller);
@@ -97,7 +111,6 @@ class render
 		ob_end_clean();
 
 		echo json_encode(response::get());
-
 	}
 
 	protected static function json(actionController $__controller__)
@@ -113,7 +126,17 @@ class render
 	protected static function xml(actionController $__controller__)
 	{
 		extract($__controller__->getActionVars(), EXTR_OVERWRITE);
-		require self::getTemplatePath($__controller__->getActionName(), $__controller__->getModuleName());
+
+		switch($__controller__->stream())
+		{
+			case self::STREAM_STDOUT:
+				require self::getTemplatePath($__controller__->getActionName(), $__controller__->getModuleName());
+				break;
+
+			case self::STREAM_SMTP:
+				break;
+		}
+
 	}
 
 	/**
