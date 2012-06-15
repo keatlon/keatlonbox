@@ -181,6 +181,7 @@ abstract class dbPeer
 	 */
 	public function doInsert($data, $multi = false, $ignore = false)
 	{
+		$ignore		=	$ignore ? 'IGNORE' : '';
 
 		if ($multi)
 		{
@@ -206,7 +207,6 @@ abstract class dbPeer
 
 			$columns[]	=	'created';
 			$sqlColumns	=	implode(",", $columns);
-			$ignore		=	$ignore ? 'IGNORE' : '';
 
 			return db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $this->connectionName);
 		}
@@ -220,7 +220,7 @@ abstract class dbPeer
 			$insert_data[] = self::escape($column) . " = :{$column}";
 		}
 
-		$sql	=	'INSERT INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data);
+		$sql	=	'INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data);
 
 		db::exec($sql, $data, $this->connectionName);
 
