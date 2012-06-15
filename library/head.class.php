@@ -38,6 +38,11 @@ class head
 		self::add('title', false, $title);
 	}
 
+	static function meta($name, $content)
+	{
+		self::add('meta', array('name' => $name, 'content' => $content));
+	}
+
 	static function init()
 	{
 		self::add('meta', array
