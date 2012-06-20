@@ -3,20 +3,23 @@ abstract class form
 {
 	static protected $instance = false;
 
-    protected $fields		= array();
-	protected $rules;
-	protected $data;
-	
+    protected $fields		=	array();
+
+	protected $rules		=	array();
+	protected $metaRules	=	array();
+
+	protected $data			=	array();
+	protected $meta			=	array();
+
 	public $errors;
 
-	function __construct($data = false)
+	function __construct($data = false, $meta = false)
 	{
-		if ($data)
-		{
-			$this->data	=	$data;
-		}
+		$this->data	=	$data ? $data : array();
+		$this->meta	=	$meta ? $meta : array();
 
 		$this->setup();
+		$this->setupMeta();
 		$this->cleanup();
 	}
 
@@ -25,13 +28,13 @@ abstract class form
 		
 	}
 
+	function setupMeta()
+	{
+
+	}
+
 	function cleanup()
 	{
-		if (!$fields)
-		{
-			return true;
-		}
-
 		foreach($this->data as $k => $v)
 		{
 			if (!in_array($k, $this->fields))
@@ -70,6 +73,23 @@ abstract class form
 			}
 		}
 
+		if ($this->metaRules) foreach($this->metaRules as $rule)
+		{
+			if (!$rule['validators'])
+			{
+				continue;
+			}
+
+			foreach($rule['validators'] as $validator)
+			{
+				if (!$validator->isValid($this->meta[$rule['field']], $rule['field']))
+				{
+					$this->errors[$rule['field']] = $validator->getErrorMessage();
+					break;
+				}
+			}
+		}
+
 		return (bool)!$this->errors;
 	}
 
@@ -82,6 +102,21 @@ abstract class form
 	function addRule($field, $validators = array())
 	{
 		$this->rules[]	=	array
+		(
+			'field'			=>	$field,
+			'validators'	=>	$validators
+		);
+	}
+
+	/**
+	 * Add meta fields to be validated
+	 *
+	 * @param string $field
+	 * @param array $validators
+	 */
+	function addMetaRule($field, $validators = array())
+	{
+		$this->metaRules[]	=	array
 		(
 			'field'			=>	$field,
 			'validators'	=>	$validators
