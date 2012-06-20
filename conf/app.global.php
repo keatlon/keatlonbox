@@ -50,16 +50,41 @@ return array
 	),
 
 	/***********************************************************
+     * 			CSS LESS
+     ***********************************************************/
+
+	'less'		=>	array
+	(
+		'enabled'	=>	false,
+		'compile'	=>	false
+	),
+
+	/***********************************************************
      * 			STATICS FILES JS, CSS
      ***********************************************************/
 
 	'static'	=>	array
 	(
-		'yuicompressor'	=>	'yuicompressor.jar',
+		'js'	=>	array
+		(
+			'compile'		=>	false,
+			'compiler'		=>	false,
+
+			'compress'		=>	true,
+			'compressor'	=>	'java -jar yuicompressor.jar --type JS %s > %s',
+		),
+
+		'css'	=>	array
+		(
+			'compile'		=>	false,
+			'compiler'		=>	false,
+
+			'compress'		=>	true,
+			'compressor'	=>	'java -jar yuicompressor.jar --type JS %s > %s',
+		),
+
 		'compiled'		=>	'/web/static',
-		'compile'		=>	true,
-		'check'			=>	'modified',
-		'less'			=>	false,
+		'check'			=>	'modified'
 	),
 
 	/***********************************************************
