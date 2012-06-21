@@ -29,8 +29,6 @@ class application
 	 */
 	static public function run()
 	{
-		$pid = profiler::start(profiler::APPLICATION, 'APP');
-
 		application::init();
 
         try
@@ -66,9 +64,6 @@ class application
 			log::exception($e);
 			application::dispatch('exception', 'application', $e);
 		}
-
-		profiler::finish($pid);
-		profiler::start(profiler::RENDER);
 
 		if ($layout = render::getLayout())
 		{

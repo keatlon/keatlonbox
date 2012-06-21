@@ -2,8 +2,8 @@
 
 class resource
 {
-	const	CSS	=	'css';
-	const	JS	=	'js';
+	const	CSS		=	'css';
+	const	JS		=	'js';
 
 	const	BEFORE	=	'before';
 	const	AFTER	=	'after';
@@ -42,7 +42,7 @@ class resource
 			case self::CSS:
 				self::$css[] = sprintf
 				(
-					'<link rel="stylesheet" href="%s"/>', $href, 'screen'
+					'<link rel="stylesheet" type="text/css" href="%s"/>', $href
 				);
 				break;
 		}
@@ -50,14 +50,10 @@ class resource
 
 	static function build($group, $type)
 	{
-		self::merge($group);
-
-		if ($type == self::CSS)
-		{
-			self::less($group);
-		}
-
-		return self::compress($group, $type);
+				self::merge($group);
+				self::compile($group, $type);
+				self::compress($group, $type);
+		return	self::apply($group, $type);
 	}
 
 
@@ -116,59 +112,68 @@ class resource
 		}
 	}
 
-	static protected function compress($group, $type)
+	static function apply($group, $type)
 	{
+		self::cleanup($group, $type);
+
 		$touched	=	self::lastTouched($group);
-		$filename	=	self::getStaticFilename($group, $touched);
-		$in 		= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . 'm';
-		$out		=	conf::$conf['rootdir'] . conf::$conf['static']['compiled'] . '/' . $filename;
+		$in 		= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compressed';
+		$out		=	conf::$conf['rootdir'] .
+						conf::$conf['static']['compiled'] . '/' .
+						self::getStaticFilename($group, $touched);
 
-		if (conf::$conf['static']['compile'])
+		copy($in, $out);
+
+		file_put_contents
+		(
+			conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.meta',
+			$touched
+		);
+
+		return $out;
+	}
+
+	static protected function compile($group, $type)
+	{
+		$in 	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.merged';
+		$out	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compiled';
+
+		if (conf::$conf['static'][$type]['compile'])
 		{
-			$cmd	=	sprintf
-			(
-				'%s -jar %s --type %s %s > %s',
-				conf::$conf['system']['java'],
-				conf::$conf['static']['yuicompressor'],
-				$type,
-				$in,
-				$out
-			);
+			// dd(sprintf(conf::$conf['static'][$type]['compiler'], $in, $out));
+			$res	=	exec(sprintf(conf::$conf['static'][$type]['compiler'], $in, $out), $output, $return);
 
-			exec($cmd);
+			if ($return)
+			{
+				log::push("Error during compiling " . $group, log::E_PHP);
+				return false;
+			}
 		}
 		else
 		{
 			copy($in, $out);
 		}
 
-		unlink($in);
-		file_put_contents(conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.meta', $touched);
-
-		self::cleanup($group, $touched);
-
-		return $out;
+		return true;
 	}
 
-	static protected function less($group)
+	static protected function compress($group, $type)
 	{
-		require_once conf::$conf['rootdir'] . conf::$conf['lessphp']['lib'] . '/lessc.inc.php';
+		$in 	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compiled';
+		$out	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compressed';
 
-		$in = $out	=	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . 'm';
-		$out	.=	'l';
-
-		try
+		if (conf::$conf['static'][$type]['compress'])
 		{
-			lessc::ccompile($in, $out);
+			exec(sprintf(conf::$conf['static'][$type]['compressor'], $in, $out));
 		}
-		catch (Exception $e) {
-			log::push("Error: less cannot process the file", 'resource', log::E_PHP);
-			die();
+		else
+		{
+			copy($in, $out);
 		}
 
-		unlink($in);
-		rename($out, $in);
+		return true;
 	}
+
 
 	static protected function merge($group)
 	{
@@ -181,12 +186,15 @@ class resource
 			{
 				$msg = 'Error: File ' . $file . ' does not exists in group ' . $group;
 				log::push($msg, 'resource', log::E_PHP);
-				die($msg);
 			}
+
 			$content .= file_get_contents($file) . "\n";
 		}
 
-		file_put_contents( conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . 'm', $content);
+		file_put_contents(
+			conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.merged',
+			$content
+		);
 	}
 
 	static protected function hasUpdates($group)

@@ -16,8 +16,6 @@ class db
 
 		$statement = dbConnection::get( $connection_name )->prepare($sql);
 
-		$logId 	=	profiler::start(profiler::SQL, $sql, $bind);
-
 		foreach ( $bind as $key => $value )
 		{
 			if (is_array($value))
@@ -42,8 +40,6 @@ class db
 			$error = $statement->errorInfo();
 			throw new dbException($error[2], $sql);
 		}
-		
-		profiler::finish($logId);
 
 		return $statement;
 	}
