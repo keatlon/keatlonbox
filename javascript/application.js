@@ -1,6 +1,5 @@
 var applicationClass = function ()
 {
-
 	this.RENDERER_XML		=	1;
 	this.RENDERER_JSON      =	2;
 	this.RENDERER_DIALOG    =	4;

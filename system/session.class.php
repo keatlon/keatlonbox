@@ -10,6 +10,11 @@ class session
 		}
 	}
 
+	public static function id()
+	{
+		return session_id();
+	}
+
     public static function start($sid = false)
     {
 		if ($sid)
