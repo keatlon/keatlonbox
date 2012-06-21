@@ -7,12 +7,6 @@ class application
 	{
 		foreach (conf::$conf['phpini'] as $key => $value)
 		{
-			if ($key == 'date.timezone')
-			{
-				date_default_timezone_set($value);
-				continue;
-			}
-
 			ini_set($key, $value);
 		}
 
