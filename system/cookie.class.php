@@ -1,21 +1,21 @@
 <?php
 class cookie
 {
-    static function set($key, $value, $expire = false, $domain = false)
+    static function set($key, $value, $expires = false, $domain = false)
     {
-		if (!$expire)
+		if (!$expires)
 		{
-			$expire = time() + 86400*14;
+			$expires = time() + 86400*14;
 			$_COOKIE[$key] = $value;
 		}
 
 		if ($domain)
 		{
-			return setcookie($key, $value, $expire, '/', $domain);
+			return setcookie($key, $value, $expires, '/', $domain);
 		}
 		else
 		{
-			return setcookie($key, $value, $expire, '/');
+			return setcookie($key, $value, $expires, '/');
 		}
     }
 
