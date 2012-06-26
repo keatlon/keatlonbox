@@ -10,7 +10,7 @@ class render
 	const STREAM_SMTP	= 2;
 
 	protected static $layout 	= array('layout', 'index');
-	protected static $type 		= self::XML;
+	protected static $format	= self::XML;
 	protected static $stream	= self::STREAM_STDOUT;
 
 	public static function getLayout()
@@ -24,14 +24,14 @@ class render
 		return self::$layout;
 	}
 
-	public static function type($type = false)
+	public static function format($format = false)
 	{
-		if ($type)
+		if ($format)
 		{
-			self::$type	=	$type;
+			self::$format	=	$format;
 		}
 
-		return self::$type;
+		return self::$format;
 	}
 
 	public static function stream($stream = false)
@@ -53,7 +53,7 @@ class render
 	{
 		$controller->beforeRender();
 
-		switch($controller->render())
+		switch($controller->format())
 		{
 			case self::XML:
 				self::xml($controller);
@@ -126,14 +126,22 @@ class render
 	protected static function xml(actionController $__controller__)
 	{
 		extract($__controller__->getActionVars(), EXTR_OVERWRITE);
+		$template	=	self::getTemplatePath($__controller__->getActionName(), $__controller__->getModuleName());
 
 		switch($__controller__->stream())
 		{
 			case self::STREAM_STDOUT:
-				require self::getTemplatePath($__controller__->getActionName(), $__controller__->getModuleName());
+				require $template;
 				break;
 
 			case self::STREAM_SMTP:
+
+				ob_start();
+				require $template;
+				$__controller__->__body	=	ob_get_contents();
+				ob_end_clean();
+
+				email::send($__controller__->__email, $__controller__->__subject, $__controller__->__body);
 				break;
 		}
 

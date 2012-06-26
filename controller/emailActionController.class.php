@@ -5,7 +5,7 @@ class emailActionController extends webActionController
     protected	$__subject		=	'';
     protected	$__name			=	'';
     protected	$__email		=	'';
-	protected	$__render		=	render::XML;
+	protected	$__format		=	render::XML;
 	protected	$__stream		=	render::STREAM_SMTP;
 
     public function dispatch($data)
@@ -19,9 +19,7 @@ class emailActionController extends webActionController
 			return response::exception('Bad e-mail [' . $this->__email . ']');
 		}
 
-		render::controller($this);
-
-       	return true;
+		return render::controller($this);
     }
 
     public function setName($value)

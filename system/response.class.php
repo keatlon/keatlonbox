@@ -42,7 +42,7 @@ class response
 		(
 			'module'	=>	$controller->getModuleName(),
 			'action'	=>	$controller->getActionName(),
-			'renderer'	=>	render::type(),
+			'renderer'	=>	render::format(),
 			'js'		=>	array
 			(
 				'dispatcher'	=>	$jsDispatcher,

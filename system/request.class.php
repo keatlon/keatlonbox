@@ -87,16 +87,16 @@ class request
 		{
 			case 'json':
 				render::setLayout(false);
-				render::type(render::JSON);
+				render::format(render::JSON);
 				return;
 
 			case 'dialog':
 				render::setLayout(false);
-				render::type(render::DIALOG);
+				render::format(render::DIALOG);
 				return;
 
 			case 'xml':
-				render::type(render::XML);
+				render::format(render::XML);
 				return;
 		}
 	}
@@ -108,7 +108,7 @@ class request
 
 	static function isJson()
 	{
-		return (render::type() == render::JSON);
+		return (render::format() == render::JSON);
 	}
 
 	static function raw()

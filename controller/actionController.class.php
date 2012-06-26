@@ -5,15 +5,15 @@ abstract class actionController
 	private		$__moduleName		=	false;
 	private		$__actionName		=	false;
 	private		$__actionVars		=	array();
-	protected	$__render			=	false;
+	protected	$__format			=	false;
 	protected	$__stream			=	false;
 
 	function __construct($moduleName, $actionName)
 	{
 		$this->__moduleName =	$moduleName;
 		$this->__actionName =	$actionName;
-		$this->__render 	=	render::type();
-		$this->__stream 	=	render::stream();
+		$this->__format 	=	$this->__format ? $this->__format : render::format();
+		$this->__stream 	=	$this->__stream ? $this->__stream : render::stream();
 	}
 
 	public function dispatch($data)
@@ -74,14 +74,14 @@ abstract class actionController
 		$this->__actionVars = $vars;
 	}
 
-	function render($render = false)
+	function format($format = false)
 	{
-		if ($render)
+		if ($format)
 		{
-			$this->__render = $render;
+			$this->__format = $format;
 		}
 
-		return $this->__render;
+		return $this->__format;
 	}
 
 	function stream($stream = false)
