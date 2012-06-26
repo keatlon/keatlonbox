@@ -140,12 +140,12 @@ class resource
 
 		if (conf::$conf['static'][$type]['compile'])
 		{
-			// dd(sprintf(conf::$conf['static'][$type]['compiler'], $in, $out));
-			$res	=	exec(sprintf(conf::$conf['static'][$type]['compiler'], $in, $out), $output, $return);
+			$cmd	=	sprintf(conf::$conf['static'][$type]['compiler'], $in, $out);
+			$res	=	exec($cmd, $output, $return);
 
 			if ($return)
 			{
-				log::push("Error during compiling " . $group, log::E_PHP);
+				log::push("Error during compiling " . $group . ' ' . $cmd, log::E_PHP );
 				return false;
 			}
 		}

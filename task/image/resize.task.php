@@ -86,14 +86,7 @@ class resizeImageController extends taskActionController
 
 		if (!$params['convert'])
 		{
-	        $content = file_get_contents($cachePath);
-			
-			header('Content-Type: image/jpeg');
-			header("Last-Modified: Tue, 12 Dec 2006 03:03:59 GMT");
-			header("Expires: Mon, 7 Dec 2010 05:00:00 GMT");
-			header("Cache-Control: max-age=86400");
-
-			echo $content;
+			$this->out($cachePath);
 		}
     }
 
