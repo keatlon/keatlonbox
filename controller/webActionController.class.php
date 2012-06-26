@@ -51,10 +51,10 @@ abstract class webActionController extends actionController
 
 	}
 
-	function forward($module , $action = 'index', $method = false, $render = false)
+	function forward($module , $action = 'index', $method = false, $format = false)
 	{
 		$this->__forwarded = true;
-		throw new forwardException($module, $action, $method, $render, $this->__data);
+		throw new forwardException($module, $action, $method, $format, $this->__data);
 	}
 
 	function dialog($module , $action = 'index')
