@@ -114,13 +114,13 @@ class resource
 
 	static function apply($group, $type)
 	{
-		self::cleanup($group, $type);
-
 		$touched	=	self::lastTouched($group);
 		$in 		= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compressed';
 		$out		=	conf::$conf['rootdir'] .
 						conf::$conf['static']['compiled'] . '/' .
 						self::getStaticFilename($group, $touched);
+
+		self::cleanup($group, $touched);
 
 		copy($in, $out);
 
