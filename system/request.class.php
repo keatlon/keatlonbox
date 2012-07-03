@@ -38,7 +38,7 @@ class request
 		return self::$accept;
 	}
 
-	protected static function set($key, $value)
+	static function set($key, $value)
 	{
 		self::$data['params'][$key] = $value;
 	}
@@ -56,7 +56,6 @@ class request
 		}
 
 		return self::$data['params'];
-
 	}
 
 	static function module()
