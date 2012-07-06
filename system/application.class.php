@@ -99,6 +99,11 @@ class application
 	 */
     static public function execute($module, $task, $data = false)
     {
+		foreach (conf::$conf['phpini'] as $key => $value)
+		{
+			ini_set($key, $value);
+		}
+
         try
         {
             $context['controller']  = application::controller($module, $task);
