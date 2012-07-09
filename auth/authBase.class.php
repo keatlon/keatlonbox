@@ -27,8 +27,8 @@ abstract class authBase
 
     function clear()
 	{
-        unset($_SESSION['c'][get_class($this)]);
-		session::destroy();
+		unset($_SESSION['KBOX'][get_class($this)]['role']);
+		unset($_SESSION['KBOX'][get_class($this)]['id']);
     }
 
     function me($id)
