@@ -3,7 +3,8 @@
 class router
 {
     static private $classRoutes = array();
-	
+	static private $ns = array();
+
     static public function init($application = false)
     {
 		if ($application)
@@ -23,4 +24,10 @@ class router
     {
         return self::$classRoutes[$className];
     }
+
+	static public function register($root, $directory)
+	{
+		$ns[$root]	=	$directory;
+	}
+
 }

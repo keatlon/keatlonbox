@@ -119,8 +119,6 @@ class imageStorage extends storage
 
         $cmd = conf::$conf['image']['imagick'] . ' ' . $sourceFile . ' -crop '. $rectangle['width'] . 'x' . $rectangle['height'] . '+' . $rectangle['left'] . '+' . $rectangle['top'] . ' ' . $resizeOptions . ' ' . $destinationFile;
 
-		log::push($cmd, 'convert');
-
         if (conf::$conf['image']['escapecmd'])
         {
             $cmd = escapeshellcmd($cmd);

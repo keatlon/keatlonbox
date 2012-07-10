@@ -2,7 +2,16 @@
 
 function __autoload($className)
 {
+	if (strpos($className, '\\') !== false)
+	{
+		$className	=	str_replace('\\', '/', $className);
+		list($rootElement, $other) = explode('/', $className, 2);
+		require	conf::$conf['rootdir'] . conf::$conf['namespaces'][$rootElement] . '/' . $className . '.php';
+		return;
+	}
+
 	$filename = router::get($className);
+
 	if (!$filename)
 	{
 	    die('class ' . $className . ' not found');
