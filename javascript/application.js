@@ -123,6 +123,10 @@ var applicationClass = function ()
 					$(response.application.js.commands[l].selector).show();
 					break;
 
+				case 'val':
+					$(response.application.js.commands[l].selector).val(response.application.js.commands[l].value);
+					break;
+
 				case 'attr':
 					$(response.application.js.commands[l].selector).attr(response.application.js.commands[l].attr, response.application.js.commands[l].value);
 					break;

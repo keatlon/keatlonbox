@@ -153,6 +153,15 @@ class	jquery
 		);
 	}
 
+	static function val($selector, $value)
+	{
+		self::$commands[]	=	array(
+			'command'	=>	'val',
+			'selector'	=>	$selector,
+			'value'		=>	$value
+		);
+	}
+
 	static function hide($selector)
 	{
 		self::$commands[]	=	array(
