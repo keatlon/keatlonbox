@@ -140,4 +140,21 @@ class aql
 		return (bool)($pattern == $path);
 	}
 
+
+	static function merge($a, $b)
+	{
+		foreach($b as $key => $value)
+		{
+			if(array_key_exists($key, $a) && is_array($value))
+			{
+				$a[$key] = self::merge($a[$key], $b[$key]);
+			}
+			else
+			{
+				$a[$key] = $value;
+			}
+		}
+
+		return $a;
+	}
 }

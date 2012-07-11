@@ -16,7 +16,7 @@ class emailActionController extends webActionController
 
 		if (!$this->__email || !$v->isValid($this->__email))
 		{
-			return response::exception('Bad e-mail [' . $this->__email . ']');
+			return false;
 		}
 
 		return render::controller($this);
