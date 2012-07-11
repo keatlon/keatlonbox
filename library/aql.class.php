@@ -29,7 +29,12 @@ class aql
 
 	static public function assoc($key, $array)
     {
-		return array_combine((array)self::cols($key, $array), (array)$array);
+		if (!$array)
+		{
+			return array();
+		}
+
+		return @array_combine(self::cols($key, $array), $array);
 	}
 
 	static public function cols($key, $array)
