@@ -10,7 +10,19 @@ class db
 		{
 			if (is_array($value))
 			{
-				$sql	=	str_replace(':' . $key, implode(',', $value), $sql);
+				foreach ($value as $valueItem)
+				{
+					if (is_string($valueItem))
+					{
+						$items[]	=	"'" . $valueItem . "'";
+					}
+					else
+					{
+						$items[]	=	$valueItem;
+					}
+				}
+
+				$sql	=	str_replace(':' . $key, implode(',', $items), $sql);
 			}
 		}
 
@@ -72,5 +84,12 @@ class db
 	public static function lastId()
 	{
 		return dbConnection::get()->lastInsertId();
+	}
+
+	public static function smart($query, $where, $bind, $connection = null)
+	{
+		$wherePlain	=	implode(" AND ", $where);
+		$query		=	str_replace("[conditions]", $wherePlain, $query);
+		return		db::rows($query, $bind, $connection);
 	}
 }

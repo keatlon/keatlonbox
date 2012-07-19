@@ -64,6 +64,71 @@ abstract class dbPeer
 		return $result;
 	}
 
+	public function doSmart($query, $where, $params)
+	{
+
+	}
+
+	static protected function where()
+	{
+		foreach ($where as $key => $value)
+		{
+			if (is_numeric($key))
+			{
+				$where_clause[] = $value;
+				continue;
+			}
+
+			$operand	=	false;
+
+			if (strpos($key, ' ') !== false)
+			{
+				list($key, $operand)	=	explode(' ', $key);
+				$operand				=	strtolower($operand);
+			}
+
+			$bindKey = str_replace('.', '_', $key);
+			switch ($operand)
+			{
+				case 'in':
+					$where_clause[] = self::escape($key) . " IN (:{$bindKey})";
+					break;
+
+				case '!=':
+					$where_clause[] = self::escape($key) . " <> :{$bindKey}";
+					break;
+
+				case '>':
+					$where_clause[] = self::escape($key) . " > :{$bindKey}";
+					break;
+
+				case '>=':
+					$where_clause[] = self::escape($key) . " >= :{$bindKey}";
+					break;
+
+				case '<':
+					$where_clause[] = self::escape($key) . " < :{$bindKey}";
+					break;
+
+				case '<=':
+					$where_clause[] = self::escape($key) . " <= :{$bindKey}";
+					break;
+
+				case '%':
+					$where_clause[] = self::escape($key) . " LIKE :{$bindKey}";
+					$value = '%' . $value . '%';
+					break;
+
+				default:
+					$where_clause[] = self::escape($key) . " = :{$bindKey}";
+			}
+
+
+			$bind[$bindKey] = $value;
+		}
+
+	}
+
 	/**
 	 * get array of primary keys
 	 *
@@ -73,7 +138,18 @@ abstract class dbPeer
 	 * @param array $limit
 	 * @return array
 	 */
-	public function doCols($where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false)
+	public function doCols(	$where 		=	array(),
+						   	$order 		=	array(),
+						   	$limit 		=	false,
+						   	$offset 	=	false,
+
+						   	&$total 	=	false,
+						   	&$more 		=	false,
+
+						   	$fields 	=	false,
+							$selectSql	=	false,
+							$fromSql	=	false
+	)
 	{
 		$bind			= array();
 		$where_clause	= array();
@@ -82,8 +158,14 @@ abstract class dbPeer
 		if (is_array($where))
 			foreach ($where as $key => $value)
 			{
+				if (is_numeric($key))
+				{
+					$where_clause[] = $value;
+					continue;
+				}
+
 				$operand	=	false;
-				
+
 				if (strpos($key, ' ') !== false)
 				{
 					list($key, $operand)	=	explode(' ', $key);
@@ -96,7 +178,7 @@ abstract class dbPeer
 					case 'in':
 						$where_clause[] = self::escape($key) . " IN (:{$bindKey})";
 						break;
-					
+
 					case '!=':
 						$where_clause[] = self::escape($key) . " <> :{$bindKey}";
 						break;
@@ -141,31 +223,56 @@ abstract class dbPeer
 		if ($limit && $offset)
 		{
 			$limit_sql = $offset . ', ' . $limit;
-		} else if ($limit)
+		}
+		else if ($limit)
 		{
 			$limit_sql = $limit;
+		}
+
+		if (!$fields)
+		{
+			$fields	=	$this->primaryTKey;
+		}
+		else
+		{
+			if (!is_array($fields))
+			{
+				$fields = array($fields);
+			}
+		}
+
+		if (!$selectSql)
+		{
+			$selectSql		=	' SELECT ' . implode(',', $fields);
+		}
+
+		if (!$fromSql)
+		{
+			$fromSql	=	' FROM ' . implode(',', $fromTables);
 		}
 
 		/**
 		 * GET TOTAL ROWS QUERY
 		 */
-		$countSql = 'SELECT COUNT(' . $this->tableName . '.' . $this->primaryKey[0] . ') cnt ' . ' FROM ' . implode(',', $fromTables) .
+		$countSql = ' SELECT count(' . implode(',', $fields) . ') cnt ' . $fromSql .
 			( $where_sql ? ' WHERE ' . $where_sql : '' );
 
 		$countRow	= 	db::row($countSql, $bind, $this->connectionName);
 		$total		= 	$countRow['cnt'];
 		$more		=	$total > ((int)$offset + (int)$limit);
 
+
 		/**
 		 * GET ROWS QUERY
 		 */
-		$sql =	' SELECT ' . implode(',', $this->primaryTKey) .
-				' FROM ' . implode(',', $fromTables) .
+		$sql =	$selectSql .
+				$fromSql .
 				( $where_sql	? ' WHERE '		. $where_sql	: '' ) .
 				( $order_sql	? ' ORDER BY '	. $order_sql	: '' ) .
 				( $limit_sql	? ' LIMIT '		. $limit_sql	: '' );
 
-		if ($this->multiPrimary)
+
+		if (count($fields) > 1)
 		{
 			return db::rows($sql, $bind, $this->connectionName);
 		}
