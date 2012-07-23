@@ -10,6 +10,6 @@ class email
 		$headers .= "From: " . conf::$conf['email']['name_from'] . "<" . conf::$conf['email']['email_from'] . ">" . "\r\n";
 		$headers .= "Return-Path: " . conf::$conf['email']['return_path'] . "\r\n";
 
-		return mail($emailTo, $subject, $body, $headers, '-f' . conf::$conf['email']['return_path']);
+		return mb_send_mail($emailTo, $subject, $body, $headers, '-f' . conf::$conf['email']['return_path']);
 	}
 }
