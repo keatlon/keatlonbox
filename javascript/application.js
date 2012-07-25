@@ -33,8 +33,13 @@ var applicationClass = function ()
 	}
 
 
+	this.run	=	function()
+	{
+	}
+
 	this.dispatch = function(response)
 	{
+
 		this.vars		=	$.extend(this.vars, response.vars);
 		this.response	=	response;
 
@@ -148,6 +153,11 @@ var applicationClass = function ()
 		}
 
 		eval( "if ( typeof " + response.application.js.dispatcher + " == 'function' ) { " + response.application.js.dispatcher + "(response) }; " );
+
+		for( var c in response.application.js.callbacks)
+		{
+			eval( response.application.js.callbacks[c] + ";");
+		}
 	}
 
 	this.getElements = function(selector, parentSelector, init)

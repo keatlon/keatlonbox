@@ -5,6 +5,7 @@ class	jquery
 	const	INIT_CHILDREN		=	2;
 
 	static private $commands	=	array();
+	static private $callbacks	=	array();
 	static private $vars		=	array();
 	static private $selectors	=	array();
 	static private $_selectors	=	array();
@@ -30,6 +31,11 @@ class	jquery
         return self::$commands;
 	}
 
+	static function getCallbacks()
+	{
+        return self::$callbacks;
+	}
+
 	static function getVariables()
 	{
         return self::$vars;
@@ -38,6 +44,11 @@ class	jquery
 	static function variable($name, $value)
 	{
         self::$vars[$name] = $value;
+	}
+
+	static function callback($callback)
+	{
+        self::$callbacks[] = $callback;
 	}
 
 	static function html($selector, $content, $init = jquery::INIT_CHILDREN)

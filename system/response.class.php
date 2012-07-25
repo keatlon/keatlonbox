@@ -47,7 +47,8 @@ class response
 			(
 				'dispatcher'	=>	$jsDispatcher,
 				'selectors'		=>	jquery::getSelectors(),
-				'commands'		=>	jquery::getCommands()
+				'commands'		=>	jquery::getCommands(),
+				'callbacks'		=>	jquery::getCallbacks(),
 			)
 		);
 
