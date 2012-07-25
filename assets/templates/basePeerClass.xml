@@ -109,7 +109,7 @@ class %BASECLASSNAME% extends dbPeer
 
 		foreach ($values as $key => $value)
 		{
-			if ($meta[$key])
+			if ($meta[$key] && is_array($meta[$key]))
 			{
 				$meta[$key]	=	aql::merge($meta[$key], $value);
 			}
