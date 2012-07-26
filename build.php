@@ -167,6 +167,7 @@ function database()
 
 			$primaryKeys	=	array();
 
+			$primaryCField	=	'';
 			$primaryFields	=	array();
 			$primaryTFields	=	array();
 			$primaryOFields	=	array();
@@ -192,6 +193,7 @@ function database()
 				$primaryBinds[]		=	" " . $primaryField . " = :" . $primaryField . " ";
 			}
 
+			$primaryCKey	=	$primaryFields[0];
 			$primaryKey		=	"array(" . implode(',', $primaryFields) .  ")";
 			$primaryTKey	=	"array(" . implode(',', $primaryTFields) .  ")";
 			$primaryOKey	=	"array(" . implode(',', $primaryOFields) .  ")";
@@ -208,6 +210,7 @@ function database()
 			$baseClassContent = str_replace('%PRIMARYKEY%', $primaryKey, $baseClassContent);
 			$baseClassContent = str_replace('%PRIMARYTKEY%', $primaryTKey, $baseClassContent);
 			$baseClassContent = str_replace('%PRIMARYOKEY%', $primaryOKey, $baseClassContent);
+			$baseClassContent = str_replace('%PRIMARYCKEY%', $primaryCKey, $baseClassContent);
 			$baseClassContent = str_replace('%PRIMARYBIND%', $primaryBind, $baseClassContent);
 			$baseClassContent = str_replace('%MULTIPRIMARY%', $multiPrimary, $baseClassContent);
 

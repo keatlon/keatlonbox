@@ -10,6 +10,8 @@ class %BASECLASSNAME% extends dbPeer
     protected	$primaryKey		=	%PRIMARYKEY%;
     protected	$primaryTKey	=	%PRIMARYTKEY%;
     protected	$primaryOKey	=	%PRIMARYOKEY%;
+    protected	$primaryCKey	=	%PRIMARYCKEY%;
+
 	protected	$fields			=	array(%FIELDS%);
     protected	$primaryBind	=	"%PRIMARYBIND%";
     protected	$multiPrimary	=	%MULTIPRIMARY%;

@@ -102,14 +102,17 @@ var applicationClass = function ()
 
 				case 'html':
 					$(response.application.js.commands[l].selector).html(response.application.js.commands[l].html);
+					$(response.application.js.commands[l].selector).trigger('htmlchanged');
 					break;
 
 				case 'append':
 					$(response.application.js.commands[l].selector).append(response.application.js.commands[l].html);
+					$(response.application.js.commands[l].selector).trigger('htmlchanged');
 					break;
 
 				case 'prepend':
 					$(response.application.js.commands[l].selector).prepend(response.application.js.commands[l].html);
+					$(response.application.js.commands[l].selector).trigger('htmlchanged');
 					break;
 
 				case 'replaceWith':

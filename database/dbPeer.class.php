@@ -39,7 +39,7 @@ abstract class dbPeer
 			$pk = $pk[0];
 		}
 
-		$row = db::row('SELECT * FROM ' . $this->tableName . " WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($pk), $this->connectionName);
+		$row = db::row('SELECT * FROM `' . $this->tableName . "` WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($pk), $this->connectionName);
 
 		if ($row['meta'])
 		{
@@ -66,66 +66,6 @@ abstract class dbPeer
 
 	public function doSmart($query, $where, $params)
 	{
-
-	}
-
-	static protected function where()
-	{
-		foreach ($where as $key => $value)
-		{
-			if (is_numeric($key))
-			{
-				$where_clause[] = $value;
-				continue;
-			}
-
-			$operand	=	false;
-
-			if (strpos($key, ' ') !== false)
-			{
-				list($key, $operand)	=	explode(' ', $key);
-				$operand				=	strtolower($operand);
-			}
-
-			$bindKey = str_replace('.', '_', $key);
-			switch ($operand)
-			{
-				case 'in':
-					$where_clause[] = self::escape($key) . " IN (:{$bindKey})";
-					break;
-
-				case '!=':
-					$where_clause[] = self::escape($key) . " <> :{$bindKey}";
-					break;
-
-				case '>':
-					$where_clause[] = self::escape($key) . " > :{$bindKey}";
-					break;
-
-				case '>=':
-					$where_clause[] = self::escape($key) . " >= :{$bindKey}";
-					break;
-
-				case '<':
-					$where_clause[] = self::escape($key) . " < :{$bindKey}";
-					break;
-
-				case '<=':
-					$where_clause[] = self::escape($key) . " <= :{$bindKey}";
-					break;
-
-				case '%':
-					$where_clause[] = self::escape($key) . " LIKE :{$bindKey}";
-					$value = '%' . $value . '%';
-					break;
-
-				default:
-					$where_clause[] = self::escape($key) . " = :{$bindKey}";
-			}
-
-
-			$bind[$bindKey] = $value;
-		}
 
 	}
 
@@ -254,7 +194,7 @@ abstract class dbPeer
 		/**
 		 * GET TOTAL ROWS QUERY
 		 */
-		$countSql = ' SELECT count(' . implode(',', $fields) . ') cnt ' . $fromSql .
+		$countSql = ' SELECT count(' . $this->primaryCKey . ') cnt ' . $fromSql .
 			( $where_sql ? ' WHERE ' . $where_sql : '' );
 
 		$countRow	= 	db::row($countSql, $bind, $this->connectionName);
