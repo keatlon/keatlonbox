@@ -73,18 +73,30 @@ var dialogClass = function()
 			}
 		}
 
-		if (response.position)
-		{
-			console.log(response.position);
-			$(this.options.element).position(response.position);
-		}
-
 		dialog.show(response.title, response.body);
 
 		response.application.js.selectors.push({
 			'selector'	:	'#' + this.options.id,
 			'init'		:	2
 		});
+
+
+		if (response.position)
+		{
+			$(this.options.element).position(response.position);
+		}
+		else
+		{
+			var offset = '-' + Math.floor($(this.options.element).outerWidth() / 2) + ' -' + Math.floor($(this.options.element).outerHeight() / 2);
+
+			console.log(offset);
+
+			$(this.options.element).css({
+				at 		: 	'center',
+				my		:	'center',
+				offset	:	offset
+			});
+		}
 
 	}
 
