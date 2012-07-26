@@ -73,12 +73,19 @@ var dialogClass = function()
 			}
 		}
 
+		if (response.position)
+		{
+			console.log(response.position);
+			$(this.options.element).position(response.position);
+		}
+
 		dialog.show(response.title, response.body);
 
 		response.application.js.selectors.push({
 			'selector'	:	'#' + this.options.id,
 			'init'		:	2
 		});
+
 	}
 
 	this.load = function ( url, params, cb )

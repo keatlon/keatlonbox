@@ -12,4 +12,10 @@ class dialog
 		response::set('options', $options);
 	}
 
+	static function position($position)
+	{
+		response::set('position', $position);
+	}
+
+
 }
