@@ -32,7 +32,7 @@ class log
 		foreach ($trace as $traceItem)
 		{
 			$output[]	=	"\t" . $traceItem['file'] . '(line ' . $traceItem['line'] . ')';
-			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'] . json_encode($traceItem['args']);
+			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'];
 			$output[]	=	'';
 		}
 
