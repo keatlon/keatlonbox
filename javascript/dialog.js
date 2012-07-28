@@ -87,14 +87,11 @@ var dialogClass = function()
 		}
 		else
 		{
-			var offset = '-' + Math.floor($(this.options.element).outerWidth() / 2) + ' -' + Math.floor($(this.options.element).outerHeight() / 2);
-
-			console.log(offset);
-
-			$(this.options.element).css({
-				at 		: 	'center',
-				my		:	'center',
-				offset	:	offset
+			$(this.options.element).position({
+				at 			: 	'center',
+				my			:	'center',
+				of			:	'body',
+				offset		:	'0 -150'
 			});
 		}
 
