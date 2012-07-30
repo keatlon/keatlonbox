@@ -14,7 +14,7 @@ class db
 				{
 					if (is_string($valueItem))
 					{
-						$items[]	=	"'" . $valueItem . "'";
+						$items[]	=	"'" . utf8_encode($valueItem) . "'";
 					}
 					else
 					{
@@ -41,7 +41,7 @@ class db
 			}
 			else
 			{
-				$statement->bindValue( ":{$key}", $value, PDO::PARAM_STR );
+				$statement->bindValue( ":{$key}", utf8_encode($value), PDO::PARAM_STR );
 			}
 		}
 		
