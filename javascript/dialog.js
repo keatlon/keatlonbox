@@ -83,16 +83,22 @@ var dialogClass = function()
 
 		if (response.position)
 		{
-			$(this.options.element).position(response.position);
+			if (this.options.framework == 'bootstrap')
+			{
+				$(this.options.element).position(response.position);
+			}
 		}
 		else
 		{
-			$(this.options.element).position({
-				at 			: 	'center',
-				my			:	'center',
-				of			:	'body',
-				offset		:	'0 -150'
-			});
+			if (this.options.framework == 'bootstrap')
+			{
+				$(this.options.element).position({
+					at 			: 	'center',
+					my			:	'center',
+					of			:	'body',
+					offset		:	'0 -150'
+				});
+			}
 		}
 
 	}
