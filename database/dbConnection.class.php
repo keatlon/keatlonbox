@@ -24,12 +24,14 @@ class dbConnection
 
 		$params['port']	=	$params['port'] ? $params['port'] : 3306;
 		
-		$uri = "mysql:host={$params['host']}:{$params['port']}";
+		$uri = "mysql:host={$params['host']};port={$params['port']}";
 		
 		if ( $params['dbname'] )
 		{
 			$uri .= ";dbname={$params['dbname']}";
 		}
+
+
 
 		self::$connections[$alias] = new PDO($uri, $params['user'], $params['password'], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8", PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true) );
 		self::$connections[$alias]->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
