@@ -140,6 +140,11 @@
 			
 		},
 
+		errorCode	:	function (code)
+		{
+			$('#' + this._getErrorSelector(this.options.action, 'http' + code)).show();
+		},
+
 		_onResponse	:	function (response)
 		{
 			this._enableSubmit();
@@ -193,6 +198,8 @@
 		_hideErrors		:	function()
 		{
 			if ( this.options.response == null) return;
+
+			return $('.error', this.element).hide();
 
 			if ( typeof this.options.response.errors != 'undefined')
 			{
