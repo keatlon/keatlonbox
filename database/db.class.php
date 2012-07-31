@@ -14,7 +14,7 @@ class db
 				{
 					if (is_string($valueItem))
 					{
-						$items[]	=	"'" . utf8_encode($valueItem) . "'";
+						$items[]	=	"'" . self::_convert($valueItem) . "'";
 					}
 					else
 					{
@@ -41,7 +41,7 @@ class db
 			}
 			else
 			{
-				$statement->bindValue( ":{$key}", utf8_encode($value), PDO::PARAM_STR );
+				$statement->bindValue( ":{$key}", self::_convert($value), PDO::PARAM_STR );
 			}
 		}
 		
@@ -91,5 +91,15 @@ class db
 		$wherePlain	=	implode(" AND ", $where);
 		$query		=	str_replace("[conditions]", $wherePlain, $query);
 		return		db::rows($query, $bind, $connection);
+	}
+
+	function _convert($content)
+	{
+		if (!mb_check_encoding($content, 'UTF-8') OR !($content === mb_convert_encoding(mb_convert_encoding($content, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32')))
+		{
+			$content = mb_convert_encoding($content, 'UTF-8');
+		}
+
+		return $content;
 	}
 }
