@@ -15,6 +15,11 @@ class stack
 	 */
 	static function push($template, $stack = 'default')
 	{
+		if (!$template)
+		{
+			return;
+		}
+
 		self::$stacks[$stack][] = $template;
 		return $template;
 	}
