@@ -35,7 +35,10 @@ class head
 
 	static function title($title)
 	{
-		self::add('title', false, $title);
+		if (trim($title))
+		{
+			self::add('title', false, $title);
+		}
 	}
 
 	static function meta($name, $content)
