@@ -213,7 +213,7 @@ class resource
 		$conf 		= 	include conf::$conf['rootdir'] . '/conf/' . PRODUCT . '.static.php';
 		$last	=	0;
 
-		foreach ($conf[$group] as $file)
+		if ($conf[$group]) foreach ($conf[$group] as $file)
 		{
 			if (!file_exists($file))
 			{
