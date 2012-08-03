@@ -206,7 +206,6 @@ var applicationClass = function ()
 			this.getElements('[tooltip]', selector, init).tooltip({
 				position	:	"top center",
 				effect		:	'slide',
-				opacity		:	0.8,
 				delay		:	200
 			});
 		}
