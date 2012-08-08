@@ -21,11 +21,13 @@ return array
     /***********************************************************
      *                      DEBUG
      ***********************************************************/
-	'debug'                     =>       array(
-		'enable'					=>	false,
-		'log_errors'                =>  false,
-		'log_exceptions'            =>  false,
-		'log_information'           =>  false,
+	'debug'                     =>       array
+	(
+		'enable'				=>	false,
+		'log_errors'            =>  false,
+		'log_exceptions'        =>  false,
+		'log_information'       =>  false,
+		'log_mysql'           	=>  false,
 	),
 
 	/***********************************************************

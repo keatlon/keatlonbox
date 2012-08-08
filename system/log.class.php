@@ -4,6 +4,7 @@ class log
     const E_EXCEPTION   = 10;
     const E_PHP         = 20;
     const E_USER        = 30;
+	const E_MYSQL   	= 40;
 
 	static $erorrs		= array();
 
@@ -15,6 +16,19 @@ class log
         set_error_handler(array('log', 'php_error_handler'), E_ALL & ~E_NOTICE);
     }
 
+	static protected function getTraceInfo(Exception $e)
+	{
+		$trace	=	$e->getTrace();
+
+		foreach ($trace as $traceItem)
+		{
+			$output[]	=	"\t" . $traceItem['file'] . '(line ' . $traceItem['line'] . ')';
+			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'];
+			$output[]	=	'';
+		}
+
+		return implode("\n", $output);
+	}
 
     static public function exception(Exception $e)
     {
@@ -56,7 +70,7 @@ class log
 		log::push($message, $errno, log::E_PHP);
     }
 
-    public static function push($msg, $label = 'default', $type = log::E_USER)
+    public static function push($msg, $label = 'default', $type = log::E_USER, $params = false)
     {
 		if (conf::$conf['debug']['display_errors'])
 		{
@@ -91,6 +105,24 @@ class log
 				$filename = conf::$conf['debug']['log_exceptions'];
 
 				break;
+
+
+			case log::E_MYSQL:
+
+				if (!conf::$conf['debug']['log_mysql'])
+				{
+					return false;
+				}
+
+				$filename 	=	conf::$conf['debug']['log_mysql'];
+
+				if ($params instanceof Exception)
+				{
+					$msg		=	$msg . "\n" . self::getTraceInfo($params);
+				}
+
+				break;
+
 
 			case log::E_USER:
 
