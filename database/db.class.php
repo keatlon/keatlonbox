@@ -14,7 +14,7 @@ class db
 				{
 					if (is_string($valueItem))
 					{
-						$items[]	=	"'" . self::_convert($valueItem) . "'";
+						$items[]	=	"'" . addslashes(self::_convert($valueItem)) . "'";
 					}
 					else
 					{
