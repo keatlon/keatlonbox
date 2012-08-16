@@ -104,6 +104,10 @@ class application
 			ini_set($key, $value);
 		}
 
+		i18n	::	init();
+		log		::	init();
+		mc		::	init();
+
         try
         {
             $context['controller']  = application::controller($module, $task);
