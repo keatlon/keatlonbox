@@ -14,6 +14,7 @@ function __autoload($className)
 
 	if (!$filename)
 	{
+		return false;
 	    die('class ' . $className . ' not found');
 	}
 	
