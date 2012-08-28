@@ -87,7 +87,15 @@ class application
 	 */
     static public function dispatch($module, $action = 'index', $data = false)
     {
-		return stack::push(application::controller($module, $action)->dispatch($data ? $data : request::get()));
+		try
+		{
+			return stack::push(application::controller($module, $action)->dispatch($data ? $data : request::get()));
+		}
+		catch (forwardException $e)
+		{
+			application::dispatch($e->module, $e->action, $e->data);
+		}
+
     }
 
 	/**
