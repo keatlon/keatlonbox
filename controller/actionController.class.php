@@ -4,7 +4,7 @@ abstract class actionController
 {
 	private		$__moduleName		=	false;
 	private		$__actionName		=	false;
-	private		$__actionVars		=	array();
+	protected	$__actionVars		=	array();
 	protected	$__format			=	false;
 	protected	$__stream			=	false;
 
@@ -16,7 +16,7 @@ abstract class actionController
 		$this->__stream 	=	$this->__stream ? $this->__stream : render::stream();
 	}
 
-	public function dispatch($data)
+	public function dispatch($data, $actionVars = false)
 	{
 	}
 

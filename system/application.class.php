@@ -57,7 +57,7 @@ class application
 		}
 		catch (forwardException $e)
 		{
-			application::dispatch($e->module, $e->action, $e->data);
+			application::dispatch($e->module, $e->action, $e->data, $e->actionVars);
 		}
 		catch (Exception $e)
 		{
@@ -85,15 +85,15 @@ class application
 	 * @param bool $data
 	 * @param bool $application
 	 */
-    static public function dispatch($module, $action = 'index', $data = false)
+    static public function dispatch($module, $action = 'index', $data = false, $actionVars = false)
     {
 		try
 		{
-			return stack::push(application::controller($module, $action)->dispatch($data ? $data : request::get()));
+			return stack::push(application::controller($module, $action)->dispatch($data ? $data : request::get(), $actionVars));
 		}
 		catch (forwardException $e)
 		{
-			application::dispatch($e->module, $e->action, $e->data);
+			application::dispatch($e->module, $e->action, $e->data, $e->actionVars);
 		}
 
     }

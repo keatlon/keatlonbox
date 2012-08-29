@@ -4,8 +4,13 @@ abstract class webActionController extends actionController
 	public		$__forwarded	=	false;
 	protected	$__data			=	array();
 
-	public function dispatch($data)
+	public function dispatch($data, $actionVars = false)
 	{
+		if ($actionVars)
+		{
+			$this->__actionVars = $actionVars;
+		}
+
 		try
 		{
 			$this->beforeExecute();
@@ -54,7 +59,7 @@ abstract class webActionController extends actionController
 	function forward($module , $action = 'index', $method = false, $format = false)
 	{
 		$this->__forwarded = true;
-		throw new forwardException($module, $action, $method, $format, $this->__data);
+		throw new forwardException($module, $action, $method, $format, $this->__data, $this->__actionVars);
 	}
 
 	function dialog($module , $action = 'index')
