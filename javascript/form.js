@@ -156,13 +156,13 @@
 			{
 				return	ajax.errorHandler(response.toString());
 			}
-			
-			if (response.status == "success" && this.options.onSuccess)
+
+			if (response.status == 200 && this.options.onSuccess)
 			{
 				this.options.onSuccess(response);
 			}
 			
-			if (response.status != "success" && this.options.onError)
+			if (response.status != 200 && this.options.onError)
 			{
 				this.options.onError(response);
 			}

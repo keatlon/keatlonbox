@@ -2,7 +2,7 @@
 
 class taskActionController extends actionController
 {
-    public function dispatch($data)
+    public function dispatch($data, $actionVars = false)
     {
         try
         {
