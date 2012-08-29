@@ -37,13 +37,15 @@
 			var self				=	this;
 
 			self.element.append(
-				$('<input type="hidden">').
+				$('<input>').
+				attr("type", "hidden").
 				attr("name", "KBOX_REQUEST_SRC").
 				attr("value", "iframe")
 			);
 
 			self.element.append(
-				$('<input type="hidden">').
+				$('<input>').
+				attr("type", "hidden").
 				attr("name", "HTTP_KBOX_RENDER").
 				attr("value", "json")
 			);
@@ -62,7 +64,9 @@
 
 			$('body').append(self.options.iframe);
 
+			// self.options.iframe.get(0).contentWindow.document
 			self.options.iframe.bind('load', function (){
+
 				var response	=	$.parseJSON(self.options.iframe.contents().find('textarea').val());
 
 				if (!response)
@@ -80,14 +84,15 @@
 		_markup	: function() {
 			
 			var self					=	this;
-			
+
+
 			$(':input,:file', this.element).not('[type=button],[type=submit],[type=hidden],.ignore').each(function(){
 
 				var	errorSelector	=	self._getErrorSelector(self.options.action, self._exractFieldName($(this).attr('name')));
 
 				if (!$('#' + errorSelector).length)
 				{
-					$('<div class="error"></div>').attr('id', errorSelector).insertAfter($(this));
+					$('<div>').addClass("error").attr('id', errorSelector).insertAfter($(this));
 				}
 			});
 
@@ -122,6 +127,7 @@
 					this.options.onSubmit	=	$.proxy(this.options.onSubmit, this.options.context);
 				}
 			}
+
 
 			this._markup();
 
