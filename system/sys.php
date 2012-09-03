@@ -1,25 +1,17 @@
 <?php
 
-function __autoload($className)
+function forceboxAutoload($className)
 {
-	if (strpos($className, '\\') !== false)
-	{
-		$className	=	str_replace('\\', '/', $className);
-		list($rootElement, $other) = explode('/', $className, 2);
-		require	conf::$conf['rootdir'] . conf::$conf['namespaces'][$rootElement] . '/' . $className . '.php';
-		return;
-	}
-
 	$filename = router::get($className);
 
-	if (!$filename)
+	if ($filename)
 	{
-		return false;
-	    die('class ' . $className . ' not found');
+		require_once $filename;
 	}
 	
-	require $filename;
 }
+
+spl_autoload_register("forceboxAutoload");
 
 function h($value)
 {

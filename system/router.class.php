@@ -18,6 +18,7 @@ class router
 		{
 			self::$classRoutes = require_once conf::$conf['rootdir'] . "/~cache/autoload-core.php";
 		}
+
     }
 	
     static public function get($className)

@@ -8,6 +8,7 @@ class render
 
 	const STREAM_STDOUT	= 1;
 	const STREAM_SMTP	= 2;
+	const STREAM_CUSTOM	= 10;
 
 	protected static $layout 	= array('layout', 'index');
 	protected static $format	= self::XML;
@@ -135,7 +136,6 @@ class render
 				break;
 
 			case self::STREAM_SMTP:
-
 				ob_start();
 				require $template;
 				$__controller__->__body	=	ob_get_contents();
@@ -143,6 +143,16 @@ class render
 
 				email::send($__controller__->__email, $__controller__->__subject, $__controller__->__body);
 				break;
+
+			default :
+				ob_start();
+				require $template;
+				$__controller__->__body	=	ob_get_contents();
+				ob_end_clean();
+
+				call_user_func(array($__controller__->stream(), 'send'), $__controller__->__email, $__controller__->__subject, $__controller__->__body);
+				break;
+
 		}
 
 	}
