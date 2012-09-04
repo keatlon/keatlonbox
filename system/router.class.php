@@ -7,11 +7,23 @@ class router
 
     static public function init($application = false)
     {
+		if (conf::$conf['router'][$application])
+		{
+			$extra	=	conf::$conf['router'][$application];
+		}
+
 		if ($application)
 		{
 			self::$classRoutes = array_merge(
 				require_once conf::$conf['rootdir'] . "/~cache/autoload-core.php",
 				require_once conf::$conf['rootdir'] . "/~cache/autoload-$application.php"
+			);
+		}
+		if ($extra)
+		{
+			self::$classRoutes = array_merge(
+				require_once conf::$conf['rootdir'] . "/~cache/autoload-core.php",
+				require_once conf::$conf['rootdir'] . "/~cache/autoload-$extra.php"
 			);
 		}
 		elseif (file_exists(conf::$conf['rootdir'] . "/~cache/autoload-core.php"))
