@@ -111,7 +111,9 @@ class render
 		response::set('body', ob_get_contents());
 		ob_end_clean();
 
-		echo json_encode(response::get());
+		echo 	(request::get('KBOX_REQUEST_SRC') == 'iframe') ?
+				'<textarea>' . json_encode(response::get()) . '</textarea>' :
+				json_encode(response::get());
 	}
 
 	protected static function json(actionController $__controller__)
