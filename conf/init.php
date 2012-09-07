@@ -64,7 +64,8 @@ else
 }
 
 !defined('APPLICATION') ?
-	define('APPLICATION',   $_SERVER['APPLICATION'] ? $_SERVER['APPLICATION'] : conf::$conf['router'][false]) : false ;
+	define('APPLICATION',
+		$_SERVER['APPLICATION'] ? $_SERVER['APPLICATION'] : MODE == 'console' ? conf::$conf['router'][false] : false) : false ;
 
 router::init(APPLICATION ? APPLICATION : false);
 
