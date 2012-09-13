@@ -16,9 +16,6 @@
 !defined('ENVIRONMENT') ?
 		(define('ENVIRONMENT', $_SERVER['ENVIRONMENT'] ? $_SERVER['ENVIRONMENT'] : include CONFDIR . "/environment" )) : false ;
 
-!defined('APPLICATION') ?
-	define('APPLICATION',   $_SERVER['APPLICATION']) : null ;
-
 include ROOTDIR . "/core/system/sys.php";
 include ROOTDIR . "/core/system/router.class.php";
 
@@ -66,5 +63,9 @@ else
 	conf::$conf	= 	json_decode(file_get_contents($jsonFile), true);
 }
 
-router::init(APPLICATION);
+!defined('APPLICATION') ?
+	define('APPLICATION',
+		$_SERVER['APPLICATION'] ? $_SERVER['APPLICATION'] : MODE == 'console' ? conf::$conf['router'][false] : false) : false ;
+
+router::init(APPLICATION ? APPLICATION : false);
 

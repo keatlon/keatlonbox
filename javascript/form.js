@@ -64,10 +64,10 @@
 
 			$('body').append(self.options.iframe);
 
-			// self.options.iframe.get(0).contentWindow.document
 			self.options.iframe.bind('load', function (){
 
-				var response	=	$.parseJSON(self.options.iframe.contents().find('textarea').val());
+				var textResponse	=	self.options.iframe.contents().find('textarea').val();
+				var response		=	$.parseJSON(textResponse);
 
 				if (!response)
 				{

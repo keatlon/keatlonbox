@@ -8,7 +8,7 @@ class emailActionController extends webActionController
 	protected	$__format		=	render::XML;
 	protected	$__stream		=	render::STREAM_SMTP;
 
-    public function dispatch($data)
+    public function dispatch($data, $actionVars = false)
     {
 		$this->compose($data);
 
