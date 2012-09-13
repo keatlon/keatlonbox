@@ -2,11 +2,17 @@
 
 class head
 {
-	static protected $headers = array();
+	static protected $headers 	=	array();
+	static protected $tags 		=	array();
 
 	static function render()
 	{
 		return implode("\n", self::$headers);
+	}
+
+	static function get($node)
+	{
+		return	self::$tags[$node];
 	}
 
 	static function add($node, $attrs, $content = "")
@@ -26,10 +32,12 @@ class head
 		if ($content)
 		{
 			self::$headers[] = sprintf('<%s%s>%s</%s>', $node, $plainAttrs, h($content), $node);
+			self::$tags[$node]	=	$content;
 		}
 		else
 		{
 			self::$headers[] = sprintf('<%s%s/>', $node, $plainAttrs);
+			self::$tags[$node]	=	$attrs;
 		}
 	}
 

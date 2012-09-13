@@ -153,7 +153,8 @@ class application
 
         if (!$controller)
         {
-            throw new controllerException('/' . $module . '/' . $action . ' does not exist');
+			header('HTTP/1.0 404 Not Found');
+			throw new forwardException('layout', '_404');
     	}
 
         $actionClassName = $action . ucfirst($module) . 'Controller';

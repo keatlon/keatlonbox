@@ -241,7 +241,7 @@ function autoload($rootdir)
 
 	foreach ($files as $file)
 	{
-		$isAction = preg_match('#/apps/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)/([a-zA-Z0-9]+)\.(action|class)\.php#U', $file, $matches);
+		$isAction = preg_match('#/apps/([a-zA-Z0-9_]+)/([a-zA-Z0-9_]+)/(.*)/([a-zA-Z0-9_]+)\.(action|class)\.php#U', $file, $matches);
 
 		if ($isAction)
 		{
@@ -269,7 +269,7 @@ function autoload($rootdir)
 		}
 
 
-		$isCoreAction = preg_match('#/core/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)/([a-zA-Z0-9]+)\.action\.php#U', $file, $matches);
+		$isCoreAction = preg_match('#/core/([a-zA-Z0-9_]+)/([a-zA-Z0-9_]+)/(.*)/([a-zA-Z0-9_]+)\.action\.php#U', $file, $matches);
 
 		if ($isCoreAction)
 		{
