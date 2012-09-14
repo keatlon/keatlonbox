@@ -71,7 +71,7 @@ class auth
 	{
 		if (!conf::$conf['application'][APPLICATION]['auth'])
 		{
-			conf::$conf['application'][APPLICATION]['auth'] = array('server');
+			conf::$conf['application'][APPLICATION]['auth'] = array('mysql');
 		}
 
 		foreach(conf::$conf['application'][APPLICATION]['auth'] as $authEngine)
@@ -90,7 +90,7 @@ class auth
 			}
 			else
 			{
-				auth::gateway('server');
+				auth::gateway('mysql');
 			}
 		}
 		

@@ -15,6 +15,11 @@ class response
 		if ($value)
 		{
 			self::$code = $value;
+
+			if ($value == 404)
+			{
+				header('HTTP/1.0 404 Not Found');
+			}
 		}
 
 		return self::$code;

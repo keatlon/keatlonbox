@@ -155,7 +155,7 @@ class application
 
         if (!$controller)
         {
-			header('HTTP/1.0 404 Not Found');
+			response::code(404);
 			throw new forwardException('layout', '_404');
     	}
 
