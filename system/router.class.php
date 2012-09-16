@@ -26,6 +26,11 @@ class router
         return self::$classRoutes[$className];
     }
 
+	static public function exists($module, $action)
+	{
+		return self::$classRoutes[$action . ucfirst($module) . 'Controller'];
+	}
+
 	static public function register($root, $directory)
 	{
 		$ns[$root]	=	$directory;
