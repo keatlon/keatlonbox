@@ -83,8 +83,8 @@ abstract class dbPeer
 						   	$limit 		=	false,
 						   	$offset 	=	false,
 
-						   	&$total 	=	false,
-						   	&$more 		=	false,
+						   	&$total 	=	null,
+						   	&$more 		=	null,
 
 						   	$fields 	=	false,
 							$selectSql	=	false,
@@ -93,7 +93,7 @@ abstract class dbPeer
 	{
 		$bind			= array();
 		$where_clause	= array();
-		$fromTables[]	= $this->tableName;
+		$fromTables[]	= '`' . $this->tableName . '`';
 
 		if (is_array($where))
 			foreach ($where as $key => $value)
@@ -194,13 +194,15 @@ abstract class dbPeer
 		/**
 		 * GET TOTAL ROWS QUERY
 		 */
-		$countSql = ' SELECT count(' . $this->primaryCKey . ') cnt ' . $fromSql .
-			( $where_sql ? ' WHERE ' . $where_sql : '' );
+		if ($total !== null)
+		{
+			$countSql = ' SELECT count(' . $this->primaryCKey . ') cnt ' . $fromSql .
+				( $where_sql ? ' WHERE ' . $where_sql : '' );
 
-		$countRow	= 	db::row($countSql, $bind, $this->connectionName);
-		$total		= 	$countRow['cnt'];
-		$more		=	$total > ((int)$offset + (int)$limit);
-
+			$countRow	= 	db::row($countSql, $bind, $this->connectionName);
+			$total		= 	$countRow['cnt'];
+			$more		=	$total > ((int)$offset + (int)$limit);
+		}
 
 		/**
 		 * GET ROWS QUERY
