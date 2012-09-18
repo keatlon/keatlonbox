@@ -156,7 +156,15 @@ class application
         if (!$controller)
         {
 			response::code(404);
-			throw new forwardException('layout', '_404');
+
+			if (router::get('_404LayoutController'))
+			{
+				throw new forwardException('layout', '_404');
+			}
+			else
+			{
+				throw new controllerException;
+			}
     	}
 
         $actionClassName = $action . ucfirst($module) . 'Controller';
