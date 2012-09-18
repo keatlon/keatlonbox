@@ -62,25 +62,22 @@ class response
 		return self::$response;
 	}
 
-	static function redirect($url, $direct = false)
+	static function redirect($url, $permanent = false)
 	{
 		if(request::isJson())
 		{
 			render::setLayout(false);
-
-			if ($direct)
-			{
-				response::set('redirect', $url);
-			}
-			else
-			{
-				response::set('jsonredirect', $url);
-			}
-
+			response::set('redirect', $url);
 			throw new redirectException;
 		}
 
+		if ($permanent)
+		{
+			header("HTTP/1.1 301 Moved Permanently");
+		}
+
 		response:header('Location:' . $url);
+
 		exit;
 	}
 

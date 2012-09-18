@@ -21,6 +21,12 @@ class acl
 
 	static function parse()
 	{
+		if (!router::exists(request::module(), request::action()))
+		{
+			self::$permission	=	'allow';
+			return true;
+		}
+
 		foreach (self::$acl as $pattern => $plainRules)
 		{
 			$rules	=	explode(',', $plainRules);

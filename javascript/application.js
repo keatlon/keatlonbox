@@ -48,11 +48,6 @@ var applicationClass = function ()
 			location.href = response.redirect;
 		}
 
-		if(typeof response.jsonredirect != 'undefined')
-		{
-			location.href = response.jsonredirect;
-		}
-
 		if (response.notice)
 		{
 			notification.success(response.notice);
