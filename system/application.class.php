@@ -107,8 +107,6 @@ class application
 	 */
     static public function execute($module, $task, $data = false)
     {
-		!defined('MODE') ? define('MODE', 'console') : false;
-
 		foreach (conf::$conf['phpini'] as $key => $value)
 		{
 			ini_set($key, $value);

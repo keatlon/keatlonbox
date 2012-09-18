@@ -63,8 +63,12 @@ else
 	conf::$conf	= 	json_decode(file_get_contents($jsonFile), true);
 }
 
-$application	=	MODE == 'console' ? conf::$conf['router'][false] : false;
-$application	=	!$application && $_SERVER['APPLICATION'] ? $_SERVER['APPLICATION'] : false;
+$application	=	MODE == 'console' ? conf::$conf['router']['console'] : false;
+
+if (!$application)
+{
+	$application	=	$_SERVER['APPLICATION'] ? $_SERVER['APPLICATION'] : false;
+}
 
 !defined('APPLICATION') ? define('APPLICATION', $application) : false;
 
