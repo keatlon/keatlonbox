@@ -17,8 +17,9 @@ class redis
 			Predis\Autoloader::register();
 
 			self::$instance =	new Predis\Client(array(
-			    'host'   => conf::$conf['redis']['host'],
-			    'port'   => conf::$conf['redis']['port'],
+			    'host'   				=>	conf::$conf['redis']['host'],
+			    'port'   				=>	conf::$conf['redis']['port'],
+				'connection_persistent'	=>	true,
 			), array(
 				'prefix' => conf::$conf['redis']['prefix'] . ':'
 			));
@@ -46,4 +47,10 @@ class redis
 	{
 		return self::i()->decrby($key, $inc);
 	}
+
+	static function del($key, $inc = 1)
+	{
+		return self::i()->del($key, $inc);
+	}
+
 }
