@@ -1,86 +1,26 @@
 <?php
 class profiler
 {
-	const APPLICATION	= 0;
-	const SYSTEM		= 1;
-	const SQL       	= 2;
-	const USER      	= 4;
-	const RENDER		= 5;
-
-	protected	static $appId		=	0;
-	protected 	static $stack		= array();
-	protected 	static $counters	= array();
-	protected 	static $totals		= array();
-	protected 	static $counter		= 0;
-
-	public static function start($type = self::SYSTEM, $message = false, $extra = false, $ts = false)
+	public static function start()
 	{
-		if ($type == self::SQL && is_array($extra))
+		if (function_exists('xhprof_enable') && conf::$conf['profiler']['enabled'])
 		{
-			foreach((array)$extra as $sqlParamKey => $sqlParamValue)
-			{
-				$sqlParamValue = is_array($sqlParamValue) ? implode(',', $sqlParamValue) : $sqlParamValue;
-				$message = str_replace(':' . $sqlParamKey, "'" . htmlspecialchars($sqlParamValue) . "'", $message);
-			}
+			xhprof_enable(XHPROF_FLAGS_MEMORY);
 		}
-
-		if (!$ts)
-		{
-			$ts = microtime(true);
-		}
-
-		self::$counter++;
-
-		$record['time']		= $ts;
-		$record['message']	= $message;
-		$record['type']		= $type;
-
-		self::$stack[$type][self::$counter] = $record;
-		self::$counters[self::$counter]	= $type;
-
-		if ($type == self::RENDER)
-		{
-			self::$appId = self::$counter;
-		}
-
-		return self::$counter;
 	}
 
-	public static function finish($counter)
+	public static function stop()
 	{
-		$type	=	self::$counters[$counter];
-
-		$record	= 	self::$stack[$type][$counter];
-
-		$record['time'] = round(microtime(true) - $record['time'], 4);
-
-		self::$totals[$type]	=	(float)self::$totals[$type] + $record['time'];
-		self::$stack[$type][$counter] = $record;
-        return $record['time'];
-	}
-
-	public static function total($type = false)
-	{
-		if ($type === false)
+		if (function_exists('xhprof_disable') && conf::$conf['profiler']['enabled'])
 		{
-			return self::$totals;
+			$data	=	xhprof_disable();
+
+			require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_lib.php";
+			require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_runs.php";
+
+			$runs = new XHProfRuns_Default();
+			$run_id = $runs->save_run($data, "xhprof_foo");
 		}
-
-		return self::$totals[$type];
 	}
 
-	public static function get($type = false)
-	{
-		if ($type === false)
-		{
-			return self::$stack;
-		}
-
-		return self::$stack[$type];
-	}
-
-	static function getAppId()
-	{
-		return self::$appId;
-	}
 }

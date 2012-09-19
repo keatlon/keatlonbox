@@ -22,13 +22,13 @@ class application
 		acl		::	init();
 	}
 
-
 	/**
 	 * @static
 	 *
 	 */
 	static public function run()
 	{
+		profiler::start();
 		application::init();
 
         try
@@ -75,7 +75,6 @@ class application
 		{
 			render::stack();
 		}
-
 	}
 
 	/**
@@ -107,6 +106,8 @@ class application
 	 */
     static public function execute($module, $task, $data = false)
     {
+		profiler::start();
+
 		foreach (conf::$conf['phpini'] as $key => $value)
 		{
 			ini_set($key, $value);
@@ -169,5 +170,10 @@ class application
 
         return new $actionClassName($module, $action);
     }
+
+	static function shutdown()
+	{
+		profiler::stop();
+	}
 }
 
