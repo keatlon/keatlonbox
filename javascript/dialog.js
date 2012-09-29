@@ -95,8 +95,8 @@ var dialogClass = function()
 				$(this.options.element).position({
 					at 			: 	'center',
 					my			:	'center',
-					of			:	'body',
-					offset		:	'0 -150'
+					of			:	$(window),
+					offset		:	'0 -100'
 				});
 			}
 		}
