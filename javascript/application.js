@@ -61,13 +61,19 @@ var applicationClass = function ()
 		if (response.status == 500)
 		{
 			notification.critical(response.exception);
-			console.log('Exception', response.exception);
+			if (typeof console != 'undefined')
+			{
+				console.log('Exception', response.exception);
+			}
 			return;
 		}
 
 		if (response.status == 201)
 		{
-			console.log('Error', response.errors);
+			if (typeof console != 'undefined')
+			{
+				console.log('Error', response.errors);
+			}
 		}
 
 		switch(response.application.renderer)
