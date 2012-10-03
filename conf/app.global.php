@@ -155,9 +155,12 @@ return array
 			'parser'	=>	array('url', '_parse'),
 			'builder'	=>	array('url', '_build'),
 		)
-
-
     ),
+
+	'router'	=>	array
+	(
+		'console'	=>	'frontend'
+	),
 
     /***********************************************************
      *                      EMAIL

@@ -15,7 +15,10 @@ var ajaxClass = function()
 
 	this.errorHandler = function (data)
 	{
-        console.log('Ajax Transport Error', data);
+		if (typeof console != 'undefined')
+		{
+			console.log('Ajax Transport Error', data);
+		}
 	};
 
 	this.url = function (url, params, callback, datatype)

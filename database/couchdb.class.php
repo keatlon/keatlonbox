@@ -39,7 +39,6 @@ class couchdb
 
 		if ($response['error'])
 		{
-			log::push($response['error'], 'ELASTICSEARCH');
 			return false;
 		}
 
