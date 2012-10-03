@@ -84,11 +84,11 @@ class application
 	 * @param bool $data
 	 * @param bool $application
 	 */
-    static public function dispatch($module, $action = 'index', $data = false, $actionVars = false)
+    static public function dispatch($module, $action = 'index', $data = false, $actionVars = false, $stack = 'default')
     {
 		try
 		{
-			return stack::push(application::controller($module, $action)->dispatch($data ? $data : request::get(), $actionVars));
+			return stack::push(application::controller($module, $action)->dispatch($data ? $data : request::get(), $actionVars), $stack);
 		}
 		catch (forwardException $e)
 		{
