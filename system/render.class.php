@@ -143,7 +143,13 @@ class render
 				$__controller__->__body	=	ob_get_contents();
 				ob_end_clean();
 
-				email::send($__controller__->__email, $__controller__->__subject, $__controller__->__body);
+				email::send(
+					$__controller__->__email,
+					$__controller__->__subject,
+					$__controller__->__body,
+					$__controller__->__fromEmail,
+					$__controller__->__fromName
+				);
 				break;
 
 			default :
@@ -152,7 +158,13 @@ class render
 				$__controller__->__body	=	ob_get_contents();
 				ob_end_clean();
 
-				call_user_func(array($__controller__->stream(), 'send'), $__controller__->__email, $__controller__->__subject, $__controller__->__body);
+				call_user_func(array($__controller__->stream(), 'send'),
+					$__controller__->__email,
+					$__controller__->__subject,
+					$__controller__->__body,
+					$__controller__->__fromEmail,
+					$__controller__->__fromName
+				);
 				break;
 
 		}
