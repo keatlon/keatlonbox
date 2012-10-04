@@ -3,6 +3,8 @@
 class emailActionController extends webActionController
 {
     protected	$__subject		=	'';
+	protected	$__fromEmail	=	'';
+	protected	$__fromName		=	'';
     protected	$__name			=	'';
     protected	$__email		=	'';
 	protected	$__format		=	render::XML;
@@ -36,4 +38,15 @@ class emailActionController extends webActionController
     {
         $this->__email = $value;
     }
+
+	public function setFromEmail($value)
+	{
+		$this->__fromEmail = $value;
+	}
+	public function setFromName($value)
+	{
+		$this->__fromName = $value;
+	}
+
+
 }
