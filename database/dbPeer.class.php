@@ -337,7 +337,6 @@ abstract class dbPeer
 
 		$data = $this->doBindPrimaryKey($primaryKey, $data);
 		
-
 		return db::exec('UPDATE ' . self::escape($this->tableName) . ' SET ' . implode(', ', $update_data) . " WHERE {$this->primaryBind}", $data, $this->connectionName);
 	}
 
