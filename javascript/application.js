@@ -156,7 +156,10 @@ var applicationClass = function ()
 			this.initUi(response.application.js.selectors[c].selector, response.application.js.selectors[c].init);
 		}
 
-		eval( "if ( typeof " + response.application.js.dispatcher + " == 'function' ) { " + response.application.js.dispatcher + "(response) }; " );
+		for (var d in response.application.js.dispatchers)
+		{
+			eval( "if ( typeof " + response.application.js.dispatchers[d] + " == 'function' ) { " + response.application.js.dispatchers[d] + "(response) }; " );
+		}
 
 		for( var c in response.application.js.callbacks)
 		{

@@ -38,8 +38,15 @@ class response
 		}
 
 		$controller		=	stack::last();
+
 		$jsDispatcher	=	$controller->getActionName() .
 							ucfirst($controller->getModuleName()) .
+							'Controller' .
+							ucfirst(strtolower(request::method()));
+
+		$layoutDispatcher	=
+							conf::$conf['application'][APPLICATION]['default']['layout'][1] .
+							ucfirst(conf::$conf['application'][APPLICATION]['default']['layout'][0]) .
 							'Controller' .
 							ucfirst(strtolower(request::method()));
 
@@ -50,7 +57,7 @@ class response
 			'renderer'	=>	render::format(),
 			'js'		=>	array
 			(
-				'dispatcher'	=>	$jsDispatcher,
+				'dispatchers'	=>	array($layoutDispatcher, $jsDispatcher),
 				'selectors'		=>	jquery::getSelectors(),
 				'commands'		=>	jquery::getCommands(),
 				'callbacks'		=>	jquery::getCallbacks(),
