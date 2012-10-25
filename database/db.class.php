@@ -1,10 +1,27 @@
 <?
 class db
 {
+	const READ 	= 1;
+	const WRITE = 2;
+
+	private static function getConnectionAlias( $connectionAlias, $type)
+	{
+		if (!$connectionAlias) switch($type)
+		{
+			case self::READ:
+				return conf::$conf['database']['default_read_connection'];
+
+			case self::WRITE:
+				return conf::$conf['database']['default_write_connection'];
+		}
+
+		return $connectionAlias;
+	}
+
 	/**
 	 * @return PDOStatement
 	 */
-	public static function exec( $sql, $bind = array(), $connection_name = null )
+	public static function exec( $sql, $bind = array(), $connectionAlias = null )
 	{
 		foreach ( $bind as $key => $value )
 		{
@@ -26,7 +43,7 @@ class db
 			}
 		}
 
-		$statement = dbConnection::get( $connection_name )->prepare($sql);
+		$statement = dbConnection::get( self::getConnectionAlias($connectionAlias, self::WRITE) )->prepare($sql);
 
 		foreach ( $bind as $key => $value )
 		{
@@ -56,28 +73,28 @@ class db
 		return $statement;
 	}
 	
-	public static function scalar( $sql, $bind = array(), $connection_name = null )
+	public static function scalar( $sql, $bind = array(), $connectionAlias = null )
 	{
-		$statement = self::exec( $sql, $bind, $connection_name );
+		$statement = self::exec( $sql, $bind, self::getConnectionAlias($connectionAlias, self::READ) );
 		return $statement->fetch( pdo::FETCH_COLUMN );
 	}
 	
-	public static function row( $sql, $bind = array(), $connection_name = null )
+	public static function row( $sql, $bind = array(), $connectionAlias = null )
 	{
-		$statement = self::exec( $sql, $bind, $connection_name );
+		$statement = self::exec( $sql, $bind, self::getConnectionAlias($connectionAlias, self::READ) );
 		
 		return $statement->fetch( pdo::FETCH_ASSOC );
 	}
 	
-	public static function rows( $sql, $bind = array(), $connection_name = null )
+	public static function rows( $sql, $bind = array(), $connectionAlias = null )
 	{
-		$statement = self::exec( $sql, $bind, $connection_name );
+		$statement = self::exec( $sql, $bind, self::getConnectionAlias($connectionAlias, self::READ) );
 		return $statement->fetchAll( pdo::FETCH_ASSOC );
 	}
 	
-	public static function cols( $sql, $bind = array(), $connection_name = null )
+	public static function cols( $sql, $bind = array(), $connectionAlias = null )
 	{
-		$statement = self::exec( $sql, $bind, $connection_name );
+		$statement = self::exec( $sql, $bind, self::getConnectionAlias($connectionAlias, self::READ) );
 		return $statement->fetchAll( pdo::FETCH_COLUMN );
 	}
 	
@@ -86,11 +103,11 @@ class db
 		return dbConnection::get()->lastInsertId();
 	}
 
-	public static function smart($query, $where, $bind, $connection = null)
+	public static function smart($query, $where, $bind, $connectionAlias = null)
 	{
 		$wherePlain	=	implode(" AND ", $where);
 		$query		=	str_replace("[conditions]", $wherePlain, $query);
-		return		db::rows($query, $bind, $connection);
+		return		db::rows($query, $bind, self::getConnectionAlias($connectionAlias, self::READ));
 	}
 
 	static function _convert($content)
