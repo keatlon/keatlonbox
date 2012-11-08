@@ -27,9 +27,9 @@ class %BASECLASSNAME% extends dbPeer
      * @param integer $primaryKey
      * @return array
      */
-    public static function  row( $primaryKey )
+    public static function  row( $primaryKey, $connection = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doRow( $primaryKey );
+        return dbPeer::getInstance('%CLASSNAME%')->doRow( $primaryKey, $connection );
     }
 
     /**
@@ -38,9 +38,9 @@ class %BASECLASSNAME% extends dbPeer
      * @param integer $primaryKey
      * @return array
      */
-    public static function  rows( $primaryKeys )
+    public static function  rows( $primaryKeys, $connection = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doRows( $primaryKeys );
+        return dbPeer::getInstance('%CLASSNAME%')->doRows( $primaryKeys, $connection );
     }
 
     /**
@@ -52,9 +52,34 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $limit
      * @return array
      */
-    public static function  cols( $where = array(), $order = array(), $limit = false, $offset = false, &$total = false, &$more = false )
+    public static function  cols( 	$where = array(),
+    								$order = array(),
+    								$limit = false,
+    								$offset = false,
+    								&$total = false,
+    								&$more = false,
+
+									$fields 	=	false,
+									$selectSql	=	false,
+									$fromSql	=	false,
+
+    								$connection = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doCols( $where, $order, $limit, $offset, $total, $more);
+
+
+        return dbPeer::getInstance('%CLASSNAME%')->doCols(
+        	$where,
+        	$order,
+        	$limit,
+        	$offset,
+        	$total,
+        	$more,
+
+			$fields,
+			$selectSql,
+			$fromSql,
+
+        	$connection);
     }
 
 
@@ -64,9 +89,9 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return integer
      */
-    public static function  insert( $data, $multi = false, $ignore = false )
+    public static function  insert( $data, $multi = false, $ignore = false, $connection = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data, $multi, $ignore );
+        return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data, $multi, $ignore, $connection );
     }
 
 
@@ -76,9 +101,9 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return integer
      */
-    public static function  replace( $data )
+    public static function  replace( $data, $connection = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data );
+        return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data, $connection );
     }
 
 
@@ -89,9 +114,9 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return boolean
      */
-    public static function  update($id,  $data)
+    public static function  update($id,  $data, $connection = false)
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doUpdate($id,  $data);
+        return dbPeer::getInstance('%CLASSNAME%')->doUpdate($id,  $data, $connection);
     }
 
     /**
@@ -99,14 +124,14 @@ class %BASECLASSNAME% extends dbPeer
      *
      * @param integer $primaryKey
      */
-    public static function  delete( $primaryKey )
+    public static function  delete( $primaryKey, $connection = false )
     {
-        return dbPeer::getInstance('%CLASSNAME%')->doDelete( $primaryKey );
+        return dbPeer::getInstance('%CLASSNAME%')->doDelete( $primaryKey, $connection );
     }
 
-	static function setMeta($id, $values, $mode = 'override')
+	static function setMeta($id, $values, $mode = 'override', $connection = false)
 	{
-		$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id);
+		$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $connection);
 		$meta	=	$item['meta'];
 
 		foreach ($values as $key => $value)
@@ -128,14 +153,14 @@ class %BASECLASSNAME% extends dbPeer
 			}
 		}
 
-		dbPeer::getInstance('%CLASSNAME%')->doUpdate($id, array('meta' => json_encode($meta)));
+		dbPeer::getInstance('%CLASSNAME%')->doUpdate($id, array('meta' => json_encode($meta)), $connection);
 	}
 
-	static function getMeta($id, $key, $item = false)
+	static function getMeta($id, $key, $item = false, $connection = false)
 	{
 		if (!$item)
 		{
-			$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id);
+			$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $connection);
 		}
 
 		if ($item['meta'])
