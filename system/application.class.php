@@ -106,8 +106,6 @@ class application
 	 */
     static public function execute($module, $task, $data = false)
     {
-		profiler::start();
-
 		foreach (conf::$conf['phpini'] as $key => $value)
 		{
 			ini_set($key, $value);
@@ -173,7 +171,8 @@ class application
 
 	static function shutdown()
 	{
-		profiler::stop();
+		$diff	=	profiler::stop();
+		log::push('time: ' . $diff / 1000000);
 	}
 }
 

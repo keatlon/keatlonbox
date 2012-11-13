@@ -1,7 +1,8 @@
 <?php
 class profiler
 {
-	protected static $type = 'default';
+	protected static $type		=	'default';
+	protected static $started 	=	'default';
 
 	public static function type($type = false)
 	{
@@ -13,32 +14,55 @@ class profiler
 		return self::$type;
 	}
 
-	public static function start($forced = false)
+	static function umicrotime()
 	{
-		if (function_exists('xhprof_enable') && (conf::$conf['profiler']['enabled'] || $forced))
+		list($usec, $sec) = explode(" ", microtime());
+		return round(((float)$usec + (float)$sec) * 1000000);
+	}
+
+	public static function start()
+	{
+		if (!conf::$conf['profiler']['enabled'])
 		{
-			xhprof_enable(XHPROF_FLAGS_MEMORY);
+			return false;
+		}
+
+		switch(conf::$conf['profiler']['type'])
+		{
+			case 'xhprof':
+				xhprof_enable(XHPROF_FLAGS_MEMORY);
+				break;
+
+			case 'default':
+			default:
+				self::$started	=	self::umicrotime();
+				break;
 		}
 	}
 
-	public static function stop($forced = false)
+	public static function stop()
 	{
-		if (function_exists('xhprof_disable') && (conf::$conf['profiler']['enabled'] || $forced))
+		if (!conf::$conf['profiler']['enabled'])
 		{
-			$data	=	xhprof_disable();
+			return false;
+		}
 
-			require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_lib.php";
-			require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_runs.php";
+		switch(conf::$conf['profiler']['type'])
+		{
+			case 'xhprof':
+				$data	=	xhprof_disable();
 
-			$runs 	=	new XHProfRuns_Default();
-			$id		=	$runs->save_run($data, self::type());
+				require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_lib.php";
+				require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_runs.php";
 
-			echo "---------------\n".
-				 "Assuming you have set up the http based UI for \n".
-				 "XHProf at some address, you can view run at \n".
-				 "http://<xhprof-ui-address>/index.php?run=$id&source=" . self::type().
-				 "---------------\n";
+				$runs 	=	new XHProfRuns_Default();
+				$id		=	$runs->save_run($data, self::type());
+				break;
 
+			case 'default':
+			default:
+				return (self::umicrotime() - self::$started);
+				break;
 		}
 	}
 
