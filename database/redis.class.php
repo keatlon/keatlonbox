@@ -2,30 +2,41 @@
 
 class redis
 {
-	protected static $instance;
+	protected static $instances;
 
 	/**
 	 *	get instance of redis
 	 *
 	 *	@return Predis\Client
 	 */
-	static function i()
+	static function i($connection = 'default')
 	{
-		if (!self::$instance)
+		if (!self::$instances[$connection])
 		{
 			require_once conf::$conf['rootdir'] . '/lib/plugins/redis/Predis/Autoloader.php';
 			Predis\Autoloader::register();
 
-			self::$instance =	new Predis\Client(array(
-			    'host'   				=>	conf::$conf['redis']['host'],
-			    'port'   				=>	conf::$conf['redis']['port'],
+			if (!conf::$conf['redis']['pool'][$connection])
+			{
+				$host	=	conf::$conf['redis']['host'];
+    			$port   =	conf::$conf['redis']['port'];
+			}
+			else
+			{
+				$host	=	conf::$conf['redis']['pool'][$connection]['host'];
+    			$port   =	conf::$conf['redis']['pool'][$connection]['port'];
+			}
+
+			self::$instances[$connection] =	new Predis\Client(array(
+			    'host'   				=>	$host,
+			    'port'   				=>	$port,
 				'connection_persistent'	=>	true,
 			), array(
 				'prefix' => conf::$conf['redis']['prefix'] . ':'
 			));
 		}
 
-		return self::$instance;
+		return self::$instances[$connection];
 	}
 
 	static function set($key, $value)
