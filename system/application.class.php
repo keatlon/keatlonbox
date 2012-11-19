@@ -172,7 +172,6 @@ class application
 	static function shutdown()
 	{
 		$diff	=	profiler::stop();
-		log::push('time: ' . $diff / 1000000);
 	}
 }
 
