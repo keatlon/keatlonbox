@@ -45,7 +45,7 @@ foreach($targets as $target)
 			break;
 
 		case 'db':
-			database();
+			database($arguments);
 			break;
 
 		case 'form':
@@ -130,103 +130,121 @@ function parseArguments($arguments)
 }
 
 
-function database()
+function database($arguments)
 {
+	if ($arguments['tables'])
+	{
+		$tables	=	explode(',', $arguments['tables']);
+
+		foreach($tables as $tableName)
+		{
+			table($tableName);
+		}
+
+		echo count($tables) . ' tables found';
+
+		return true;
+	}
+
 	foreach(conf::$conf['database']['pool'] as $dbName => $dbConnection)
 	{
 		$dbName     =   conf::$conf['database']['pool']['master']['dbname'];
-		$tables     =   db::rows('SHOW TABLES FROM `' . $dbName . '`');
-		$modelPath  =   conf::$conf['rootdir'] . '/lib/model';
+		$tables     =   db::cols('SHOW TABLES FROM `' . $dbName . '`');
 
-		foreach($tables as $table)
+		foreach($tables as $tableName)
 		{
-			$tableName = $table['Tables_in_' . $dbName];
-			$parts = explode('_', $tableName);
-
-			if (count($parts) > 1)
-			{
-				for($l = 1; $l < count($parts);$l++)
-				{
-					$parts[$l] = ucfirst($parts[$l]);
-				}
-			}
-
-			$className = implode('', $parts) . 'Peer';
-			$classPath = $modelPath . '/' . $className . '.class.php';
-
-			// GENERATE BASE CLASS
-			$primaryKey = 'id';
-			$fields     = array();
-
-			$columns = db::rows('show columns from `' . $tableName . '`');
-
-			$primaryKeys	=	array();
-
-			$primaryCField	=	'';
-			$primaryFields	=	array();
-			$primaryTFields	=	array();
-			$primaryOFields	=	array();
-			$primaryBinds	=	array();
-			$fields			=	array();
-
-			foreach($columns as $column)
-			{
-				if ($column['Key'] == 'PRI')
-				{
-					$primaryKeys[] = $column['Field'];
-				}
-
-				$fields[]	=	"'" . $column['Field'] . "'";
-			}
-
-			foreach ($primaryKeys as $primaryField)
-			{
-				$primaryFields[]	=	"'" . $primaryField . "'";
-				$primaryTFields[]	=	"'" . $tableName . "." . $primaryField . "'";
-				$primaryOFields[]	=	"'" . $tableName . "." . $primaryField . " DESC'";
-
-				$primaryBinds[]		=	" " . $primaryField . " = :" . $primaryField . " ";
-			}
-
-			$primaryCKey	=	$primaryFields[0];
-			$primaryKey		=	"array(" . implode(',', $primaryFields) .  ")";
-			$primaryTKey	=	"array(" . implode(',', $primaryTFields) .  ")";
-			$primaryOKey	=	"array(" . implode(',', $primaryOFields) .  ")";
-			$primaryBind	=	implode('AND', $primaryBinds);
-			$multiPrimary	=	count($primaryKeys) > 1 ? 'true' : 'false';
-
-
-			$baseClassName = implode('', $parts) . 'BasePeer';
-			$baseClassPath = $modelPath . '/base/' . $baseClassName . '.class.php';
-			$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/basePeerClass.xml');
-			$baseClassContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
-			$baseClassContent = str_replace('%CLASSNAME%', $className, $baseClassContent);
-			$baseClassContent = str_replace('%TABLENAME%', $tableName, $baseClassContent);
-			$baseClassContent = str_replace('%PRIMARYKEY%', $primaryKey, $baseClassContent);
-			$baseClassContent = str_replace('%PRIMARYTKEY%', $primaryTKey, $baseClassContent);
-			$baseClassContent = str_replace('%PRIMARYOKEY%', $primaryOKey, $baseClassContent);
-			$baseClassContent = str_replace('%PRIMARYCKEY%', $primaryCKey, $baseClassContent);
-			$baseClassContent = str_replace('%PRIMARYBIND%', $primaryBind, $baseClassContent);
-			$baseClassContent = str_replace('%MULTIPRIMARY%', $multiPrimary, $baseClassContent);
-
-			$baseClassContent = str_replace('%FIELDS%', implode(',', $fields), $baseClassContent);
-
-
-			file_put_contents($baseClassPath, $baseClassContent);
-
-			$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/peerClass.xml');
-			$classContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
-			$classContent = str_replace('%CLASSNAME%', $className, $classContent);
-			if (!file_exists($classPath))
-			{
-				file_put_contents($classPath, $classContent);
-			}
+			table($tableName);
 		}
 
 		echo count($tables) . ' tables found';
 	}
 }
 
+
+function table($tableName)
+{
+	$modelPath  =   conf::$conf['rootdir'] . '/lib/model';
+	$parts 		= explode('_', $tableName);
+
+	if (count($parts) > 1)
+	{
+		for($l = 1; $l < count($parts);$l++)
+		{
+			$parts[$l] = ucfirst($parts[$l]);
+		}
+	}
+
+	$className = implode('', $parts) . 'Peer';
+	$classPath = $modelPath . '/' . $className . '.class.php';
+
+	// GENERATE BASE CLASS
+	$primaryKey = 'id';
+	$fields     = array();
+
+	$columns = db::rows('show columns from `' . $tableName . '`');
+
+	$primaryKeys	=	array();
+
+	$primaryCField	=	'';
+	$primaryFields	=	array();
+	$primaryTFields	=	array();
+	$primaryOFields	=	array();
+	$primaryBinds	=	array();
+	$fields			=	array();
+
+	foreach($columns as $column)
+	{
+		if ($column['Key'] == 'PRI')
+		{
+			$primaryKeys[] = $column['Field'];
+		}
+
+		$fields[]	=	"'" . $column['Field'] . "'";
+	}
+
+	foreach ($primaryKeys as $primaryField)
+	{
+		$primaryFields[]	=	"'" . $primaryField . "'";
+		$primaryTFields[]	=	"'" . $tableName . "." . $primaryField . "'";
+		$primaryOFields[]	=	"'" . $tableName . "." . $primaryField . " DESC'";
+
+		$primaryBinds[]		=	" " . $primaryField . " = :" . $primaryField . " ";
+	}
+
+	$primaryCKey	=	$primaryFields[0];
+	$primaryKey		=	"array(" . implode(',', $primaryFields) .  ")";
+	$primaryTKey	=	"array(" . implode(',', $primaryTFields) .  ")";
+	$primaryOKey	=	"array(" . implode(',', $primaryOFields) .  ")";
+	$primaryBind	=	implode('AND', $primaryBinds);
+	$multiPrimary	=	count($primaryKeys) > 1 ? 'true' : 'false';
+
+
+	$baseClassName = implode('', $parts) . 'BasePeer';
+	$baseClassPath = $modelPath . '/base/' . $baseClassName . '.class.php';
+	$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/basePeerClass.xml');
+	$baseClassContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
+	$baseClassContent = str_replace('%CLASSNAME%', $className, $baseClassContent);
+	$baseClassContent = str_replace('%TABLENAME%', $tableName, $baseClassContent);
+	$baseClassContent = str_replace('%PRIMARYKEY%', $primaryKey, $baseClassContent);
+	$baseClassContent = str_replace('%PRIMARYTKEY%', $primaryTKey, $baseClassContent);
+	$baseClassContent = str_replace('%PRIMARYOKEY%', $primaryOKey, $baseClassContent);
+	$baseClassContent = str_replace('%PRIMARYCKEY%', $primaryCKey, $baseClassContent);
+	$baseClassContent = str_replace('%PRIMARYBIND%', $primaryBind, $baseClassContent);
+	$baseClassContent = str_replace('%MULTIPRIMARY%', $multiPrimary, $baseClassContent);
+
+	$baseClassContent = str_replace('%FIELDS%', implode(',', $fields), $baseClassContent);
+
+
+	file_put_contents($baseClassPath, $baseClassContent);
+
+	$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/peerClass.xml');
+	$classContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
+	$classContent = str_replace('%CLASSNAME%', $className, $classContent);
+	if (!file_exists($classPath))
+	{
+		file_put_contents($classPath, $classContent);
+	}
+}
 
 function autoload($rootdir)
 {
