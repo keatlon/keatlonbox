@@ -92,6 +92,11 @@ class stack
 	 */
 	static function hasController($module, $action = false, $stack = 'default')
 	{
+		if (request::module() == $module && request::action() == $action)
+		{
+			return true;
+		}
+
 		if (!self::$stacks[$stack])
 		{
 			return false;
