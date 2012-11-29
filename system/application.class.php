@@ -128,10 +128,28 @@ class application
                 $context['data']        = $data;
             }
 
+			foreach ($context['data'] as $arg)
+			{
+				if (substr($arg, 0, 2) === '--')
+				{
+					list($param, $value)	=	explode("=", $arg, 2);
+
+					$params[substr($param, 2)]	=	$value;
+
+				}
+				else
+				{
+					$params[]	=	$arg;
+				}
+			}
+
             $context['module'] = $module;
             $context['action'] = $task;
 
-            $code = $context['controller']->dispatch($context['data']);
+            $code = $context['controller']->dispatch($params);
+
+
+
         }
         catch (controllerException $e)
         {
