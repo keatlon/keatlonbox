@@ -292,11 +292,11 @@ function autoload($rootdir)
 		}
 
 
-		$isTask = preg_match('#/(core|lib)/task/(.*)/(.*)\.task\.php#', $file, $matches);
+		$isTask = preg_match('#/.*/(.*)/(.*)\.task\.php#', $file, $matches);
 
 		if ($isTask)
 		{
-			list($path, $type, $module, $action) = $matches;
+			list($path, $module, $action) = $matches;
 			$classes['core'][$action . ucfirst($module) . 'Controller'] = $file;
 			continue;
 		}
