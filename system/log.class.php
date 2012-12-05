@@ -1,28 +1,23 @@
 <?php
 class log
 {
-    const E_EXCEPTION   = 10;
-    const E_PHP         = 20;
-    const E_USER        = 30;
-	const E_MYSQL   	= 40;
-
-	static $erorrs		= array();
+	static protected $handler		= false;
 
     static public function init()
     {
-		ini_set('display_errors', false);
-		
-		error_reporting(E_ALL & ~E_NOTICE);
-        set_error_handler(array('log', 'php_error_handler'), E_ALL & ~E_NOTICE);
+		$reporting		=	conf::$conf['log']['error_reporting'] ? conf::$conf['log']['error_reporting'] : E_ALL & ~E_NOTICE;
+		self::$handler	=	conf::$conf['log']['handler'] ? conf::$conf['log']['handler'] : false;
+
+		error_reporting($reporting);
+        set_error_handler(array('log', 'php'), $reporting);
     }
 
-	static protected function getTraceInfo(Exception $e)
+	static function getTraceInfo(Exception $e)
 	{
 		$trace	=	$e->getTrace();
 
 		foreach ($trace as $traceItem)
 		{
-			$output[]	=	"\t" . $traceItem['file'] . '(line ' . $traceItem['line'] . ')';
 			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'];
 			$output[]	=	'';
 		}
@@ -30,132 +25,94 @@ class log
 		return implode("\n", $output);
 	}
 
-    static public function exception(Exception $e)
+    private static function push($message, $component, $level)
     {
-        if (!conf::$conf['debug']['log_exceptions'])
-        {
-            return true;
-        }
-
-
-		$output[]	=	get_class($e) . ': ' . $e->getMessage();
-		$output[]	=	'';
-
-		$trace	=	$e->getTrace();
-
-		foreach ($trace as $traceItem)
+		if (self::$handler)
 		{
-			$output[]	=	"\t" . $traceItem['file'] . '(line ' . $traceItem['line'] . ')';
-			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'];
-			$output[]	=	'';
+			return call_user_func(self::$handler, $message, $component, $level);
 		}
 
-        log::push(implode("\n", $output), false, log::E_EXCEPTION);
+		$prefix	=	conf::$conf['log']['prefix'] ? conf::$conf['log']['prefix'] : ENVIRONMENT;
+		$file	=	conf::$conf['log']['path'] . '/' . $prefix . '.' . $component . '.' . $level . '.log';
+
+		$info	=	"[" . date('d M Y, H:i:s') . "] " . $_SERVER['REQUEST_URI'] . " (" . $_SERVER['REMOTE_ADDR'] . ")\n";
+
+		file_put_contents($file, $info . $message . "\n\n", FILE_APPEND);
+
+		return true;
     }
 
-    static public function php_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
-    {
-		$message = $errstr . " in " . $errfile . " at line " . $errline;
-		
-		switch($errno)
+	static function critical($message, $component = 'system')
+	{
+		if (conf::$conf['log']['critical'])
 		{
-			case E_NOTICE:
-				$message = 'NOTICE: ' . $message;
+			return log::push($message, $component, 'critical');
+		}
+	}
+
+	static function error($message, $component = 'system')
+	{
+		if (conf::$conf['log']['error'])
+		{
+			return log::push($message, $component, 'error');
+		}
+	}
+
+	static function warning($message, $component = 'system')
+	{
+		if (conf::$conf['log']['warning'])
+		{
+			return log::push($message, $component, 'warning');
+		}
+	}
+
+	static function info($message, $component = 'system')
+	{
+		if (conf::$conf['log']['info'])
+		{
+			return log::push($message, $component, 'info');
+		}
+	}
+
+	static function debug($message, $component = 'system')
+	{
+		if (conf::$conf['log']['debug'])
+		{
+			return log::push($message, $component, 'debug');
+		}
+	}
+
+	static public function php($level, $error, $file, $line, $context)
+	{
+		switch($level)
+		{
+			case E_PARSE:
+			case E_RECOVERABLE_ERROR:
+				$level	=	'critical';
+				break;
+
+			case E_ERROR:
+				$level	=	'error';
 				break;
 
 			case E_WARNING:
-				break;
-		}
-		
-		log::push($message, $errno, log::E_PHP);
-    }
-
-    public static function push($msg, $label = 'default', $type = log::E_USER, $params = false)
-    {
-		if (conf::$conf['debug']['display_errors'])
-		{
-			$item['type']		= $type;
-			$item['label']		= $label;
-			$item['message']	= $msg;
-
-			log::$erorrs[] = $item;
-		}
-
-
-		switch($type)
-		{
-			case log::E_PHP:
-
-				if (!conf::$conf['debug']['log_errors'])
-				{
-					return false;
-				}
-				
-				$filename = conf::$conf['debug']['log_errors'];
-
+				$level	=	'warning';
 				break;
 
-			case log::E_EXCEPTION:
-
-				if (!conf::$conf['debug']['log_exceptions'])
-				{
-					return false;
-				}
-
-				$filename = conf::$conf['debug']['log_exceptions'];
-
+			case E_STRICT:
+			case E_DEPRECATED:
+			case E_NOTICE:
+				$level	=	'info';
 				break;
 
-
-			case log::E_MYSQL:
-
-				if (!conf::$conf['debug']['log_mysql'])
-				{
-					return false;
-				}
-
-				$filename 	=	conf::$conf['debug']['log_mysql'];
-
-				if ($params instanceof Exception)
-				{
-					$msg		=	$msg . "\n" . self::getTraceInfo($params);
-				}
-
-				break;
-
-
-			case log::E_USER:
-
-				if (!conf::$conf['debug']['log_exceptions'])
-				{
-					return false;
-				}
-
-				$filename = conf::$conf['debug']['log_information'];
-
+			default:
+				$level	=	'info';
 				break;
 		}
 
-        $fh = fopen($filename, 'a+');
-
-		$line = array(
-			"",
-			'on ' . date('d-m-Y H:i:s') . '] ' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REQUEST_URI'],
-			$msg
-		);
-
-        fwrite($fh, implode("\n", $line) . "\n\n");
-        fclose($fh);
-    }
-
-	public static function getTrace()
-	{
-		$debugTrace = debug_backtrace();
-
-		foreach($debugTrace as $debugItem)
-		{
-			
-		}
+		$message = $error . "\nline $line in $file";
+		return log::push($message, 'php', $level);
 	}
+
 
 }

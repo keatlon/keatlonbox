@@ -61,7 +61,7 @@ class application
 		}
 		catch (Exception $e)
 		{
-			log::exception($e);
+			log::critical(log::getTraceInfo($e));
 			application::dispatch('exception', 'application', $e);
 		}
 

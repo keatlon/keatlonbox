@@ -12,7 +12,7 @@ class taskActionController extends actionController
         }
         catch (dbException $e)
         {
-			log::exception($e);
+			log::critical(log::getTraceInfo($e));
             echo "\n********************\n";
             echo " DB Exception: " . $e->getMessage();
             echo "\n********************\n";
@@ -22,7 +22,7 @@ class taskActionController extends actionController
             echo "\n********************\n";
             echo " Exception: " . $e->getMessage();
             echo "\n********************\n";
-            log::exception($e);
+			log::critical(log::getTraceInfo($e));
        }
     }
 

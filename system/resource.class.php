@@ -92,7 +92,7 @@ class resource
 				break;
 
 			default:
-				log::push('Bad extension ' . $info['extension'], 'resource', log::E_PHP);
+				log::error(sprintf('bad extension [%s]', $info['extension']), 'static');
 				break;
 		}
 	}
@@ -145,7 +145,7 @@ class resource
 
 			if ($return)
 			{
-				log::push("Error during compiling " . $group . ' ' . $cmd, log::E_PHP );
+				log::error(sprintf("Error during compiling %s %s", $group, $cmd), 'static');
 				return false;
 			}
 		}
@@ -184,8 +184,7 @@ class resource
 		{
 			if (!file_exists($file))
 			{
-				$msg = 'Error: File ' . $file . ' does not exists in group ' . $group;
-				log::push($msg, 'resource', log::E_PHP);
+				log::error(sprintf("File %s does not exists in group %s", $file, $group), 'static');
 			}
 
 			$content .= file_get_contents($file) . "\n";
