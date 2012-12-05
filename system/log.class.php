@@ -27,15 +27,16 @@ class log
 
     private static function push($message, $component, $level)
     {
+		$ip		=	$_SERVER['REMOTE_ADDR'] ? $_SERVER['REMOTE_ADDR'] : 'console';
+		$info	=	"[" . date('d M Y, H:i:s') . "] " . $_SERVER['REQUEST_URI'] . " (" . $ip . ")\n";
+
 		if (self::$handler)
 		{
-			return call_user_func(self::$handler, $message, $component, $level);
+			return call_user_func(self::$handler, $info . $message, $component, $level);
 		}
 
 		$prefix	=	conf::$conf['log']['prefix'] ? conf::$conf['log']['prefix'] : ENVIRONMENT;
 		$file	=	conf::$conf['log']['path'] . '/' . $prefix . '.' . $component . '.' . $level . '.log';
-
-		$info	=	"[" . date('d M Y, H:i:s') . "] " . $_SERVER['REQUEST_URI'] . " (" . $_SERVER['REMOTE_ADDR'] . ")\n";
 
 		file_put_contents($file, $info . $message . "\n\n", FILE_APPEND);
 
