@@ -61,15 +61,8 @@ class db
 				$statement->bindValue( ":{$key}", self::_convert($value), PDO::PARAM_STR );
 			}
 		}
-		
-		$statement->execute();
-		
-		if ( $statement->errorCode() != '0000' )
-		{
-			$error = $statement->errorInfo();
-			throw new dbException($error[2], $sql);
-		}
 
+		$statement->execute();
 		return $statement;
 	}
 	

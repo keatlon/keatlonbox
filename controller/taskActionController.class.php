@@ -10,9 +10,10 @@ class taskActionController extends actionController
             $this->execute($data);
             $this->afterExecute();
         }
-        catch (dbException $e)
+        catch ( PDOException $e)
         {
-			log::critical(log::getTraceInfo($e));
+			log::critical($e->getMessage() . "\n\n" . json_encode($e->errorInfo) . "\n\n" . $e->getTraceAsString(), 'mysql');
+
             echo "\n********************\n";
             echo " DB Exception: " . $e->getMessage();
             echo "\n********************\n";

@@ -38,8 +38,10 @@ class application
 			application::dispatch(request::module(), request::action());
 			event::process(event::EVENT_BEFORE_RENDER);
         }
-		catch (dbException $e)
+		catch (PDOException $e)
 		{
+			log::critical($e->getMessage() . "\n\n" . $e, 'mysql', $e);
+			response::exception('Database Error');
 			application::dispatch('exception', 'database', $e);
 		}
 		catch (accessDeniedException $e)
@@ -148,9 +150,12 @@ class application
 
             $code = $context['controller']->dispatch($params);
 
-
-
         }
+		catch (PDOException $e)
+		{
+			log::critical($e->getMessage() . "\n\n" . $e, 'mysql');
+			response::exception('Database Error');
+		}
         catch (controllerException $e)
         {
         }
