@@ -22,7 +22,10 @@ abstract class actionController
 
 	public function beforeExecute()
 	{
-
+		if(isset($_GET['format']) && $_GET['format']=="json"){
+			$this->format(render::JSON);
+			render::setLayout(null);
+		}
 	}
 
 	public function afterExecute()
