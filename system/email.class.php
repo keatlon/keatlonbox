@@ -1,7 +1,7 @@
 <?
 class email
 {
-	static public function send($emailTo, $subject, $body, $fromEmail = false, $fromName = false)
+	static public function send($emailTo, $subject, $body, $fromEmail = false, $fromName = false, $extra = array())
 	{
 		mb_language('uni');
 

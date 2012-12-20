@@ -163,7 +163,8 @@ class render
 					$__controller__->__subject,
 					$__controller__->__body,
 					$__controller__->__fromEmail,
-					$__controller__->__fromName
+					$__controller__->__fromName,
+					$__controller__->__extra
 				);
 				break;
 

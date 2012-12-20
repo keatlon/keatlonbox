@@ -7,6 +7,8 @@ class emailActionController extends webActionController
 	protected	$__fromName		=	'';
     protected	$__name			=	'';
     protected	$__email		=	'';
+	protected	$__extra		=	array();
+
 	protected	$__format		=	render::XML;
 	protected	$__stream		=	render::STREAM_SMTP;
 
