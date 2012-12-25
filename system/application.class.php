@@ -13,7 +13,6 @@ class application
 		session	::	init();
         log		::	init();
         mc		::	init();
-		i18n	::	init();
 		auth	::	init();
 		request	::	init();
 		head	::	init();
@@ -113,7 +112,6 @@ class application
 			ini_set($key, $value);
 		}
 
-		i18n	::	init();
 		log		::	init();
 		mc		::	init();
 

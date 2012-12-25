@@ -220,7 +220,7 @@ function table($tableName, $prefix = '', $alias = 'master')
 		$primaryBinds[]		=	" " . $primaryField . " = :" . $primaryField . " ";
 	}
 
-	$primaryCKey	=	$primaryFields[0];
+	$primaryCKey	=	$primaryFields[0] ? $primaryFields[0] : "''";
 	$primaryKey		=	"array(" . implode(',', $primaryFields) .  ")";
 	$primaryTKey	=	"array(" . implode(',', $primaryTFields) .  ")";
 	$primaryOKey	=	"array(" . implode(',', $primaryOFields) .  ")";
