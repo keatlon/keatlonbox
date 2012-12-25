@@ -132,13 +132,16 @@ function parseArguments($arguments)
 
 function database($arguments)
 {
+	$alias	=	$arguments['alias'] ? $arguments['alias'] : 'master';
+	$prefix	=	$arguments['prefix'] ? $arguments['prefix'] : '';
+
 	if ($arguments['tables'])
 	{
 		$tables	=	explode(',', $arguments['tables']);
 
 		foreach($tables as $tableName)
 		{
-			table($tableName);
+			table($tableName, $prefix, $alias);
 		}
 
 		echo count($tables) . ' tables found';
@@ -146,14 +149,15 @@ function database($arguments)
 		return true;
 	}
 
+
 	foreach(conf::$conf['database']['pool'] as $dbName => $dbConnection)
 	{
-		$dbName     =   conf::$conf['database']['pool']['master']['dbname'];
+		$dbName     =   conf::$conf['database']['pool'][$alias]['dbname'];
 		$tables     =   db::cols('SHOW TABLES FROM `' . $dbName . '`');
 
 		foreach($tables as $tableName)
 		{
-			table($tableName);
+			table($tableName, $prefix, $alias);
 		}
 
 		echo count($tables) . ' tables found';
@@ -161,10 +165,15 @@ function database($arguments)
 }
 
 
-function table($tableName)
+function table($tableName, $prefix = '', $alias = 'master')
 {
 	$modelPath  =   conf::$conf['rootdir'] . '/lib/model';
 	$parts 		= explode('_', $tableName);
+
+	if ($prefix)
+	{
+		array_unshift($parts, $prefix);
+	}
 
 	if (count($parts) > 1)
 	{
@@ -181,7 +190,7 @@ function table($tableName)
 	$primaryKey = 'id';
 	$fields     = array();
 
-	$columns = db::rows('show columns from `' . $tableName . '`');
+	$columns = db::rows('show columns from `' . $tableName . '`', array(), $alias);
 
 	$primaryKeys	=	array();
 
@@ -225,6 +234,7 @@ function table($tableName)
 	$baseClassContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
 	$baseClassContent = str_replace('%CLASSNAME%', $className, $baseClassContent);
 	$baseClassContent = str_replace('%TABLENAME%', $tableName, $baseClassContent);
+	$baseClassContent = str_replace('%CONNECTION%', $alias, $baseClassContent);
 	$baseClassContent = str_replace('%PRIMARYKEY%', $primaryKey, $baseClassContent);
 	$baseClassContent = str_replace('%PRIMARYTKEY%', $primaryTKey, $baseClassContent);
 	$baseClassContent = str_replace('%PRIMARYOKEY%', $primaryOKey, $baseClassContent);

@@ -6,6 +6,8 @@ class %BASECLASSNAME% extends dbPeer
 {
     protected	$instance		= false;
     
+    protected	$connection		=	'%CONNECTION%';
+
     protected	$tableName		=	'%TABLENAME%';
     protected	$primaryKey		=	%PRIMARYKEY%;
     protected	$primaryTKey	=	%PRIMARYTKEY%;
@@ -29,6 +31,7 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  row( $primaryKey, $connection = false )
     {
+    	$connection =	$connection ? $connection : $this->connection;
         return dbPeer::getInstance('%CLASSNAME%')->doRow( $primaryKey, $connection );
     }
 
@@ -40,6 +43,7 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  rows( $primaryKeys, $connection = false )
     {
+    	$connection =	$connection ? $connection : $this->connection;
         return dbPeer::getInstance('%CLASSNAME%')->doRows( $primaryKeys, $connection );
     }
 
@@ -65,7 +69,7 @@ class %BASECLASSNAME% extends dbPeer
 
     								$connection = false )
     {
-
+    	$connection =	$connection ? $connection : $this->connection;
 
         return dbPeer::getInstance('%CLASSNAME%')->doCols(
         	$where,
@@ -91,6 +95,7 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  insert( $data, $multi = false, $ignore = false, $connection = false )
     {
+    	$connection =	$connection ? $connection : $this->connection;
         return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data, $multi, $ignore, $connection );
     }
 
@@ -103,6 +108,7 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  replace( $data, $connection = false )
     {
+    	$connection =	$connection ? $connection : $this->connection;
         return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data, $connection );
     }
 
@@ -116,6 +122,7 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  update($id,  $data, $connection = false)
     {
+    	$connection =	$connection ? $connection : $this->connection;
         return dbPeer::getInstance('%CLASSNAME%')->doUpdate($id,  $data, $connection);
     }
 
@@ -126,13 +133,15 @@ class %BASECLASSNAME% extends dbPeer
      */
     public static function  delete( $primaryKey, $connection = false )
     {
+    	$connection =	$connection ? $connection : $this->connection;
         return dbPeer::getInstance('%CLASSNAME%')->doDelete( $primaryKey, $connection );
     }
 
 	static function setMeta($id, $values, $mode = 'override', $connection = false)
 	{
-		$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $connection);
-		$meta	=	$item['meta'];
+    	$connection =	$connection ? $connection : $this->connection;
+		$item		=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $connection);
+		$meta		=	$item['meta'];
 
 		foreach ($values as $key => $value)
 		{
@@ -158,6 +167,8 @@ class %BASECLASSNAME% extends dbPeer
 
 	static function getMeta($id, $key, $item = false, $connection = false)
 	{
+    	$connection =	$connection ? $connection : $this->connection;
+
 		if (!$item)
 		{
 			$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $connection);

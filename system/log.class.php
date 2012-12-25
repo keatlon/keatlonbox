@@ -14,15 +14,7 @@ class log
 
 	static function getTraceInfo(Exception $e)
 	{
-		$trace	=	$e->getTrace();
-
-		foreach ($trace as $traceItem)
-		{
-			$output[]	=	"\t" . $traceItem['class'] . $traceItem['type'] . $traceItem['function'];
-			$output[]	=	'';
-		}
-
-		return implode("\n", $output);
+		return "\n" . $e->getTraceAsString();
 	}
 
     private static function push($message, $component, $level)
