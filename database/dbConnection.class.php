@@ -33,7 +33,11 @@ class dbConnection
 
 
 
-		self::$connections[$alias] = new PDO($uri, $params['user'], $params['password'], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8", PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true) );
+		self::$connections[$alias] = new PDO($uri, $params['user'], $params['password'], array(
+			PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+			PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+			PDO::ATTR_PERSISTENT => true
+		));
 		self::$connections[$alias]->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 		self::$connections[$alias]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
