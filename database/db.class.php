@@ -105,6 +105,11 @@ class db
 
 	static function _convert($content)
 	{
-		return mb_convert_encoding($content, 'UTF-8');
+		if (!mb_check_encoding($content, 'UTF-8'))
+		{
+			return mb_convert_encoding($content, 'UTF-8');
+		}
+
+		return $content;
 	}
 }
