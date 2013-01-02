@@ -59,9 +59,9 @@ class redis
 		return self::i()->decrby($key, $inc);
 	}
 
-	static function del($key, $inc = 1)
+	static function del($key)
 	{
-		return self::i()->del($key, $inc);
+		return self::i()->del($key);
 	}
 
 }
