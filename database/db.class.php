@@ -43,6 +43,8 @@ class db
 			}
 		}
 
+		log::debug($sql . ' ' . json_encode($bind) . ' ' . $connectionAlias, 'mysql');
+
 		$statement = dbConnection::get( self::getConnectionAlias($connectionAlias, self::WRITE) )->prepare($sql);
 
 		foreach ( $bind as $key => $value )
