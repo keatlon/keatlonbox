@@ -2,8 +2,8 @@
 
 class auth
 {
-	static protected $instances;
-	static protected $gateway = false;
+	static protected $instances	=	array();
+	static protected $gateway 	= 	'base';
 
 	/**
 	 * get instance of auth class

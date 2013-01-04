@@ -1,6 +1,6 @@
 <?php
 
-abstract class authBase
+class authBase
 {
 	public		$autoCreate = false;
 
