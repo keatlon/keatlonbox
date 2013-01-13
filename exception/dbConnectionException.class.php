@@ -1,0 +1,3 @@
+<?
+class dbConnectionException extends PDOException
+{}
