@@ -6,7 +6,7 @@ class log
     static public function init()
     {
 		$reporting		=	conf::$conf['log']['error_reporting'] ? conf::$conf['log']['error_reporting'] : E_ALL & ~E_NOTICE;
-		self::$handler	=	conf::$conf['log']['handler'] ? conf::$conf['log']['handler'] : false;
+		self::$handler	=	isset(conf::$conf['log']['handler']) ? conf::$conf['log']['handler'] : false;
 
 		error_reporting($reporting);
         set_error_handler(array('log', 'php'), $reporting);

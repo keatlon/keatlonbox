@@ -4,6 +4,8 @@
 * 		DEFINE PATHS & ENVIRONMENT
 ***************************************************************/
 
+!defined('MODE') ? define('MODE', false ) : false;
+
 !defined('ROOTDIR') ?
 		define('ROOTDIR', realpath(dirname(__FILE__) . '/../../') ) : false;
 
@@ -11,10 +13,10 @@
 		define('CONFDIR', ROOTDIR . '/conf') : false;
 
 !defined('PRODUCT') ?
-		(define('PRODUCT', $_SERVER['PRODUCT'] ? $_SERVER['PRODUCT'] : 'default')) : false ;
+		(define('PRODUCT', isset($_SERVER['PRODUCT']) ? $_SERVER['PRODUCT'] : 'default')) : false ;
 
 !defined('ENVIRONMENT') ?
-		(define('ENVIRONMENT', $_SERVER['ENVIRONMENT'] ? $_SERVER['ENVIRONMENT'] : include CONFDIR . "/environment" )) : false ;
+		(define('ENVIRONMENT', isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT'] : include CONFDIR . "/environment" )) : false ;
 
 include ROOTDIR . "/core/system/sys.php";
 include ROOTDIR . "/core/system/router.class.php";
@@ -67,7 +69,7 @@ $application	=	MODE == 'console' ? conf::$conf['router']['console'] : false;
 
 if (!$application)
 {
-	$application	=	$_SERVER['APPLICATION'] ? $_SERVER['APPLICATION'] : false;
+	$application	=	isset($_SERVER['APPLICATION']) ? $_SERVER['APPLICATION'] : false;
 }
 
 !defined('APPLICATION') ? define('APPLICATION', $application) : false;
