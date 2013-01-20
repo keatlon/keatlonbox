@@ -39,7 +39,7 @@ class application
         }
 		catch (PDOException $e)
 		{
-			log::critical($e->getMessage() . "\n\n" . $e, 'mysql', $e);
+			log::critical($e->getMessage() . "\n\n" . $e, 'mysql');
 			response::exception('Database Error');
 			application::dispatch('exception', 'database', $e);
 		}
