@@ -23,7 +23,7 @@ if (isset($arguments['confdir']))
 	define('CONFDIR', $arguments['confdir']);
 }
 
-define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
+define('PRODUCT',	isset($arguments['product']) ? $arguments['product'] : 'default');
 
 $rootdir        =   dirname(__FILE__) . "/..";
 
@@ -296,7 +296,7 @@ function autoload($rootdir)
 
 		if ($isCoreAction)
 		{
-			list($path, $application, $module, $type, $name, $ext) = $matches;
+			list($path, $application, $module, $type, $name) = $matches;
 			$classes['core'][$name . ucfirst($module) . 'Controller'] = $file;
 			continue;
 		}

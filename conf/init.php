@@ -73,5 +73,3 @@ if (!$application)
 !defined('APPLICATION') ? define('APPLICATION', $application) : false;
 
 router::init(APPLICATION ? APPLICATION : false);
-
-register_shutdown_function(array('application', 'shutdown'));
