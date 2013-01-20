@@ -64,18 +64,6 @@ class resizeImageController extends taskActionController
             }
             
             exec($cmd);
-
-            if (isset(conf::$conf['image']['watermark'][$image['size']]))
-            {
-                $wmcmd = sprintf(conf::$conf['image']['watermark'][$image['size']], conf::$conf['rootdir'] . '/web/images/watermark.png', $cachePath, $cachePath);
-
-                if (conf::$conf['image']['escapecmd'])
-                {
-                    $wmcmd = escapeshellcmd($wmcmd);
-                }
-                exec($wmcmd);
-            }
-
         }
 
         if (!file_exists($cachePath))

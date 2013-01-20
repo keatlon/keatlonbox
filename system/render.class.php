@@ -184,12 +184,12 @@ class render
 	{
 		if (substr($action, 0, 2) == '//')
 		{
-			return conf::$conf['rootdir'] . substr($action, 1) . '.view.php';
+			return ROOTDIR . substr($action, 1) . '.view.php';
 		}
 
 		if ($action[0] == '/')
 		{
-			return conf::$conf['rootdir'] . '/apps' . $action . '.view.php';
+			return ROOTDIR . '/apps' . $action . '.view.php';
 		}
 
 		if (!$module)
@@ -197,7 +197,7 @@ class render
 			$module = stack::currentModule();
 		}
 
-		return conf::$conf['rootdir'] . '/apps/' . APPLICATION . '/' . $module . '/view/' . $action . '.view.php';
+		return ROOTDIR . '/apps/' . APPLICATION . '/' . $module . '/view/' . $action . '.view.php';
 	}
 
 }

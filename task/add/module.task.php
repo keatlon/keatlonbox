@@ -7,28 +7,28 @@ class moduleAddController extends taskActionController
         $module =   (string)$params[4];
         $action =   (string)$params[5];
 
-		if (!is_dir(conf::$conf['rootdir'] . "/apps/$app"))
+		if (!is_dir(ROOTDIR . "/apps/$app"))
 		{
-            @mkdir(conf::$conf['rootdir'] . "/apps/$app");
+            @mkdir(ROOTDIR . "/apps/$app");
 		}
 
 		if ($module)
 		{
-			@mkdir(conf::$conf['rootdir'] . "/apps/$app/$module");
-			@mkdir(conf::$conf['rootdir'] . "/apps/$app/$module/action");
-			@mkdir(conf::$conf['rootdir'] . "/apps/$app/$module/view");
-			@mkdir(conf::$conf['rootdir'] . "/apps/$app/$module/js");
+			@mkdir(ROOTDIR . "/apps/$app/$module");
+			@mkdir(ROOTDIR . "/apps/$app/$module/action");
+			@mkdir(ROOTDIR . "/apps/$app/$module/view");
+			@mkdir(ROOTDIR . "/apps/$app/$module/js");
 			
-			touch(conf::$conf['rootdir'] . "/apps/$app/$module/js/$module.js");
+			touch(ROOTDIR . "/apps/$app/$module/js/$module.js");
 		}
 
 		if ($action)
 		{
-			$template	=	simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/action.xml');
+			$template	=	simplexml_load_file(ROOTDIR . '/core/assets/templates/action.xml');
 
 			file_put_contents
 			(
-				conf::$conf['rootdir'] . "/apps/$app/$module/action/$action.action.php",
+                ROOTDIR . "/apps/$app/$module/action/$action.action.php",
 				str_replace
 				(
 					array
@@ -45,7 +45,7 @@ class moduleAddController extends taskActionController
 				)
 			);
 
-			touch(conf::$conf['rootdir'] . "/apps/$app/$module/view/$action.view.php");
+			touch(ROOTDIR . "/apps/$app/$module/view/$action.view.php");
 		}
 		
     }

@@ -52,8 +52,8 @@ class profiler
 			case 'xhprof':
 				$data	=	xhprof_disable();
 
-				require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_lib.php";
-				require_once conf::$conf['rootdir'] . "/lib/plugins/xhprof/xhprof_runs.php";
+				require_once ROOTDIR . "/lib/plugins/xhprof/xhprof_lib.php";
+				require_once ROOTDIR . "/lib/plugins/xhprof/xhprof_runs.php";
 
 				$runs 	=	new XHProfRuns_Default();
 				$id		=	$runs->save_run($data, self::type());
