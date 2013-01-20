@@ -11,10 +11,10 @@
 		define('CONFDIR', ROOTDIR . '/conf') : false;
 
 !defined('PRODUCT') ?
-		(define('PRODUCT', $_SERVER['PRODUCT'] ? $_SERVER['PRODUCT'] : 'default')) : false ;
+		(define('PRODUCT', isset($_SERVER['PRODUCT']) ? $_SERVER['PRODUCT'] : 'default')) : false ;
 
 !defined('ENVIRONMENT') ?
-		(define('ENVIRONMENT', $_SERVER['ENVIRONMENT'] ? $_SERVER['ENVIRONMENT'] : include CONFDIR . "/environment" )) : false ;
+		(define('ENVIRONMENT', isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT'] : include CONFDIR . "/environment" )) : false ;
 
 include ROOTDIR . "/core/system/sys.php";
 include ROOTDIR . "/core/system/router.class.php";
