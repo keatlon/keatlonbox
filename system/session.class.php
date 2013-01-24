@@ -4,7 +4,7 @@ class session
 {
     public static function init()
     {
-        if (conf::$conf['application'][APPLICATION]['session'])
+        if (conf::$conf['application'][APPLICATION] && conf::$conf['application'][APPLICATION]['session'])
 		{
 			if (conf::$conf['session']['handler'])
 			{

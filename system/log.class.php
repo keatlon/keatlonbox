@@ -1,12 +1,16 @@
 <?php
 class log
 {
-	static protected $handler		= false;
+	static protected $handler		= array('log', 'handler');
 
     static public function init()
     {
 		$reporting		=	conf::$conf['log']['error_reporting'] ? conf::$conf['log']['error_reporting'] : E_ALL & ~E_NOTICE;
-		self::$handler	=	conf::$conf['log']['handler'] ? conf::$conf['log']['handler'] : false;
+
+        if (conf::$conf['log']['handler'])
+        {
+            self::$handler	=	conf::$conf['log']['handler'];
+        }
 
 		error_reporting($reporting);
         set_error_handler(array('log', 'php'), $reporting);
@@ -17,62 +21,57 @@ class log
 		return "\n" . $e->getTraceAsString();
 	}
 
-    private static function push($message, $component, $level, $app = false)
+    private static function push($message, $component, $level, $attributes = array())
     {
-		$ip		=	$_SERVER['REMOTE_ADDR'] ? $_SERVER['REMOTE_ADDR'] : 'console';
-		$info	=	"[" . date('d M Y, H:i:s') . "] " . $_SERVER['REQUEST_URI'] . " (" . $ip . ")\n";
+        $attributes['env']          =   ENVIRONMENT;
+        $attributes['app']          =   APPLICATION;
+        $attributes['component']    =   $component;
+        $attributes['level']        =   $level;
+        $attributes['created']      =   time();
+        $attributes['ip']           =   $_SERVER['SERVER_ADDR'];
+        $attributes['host']         =   $_SERVER['SERVER_NAME'];
+        $attributes['message']      =   $message;
 
-		if (self::$handler)
-		{
-			return call_user_func(self::$handler, $info . $message, $component, $level);
-		}
-
-		$app	=	$app ? $app : conf::$conf['log']['prefix'];
-		$app	=	$app ? $app : ENVIRONMENT;
-		$file	=	conf::$conf['log']['path'] . '/' . $app . '.' . $component . '.' . $level . '.log';
-
-		file_put_contents($file, $info . $message . "\n\n", FILE_APPEND);
-
-		return true;
+		return call_user_func(self::$handler, $attributes);
     }
 
-	static function critical($message, $component = 'system', $app = false)
+	static function critical($message, $component = 'system', $attributes = array())
 	{
 		if (conf::$conf['log']['critical'])
 		{
-			return log::push($message, $component, 'critical', $app);
+			return log::push($message, $component, 'critical', $attributes);
 		}
 	}
 
-	static function error($message, $component = 'system', $app = false)
+	static function error($message, $component = 'system', $attributes = array())
 	{
 		if (conf::$conf['log']['error'])
 		{
-			return log::push($message, $component, 'error', $app);
+			return log::push($message, $component, 'error', $attributes);
 		}
 	}
 
-	static function warning($message, $component = 'system', $app = false)
+	static function warning($message, $component = 'system', $attributes = array())
 	{
 		if (conf::$conf['log']['warning'])
 		{
-			return log::push($message, $component, 'warning', $app);
+			return log::push($message, $component, 'warning', $attributes);
 		}
 	}
 
-	static function info($message, $component = 'system', $app = false)
+	static function info($message, $component = 'system', $attributes = array())
 	{
 		if (conf::$conf['log']['info'])
 		{
-			return log::push($message, $component, 'info', $app);
+			return log::push($message, $component, 'info', $attributes);
 		}
 	}
 
-	static function debug($message, $component = 'system', $app = false)
+	static function debug($message, $component = 'system', $attributes = array())
 	{
 		if (conf::$conf['log']['debug'])
 		{
-			return log::push($message, $component, 'debug', $app);
+			return log::push($message, $component, 'debug', $attributes);
 		}
 	}
 
@@ -108,5 +107,22 @@ class log
 		return log::push($message, 'php', $level);
 	}
 
+
+    static function handler($attributes)
+    {
+        $file	=	conf::$conf['log']['path'] . '/' .  implode(".", array(
+            $attributes['env'],
+            $attributes['app'],
+            $attributes['component'],
+            $attributes['level'],
+            'log'
+        ));
+
+        $attributes['created']  =   date('d M, Y H:i:s', $attributes['created']);
+
+        file_put_contents($file, json_encode($attributes, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+
+        return true;
+    }
 
 }
