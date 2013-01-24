@@ -13,7 +13,7 @@ class redis
 	{
 		if (!self::$instances[$connection])
 		{
-			require_once conf::$conf['rootdir'] . '/lib/plugins/redis/Predis/Autoloader.php';
+			require_once ROOTDIR . '/lib/plugins/redis/Predis/Autoloader.php';
 			Predis\Autoloader::register();
 
 			if (!conf::$conf['redis']['pool'][$connection])

@@ -18,18 +18,19 @@ if (!isset($arguments['target']))
 
 $targets	=	explode(',', $arguments['target']);
 
+!defined('ROOTDIR') ?
+		define('ROOTDIR', realpath(dirname(__FILE__) . '/../') ) : false;
+
 if (isset($arguments['confdir']))
 {
 	define('CONFDIR', $arguments['confdir']);
 }
 
-define('PRODUCT',	$arguments['product'] ? $arguments['product'] : 'default');
-
-$rootdir        =   dirname(__FILE__) . "/..";
+define('PRODUCT',	isset($arguments['product']) ? $arguments['product'] : 'default');
 
 include dirname(__FILE__) . "/conf/init.php";
 
-$cacheDir = $rootdir . conf::$conf['cachedir'];
+$cacheDir = ROOTDIR . conf::$conf['cachedir'];
 
 if (!is_dir($cacheDir))
 {
@@ -41,7 +42,7 @@ foreach($targets as $target)
 	switch($target)
 	{
 		case 'autoload':
-			autoload($rootdir);
+			autoload(ROOTDIR);
 			break;
 
 		case 'db':
@@ -49,12 +50,12 @@ foreach($targets as $target)
 			break;
 
 		case 'form':
-			forms($rootdir, $app);
+			forms(ROOTDIR, $app);
 			break;
 
 		case 'static':
 
-			$conf 		= 	include conf::$conf['rootdir'] . '/conf/' . PRODUCT . '.static.php';
+			$conf 		= 	include ROOTDIR . '/conf/' . PRODUCT . '.static.php';
 
 			foreach ($conf as $group => $files)
 			{
@@ -167,8 +168,8 @@ function database($arguments)
 
 function table($tableName, $prefix = '', $alias = 'master')
 {
-	$modelPath  =   conf::$conf['rootdir'] . '/lib/model';
-	$parts 		= explode('_', $tableName);
+	$modelPath  =   ROOTDIR . '/lib/model';
+	$parts 		=   explode('_', $tableName);
 
 	if ($prefix)
 	{
@@ -230,7 +231,7 @@ function table($tableName, $prefix = '', $alias = 'master')
 
 	$baseClassName = implode('', $parts) . 'BasePeer';
 	$baseClassPath = $modelPath . '/base/' . $baseClassName . '.class.php';
-	$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/basePeerClass.xml');
+	$xml = simplexml_load_file(ROOTDIR . '/core/assets/templates/basePeerClass.xml');
 	$baseClassContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
 	$baseClassContent = str_replace('%CLASSNAME%', $className, $baseClassContent);
 	$baseClassContent = str_replace('%TABLENAME%', $tableName, $baseClassContent);
@@ -247,7 +248,7 @@ function table($tableName, $prefix = '', $alias = 'master')
 
 	file_put_contents($baseClassPath, $baseClassContent);
 
-	$xml = simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/peerClass.xml');
+	$xml = simplexml_load_file(ROOTDIR . '/core/assets/templates/peerClass.xml');
 	$classContent = str_replace('%BASECLASSNAME%', $baseClassName, $xml->body);
 	$classContent = str_replace('%CLASSNAME%', $className, $classContent);
 	if (!file_exists($classPath))
@@ -296,7 +297,7 @@ function autoload($rootdir)
 
 		if ($isCoreAction)
 		{
-			list($path, $application, $module, $type, $name, $ext) = $matches;
+			list($path, $application, $module, $type, $name) = $matches;
 			$classes['core'][$name . ucfirst($module) . 'Controller'] = $file;
 			continue;
 		}
@@ -321,9 +322,9 @@ function autoload($rootdir)
 
 function forms($rootdir, $application)
 {
-	$formPath	=   conf::$conf['rootdir'] . '/lib/form';
+	$formPath	=   ROOTDIR . '/lib/form';
 	$views		=	scan($rootdir . "/apps/" . $application, '|.*\.view\.php|');
-	$template	=	simplexml_load_file(conf::$conf['rootdir'] . '/core/assets/templates/form.xml');
+	$template	=	simplexml_load_file(ROOTDIR . '/core/assets/templates/form.xml');
 
 	foreach ($views as $filename)
 	{

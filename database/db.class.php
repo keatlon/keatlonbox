@@ -23,7 +23,7 @@ class db
 	 */
 	public static function exec( $sql, $bind = array(), $connectionAlias = null )
 	{
-		foreach ( $bind as $key => $value )
+		if ($bind) foreach ( $bind as $key => $value )
 		{
 			if (is_array($value))
 			{
@@ -47,7 +47,7 @@ class db
 
 		$statement = dbConnection::get( self::getConnectionAlias($connectionAlias, self::WRITE) )->prepare($sql);
 
-		foreach ( $bind as $key => $value )
+		if ($bind) foreach ( $bind as $key => $value )
 		{
 			if (is_array($value))
 			{

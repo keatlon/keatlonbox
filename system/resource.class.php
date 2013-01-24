@@ -101,7 +101,7 @@ class resource
 	{
 		$basename	=	str_replace('.css', '.*\.css', $group);
 		$basename	=	str_replace('.js', '.*\.js', $basename);
-		$files 		=	scan(conf::$conf['rootdir'] . conf::$conf['static']['compiled'], '|' . $basename . '|');
+		$files 		=	scan(ROOTDIR . conf::$conf['static']['compiled'], '|' . $basename . '|');
 
 		foreach ($files as $file)
 		{
@@ -115,8 +115,8 @@ class resource
 	static function apply($group, $type)
 	{
 		$touched	=	self::lastTouched($group);
-		$in 		= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compressed';
-		$out		=	conf::$conf['rootdir'] .
+		$in 		= 	ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.compressed';
+		$out		=	ROOTDIR .
 						conf::$conf['static']['compiled'] . '/' .
 						self::getStaticFilename($group, $touched);
 
@@ -126,7 +126,7 @@ class resource
 
 		file_put_contents
 		(
-			conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.meta',
+            ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.meta',
 			$touched
 		);
 
@@ -135,8 +135,8 @@ class resource
 
 	static protected function compile($group, $type)
 	{
-		$in 	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.merged';
-		$out	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compiled';
+		$in 	= 	ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.merged';
+		$out	= 	ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.compiled';
 
 		if (conf::$conf['static'][$type]['compile'])
 		{
@@ -159,8 +159,8 @@ class resource
 
 	static protected function compress($group, $type)
 	{
-		$in 	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compiled';
-		$out	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.compressed';
+		$in 	= 	ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.compiled';
+		$out	= 	ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.compressed';
 
 		if (conf::$conf['static'][$type]['compress'])
 		{
@@ -177,7 +177,7 @@ class resource
 
 	static protected function merge($group)
 	{
-		$conf 		= 	include conf::$conf['rootdir'] . '/conf/' . PRODUCT . '.static.php';
+		$conf 		= 	include ROOTDIR . '/conf/' . PRODUCT . '.static.php';
 		$content	=	'';
 
 		foreach ($conf[$group] as $file)
@@ -191,7 +191,7 @@ class resource
 		}
 
 		file_put_contents(
-			conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.merged',
+            ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.merged',
 			$content
 		);
 	}
@@ -203,13 +203,13 @@ class resource
 
 	static protected function lastCompiled($group)
 	{
-		$meta 	= 	conf::$conf['rootdir'] . conf::$conf['cachedir'] . '/' . $group . '.meta';
+		$meta 	= 	ROOTDIR . conf::$conf['cachedir'] . '/' . $group . '.meta';
 		return 	file_exists($meta) ? file_get_contents($meta) : 0;
 	}
 
 	static protected function lastTouched($group)
 	{
-		$conf 		= 	include conf::$conf['rootdir'] . '/conf/' . PRODUCT . '.static.php';
+		$conf 		= 	include ROOTDIR . '/conf/' . PRODUCT . '.static.php';
 		$last	=	0;
 
 		if ($conf[$group]) foreach ($conf[$group] as $file)
@@ -243,8 +243,6 @@ class resource
 
 	static protected function getFullStaticFilename($filename, $timestamp)
 	{
-		$out		=	conf::$conf['rootdir'] . conf::$conf['static']['compiled'] . '/' . $filename;
-
 		$info 	= 	pathinfo($filename);
 		return $info['filename'] . '.' . $timestamp . '.' . $info['extension'];
 	}

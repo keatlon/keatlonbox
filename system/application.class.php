@@ -60,11 +60,6 @@ class application
 		{
 			application::dispatch($e->module, $e->action, $e->data, $e->actionVars);
 		}
-		catch (Exception $e)
-		{
-			log::critical(log::getTraceInfo($e));
-			application::dispatch('exception', 'application', $e);
-		}
 
 		if ($layout = render::getLayout())
 		{
@@ -189,10 +184,5 @@ class application
 
         return new $actionClassName($module, $action);
     }
-
-	static function shutdown()
-	{
-		$diff	=	profiler::stop();
-	}
 }
 
