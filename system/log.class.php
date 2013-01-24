@@ -35,7 +35,7 @@ class log
 		return call_user_func(self::$handler, $attributes);
     }
 
-	static function critical($message, $component = 'system', $attributes = array())
+	static function critical($message, $attributes = array(), $component = 'system')
 	{
 		if (conf::$conf['log']['critical'])
 		{
@@ -43,7 +43,7 @@ class log
 		}
 	}
 
-	static function error($message, $component = 'system', $attributes = array())
+	static function error($message, $attributes = array(), $component = 'system')
 	{
 		if (conf::$conf['log']['error'])
 		{
@@ -51,7 +51,7 @@ class log
 		}
 	}
 
-	static function warning($message, $component = 'system', $attributes = array())
+	static function warning($message, $attributes = array(), $component = 'system')
 	{
 		if (conf::$conf['log']['warning'])
 		{
@@ -59,7 +59,7 @@ class log
 		}
 	}
 
-	static function info($message, $component = 'system', $attributes = array())
+	static function info($message, $attributes = array(), $component = 'system')
 	{
 		if (conf::$conf['log']['info'])
 		{
@@ -67,7 +67,7 @@ class log
 		}
 	}
 
-	static function debug($message, $component = 'system', $attributes = array())
+	static function debug($message, $attributes = array(), $component = 'system')
 	{
 		if (conf::$conf['log']['debug'])
 		{
@@ -77,34 +77,29 @@ class log
 
 	static public function php($level, $error, $file, $line, $context)
 	{
+        $message = $error . "\nline $line in $file";
+
 		switch($level)
 		{
 			case E_PARSE:
 			case E_RECOVERABLE_ERROR:
-				$level	=	'critical';
-				break;
+                return log::critical($message, array(), 'php');
 
 			case E_ERROR:
-				$level	=	'error';
-				break;
+                return log::error($message, array(), 'php');
 
 			case E_WARNING:
-				$level	=	'warning';
-				break;
+                return log::warning($message, array(), 'php');
 
 			case E_STRICT:
 			case E_DEPRECATED:
-			case E_NOTICE:
-				$level	=	'info';
-				break;
+                return log::info($message, array(), 'php');
 
+            case E_NOTICE:
 			default:
-				$level	=	'info';
-				break;
+                return log::debug($message, array(), 'php');
 		}
 
-		$message = $error . "\nline $line in $file";
-		return log::push($message, 'php', $level);
 	}
 
 

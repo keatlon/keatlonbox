@@ -12,18 +12,25 @@ class taskActionController extends actionController
         }
         catch ( PDOException $e)
         {
-			log::critical($e->getMessage() . "\n\n" . json_encode($e->errorInfo) . "\n\n" . $e->getTraceAsString(), 'mysql');
+			log::critical($e->getMessage(), array(
+                'info'  =>  $e->errorInfo,
+                'trace' =>  $e->getTraceAsString()
+            ), 'mysql');
 
             echo "\n********************\n";
-            echo " DB Exception: " . $e->getMessage();
+            echo " DB Exception: " . $e->getMessage() . '. See log files for details';
             echo "\n********************\n";
         }
         catch (Exception $e)
         {
             echo "\n********************\n";
-            echo " Exception: " . $e->getMessage();
+            echo " Exception: " . $e->getMessage() . '. See log files for details';
             echo "\n********************\n";
-			log::critical(log::getTraceInfo($e));
+
+            log::critical($e->getMessage(), array(
+                'info'  =>  $e->errorInfo,
+                'trace' =>  $e->getTraceAsString()
+            ));
        }
     }
 

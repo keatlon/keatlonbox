@@ -39,7 +39,11 @@ class application
         }
 		catch (PDOException $e)
 		{
-			log::critical($e->getMessage() . "\n\n" . $e, 'mysql');
+            log::critical($e->getMessage(), array(
+                'info'  =>  $e->errorInfo,
+                'trace' =>  $e->getTraceAsString()
+            ), 'mysql');
+
 			response::exception('Database Error');
 			application::dispatch('exception', 'database', $e);
 		}
@@ -146,7 +150,11 @@ class application
         }
 		catch (PDOException $e)
 		{
-			log::critical($e->getMessage() . "\n\n" . $e, 'mysql');
+            log::critical($e->getMessage(), array(
+                'info'  =>  $e->errorInfo,
+                'trace' =>  $e->getTraceAsString()
+            ), 'mysql');
+
 			response::exception('Database Error');
 		}
         catch (controllerException $e)
