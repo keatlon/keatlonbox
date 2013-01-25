@@ -22,7 +22,7 @@ class dbConnection
 			$params = $databases[$alias];
 		}
 
-		$params['port']	=	$params['port'] ? $params['port'] : 3306;
+		$params['port']	=	isset($params['port']) ? $params['port'] : 3306;
 		
 		$uri = "mysql:host={$params['host']};port={$params['port']}";
 		
@@ -37,7 +37,7 @@ class dbConnection
 				PDO::MYSQL_ATTR_INIT_COMMAND 		=> "SET NAMES utf8",
 				PDO::MYSQL_ATTR_USE_BUFFERED_QUERY 	=> true,
 				PDO::ATTR_ERRMODE					=>	PDO::ERRMODE_EXCEPTION,
-				PDO::ATTR_PERSISTENT 				=> $params['persistent'] ? true : false
+				PDO::ATTR_PERSISTENT 				=> isset($params['persistent']) ? true : false
 			);
 
 			self::$connections[$alias] = new PDO($uri, $params['user'], $params['password'], $options);
@@ -64,7 +64,7 @@ class dbConnection
 			$alias = conf::$conf['database']['default_connection'];
 		}
 		
-		if ( self::$connections[$alias] === null )
+		if (!isset(self::$connections[$alias]))
 		{
 			if ( $force_connect )
 			{

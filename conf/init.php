@@ -21,7 +21,10 @@
 require_once ROOTDIR . "/core/system/sys.php";
 require_once ROOTDIR . "/core/system/router.class.php";
 
-$arguments = __parseArguments($argv);
+if (isset($argv))
+{
+    $arguments = __parseArguments($argv);
+}
 
 class conf
 {
@@ -66,7 +69,7 @@ else
 	conf::$conf	= 	json_decode(file_get_contents($jsonFile), true);
 }
 
-$application	=	$arguments['application'] ? $arguments['application'] : false;
+$application	=	isset($arguments['application']) ? $arguments['application'] : false;
 
 if (!$application)
 {
@@ -74,5 +77,10 @@ if (!$application)
 }
 
 !defined('APPLICATION') ? define('APPLICATION', $application) : false;
+
+foreach (conf::$conf['phpini'] as $key => $value)
+{
+	ini_set($key, $value);
+}
 
 router::init(APPLICATION ? APPLICATION : false);

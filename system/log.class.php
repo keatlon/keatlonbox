@@ -7,15 +7,12 @@ class log
 
     static public function init()
     {
-		$reporting		=	conf::$conf['log']['error_reporting'] ? conf::$conf['log']['error_reporting'] : E_ALL & ~E_NOTICE;
-
-        if (conf::$conf['log']['handlers'])
+        if (isset(conf::$conf['log']['handlers']))
         {
             self::$handlers	=	conf::$conf['log']['handlers'];
         }
 
-		error_reporting($reporting);
-        set_error_handler(array('log', 'php'), $reporting);
+        set_error_handler(array('log', 'php'), ini_get('error_reporting'));
     }
 
 	static function getTraceInfo(Exception $e)
@@ -25,8 +22,8 @@ class log
 
     private static function push($message, $component, $level, $attributes = array())
     {
-        $attributes['env']          =   $attributes['env'] ? $attributes['env'] : ENVIRONMENT;
-        $attributes['app']          =   $attributes['app'] ? $attributes['app'] : APPLICATION;
+        $attributes['env']          =   isset($attributes['env']) ? $attributes['env'] : ENVIRONMENT;
+        $attributes['app']          =   isset($attributes['app']) ? $attributes['app'] : APPLICATION;
         $attributes['component']    =   $component;
         $attributes['level']        =   $level;
         $attributes['created']      =   time();

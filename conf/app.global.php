@@ -44,8 +44,7 @@ return array
 	'phpini'	=>	array
 	(
 		'display_errors'            =>  false,
-		'display_level'				=>	E_ALL & ~E_NOTICE,
-		'log_level'					=>	E_ALL & ~E_NOTICE,
+        'error_reporting'           =>  E_ALL & ~E_NOTICE,
 		'date.timezone'				=>	'Europe/Helsinki'
 	),
 

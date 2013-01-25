@@ -5,11 +5,6 @@ class application
 
 	static public function init()
 	{
-		foreach (conf::$conf['phpini'] as $key => $value)
-		{
-			ini_set($key, $value);
-		}
-
 		session	::	init();
         log		::	init();
         mc		::	init();
@@ -106,11 +101,6 @@ class application
 	 */
     static public function execute($module, $task, $data = false)
     {
-		foreach (conf::$conf['phpini'] as $key => $value)
-		{
-			ini_set($key, $value);
-		}
-
 		log		::	init();
 		mc		::	init();
 

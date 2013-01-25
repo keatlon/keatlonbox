@@ -25,7 +25,12 @@ function __parseArguments($arguments)
 		$items[trim(substr($arg[0], 2))] = trim($arg[1]);
 	}
 
-	return $items;
+    if (isset($items))
+    {
+        return $items;
+    }
+
+    return array();
 }
 
 function forceboxAutoload($className)

@@ -18,13 +18,15 @@ class taskActionController extends actionController
             ), 'mysql');
 
             echo "\n********************\n";
-            echo " DB Exception: " . $e->getMessage() . '. See log files for details';
+            echo " DB Exception: " . $e->getMessage();
+            echo "\n" . $e->getTraceAsString()
             echo "\n********************\n";
         }
         catch (Exception $e)
         {
             echo "\n********************\n";
-            echo " Exception: " . $e->getMessage() . '. See log files for details';
+            echo " Exception: " . $e->getMessage();
+            echo "\n" . $e->getTraceAsString()
             echo "\n********************\n";
 
             log::critical($e->getMessage(), array(
