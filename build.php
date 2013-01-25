@@ -2,7 +2,9 @@
 
 date_default_timezone_set('Europe/Helsinki');
 
-$arguments = parseArguments($argv);
+require_once dirname(__FILE__) . "/system/sys.php";
+
+$arguments = __parseArguments($argv);
 
 if (!$arguments)
 {
@@ -104,30 +106,6 @@ possible targets
 2) db
 3) apps
 ";
-}
-
-
-function parseArguments($arguments)
-{
-	array_shift($arguments);
-
-	foreach($arguments as $argument)
-	{
-		if (substr($argument, 0, 2) != '--')
-		{
-			continue;
-		}
-
-		if (strpos($argument, '=') === false)
-		{
-			continue;
-		}
-
-		$arg = explode('=', $argument);
-		$items[trim(substr($arg[0], 2))] = trim($arg[1]);
-	}
-	
-	return $items;
 }
 
 

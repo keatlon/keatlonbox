@@ -1,15 +1,17 @@
 <?php
 class log
 {
-	static protected $handler		= array('log', 'handler');
+	static protected $handlers		= array(
+        array('log', 'handler')
+    );
 
     static public function init()
     {
 		$reporting		=	conf::$conf['log']['error_reporting'] ? conf::$conf['log']['error_reporting'] : E_ALL & ~E_NOTICE;
 
-        if (conf::$conf['log']['handler'])
+        if (conf::$conf['log']['handlers'])
         {
-            self::$handler	=	conf::$conf['log']['handler'];
+            self::$handlers	=	conf::$conf['log']['handlers'];
         }
 
 		error_reporting($reporting);
@@ -23,8 +25,8 @@ class log
 
     private static function push($message, $component, $level, $attributes = array())
     {
-        $attributes['env']          =   ENVIRONMENT;
-        $attributes['app']          =   APPLICATION;
+        $attributes['env']          =   $attributes['env'] ? $attributes['env'] : ENVIRONMENT;
+        $attributes['app']          =   $attributes['app'] ? $attributes['app'] : APPLICATION;
         $attributes['component']    =   $component;
         $attributes['level']        =   $level;
         $attributes['created']      =   time();
@@ -32,7 +34,12 @@ class log
         $attributes['host']         =   $_SERVER['SERVER_NAME'];
         $attributes['message']      =   $message;
 
-		return call_user_func(self::$handler, $attributes);
+        if (self::$handlers) foreach(self::$handlers as $handler)
+        {
+            call_user_func($handler, $attributes);
+        }
+
+        return true;
     }
 
 	static function critical($message, $attributes = array(), $component = 'system')
@@ -115,7 +122,7 @@ class log
 
         $attributes['created']  =   date('d M, Y H:i:s', $attributes['created']);
 
-        file_put_contents($file, json_encode($attributes, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+        file_put_contents($file, d($attributes, true) . "\n\n", FILE_APPEND);
 
         return true;
     }

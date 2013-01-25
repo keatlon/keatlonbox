@@ -18,9 +18,10 @@
 !defined('ENVIRONMENT') ?
 		(define('ENVIRONMENT', isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT'] : include CONFDIR . "/environment" )) : false ;
 
-include ROOTDIR . "/core/system/sys.php";
-include ROOTDIR . "/core/system/router.class.php";
+require_once ROOTDIR . "/core/system/sys.php";
+require_once ROOTDIR . "/core/system/router.class.php";
 
+$arguments = __parseArguments($argv);
 
 class conf
 {
@@ -65,11 +66,11 @@ else
 	conf::$conf	= 	json_decode(file_get_contents($jsonFile), true);
 }
 
-$application	=	MODE == 'console' ? conf::$conf['router']['console'] : false;
+$application	=	$arguments['application'] ? $arguments['application'] : false;
 
 if (!$application)
 {
-	$application	=	isset($_SERVER['APPLICATION']) ? $_SERVER['APPLICATION'] : false;
+	$application	=	isset($_SERVER['APPLICATION']) ? $_SERVER['APPLICATION'] : 'main';
 }
 
 !defined('APPLICATION') ? define('APPLICATION', $application) : false;

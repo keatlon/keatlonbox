@@ -1,5 +1,33 @@
 <?php
 
+function __parseArguments($arguments)
+{
+    if (!$arguments)
+    {
+        return array();
+    }
+
+	array_shift($arguments);
+
+	foreach($arguments as $argument)
+	{
+		if (substr($argument, 0, 2) != '--')
+		{
+			continue;
+		}
+
+		if (strpos($argument, '=') === false)
+		{
+			continue;
+		}
+
+		$arg = explode('=', $argument);
+		$items[trim(substr($arg[0], 2))] = trim($arg[1]);
+	}
+
+	return $items;
+}
+
 function forceboxAutoload($className)
 {
 	$filename = router::get($className);

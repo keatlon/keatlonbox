@@ -7,18 +7,13 @@ class router
 
     static public function init($application = false)
     {
-		if ($application)
-		{
-			self::$classRoutes = array_merge(
-				require_once ROOTDIR . "/~cache/autoload-core.php",
-				require_once ROOTDIR . "/~cache/autoload-$application.php"
-			);
-		}
-		elseif (file_exists(ROOTDIR . "/~cache/autoload-core.php"))
-		{
-			self::$classRoutes = require_once ROOTDIR . "/~cache/autoload-core.php";
-		}
+        $coreAutoloads          =   ROOTDIR . "/~cache/autoload-core.php";
+        $coreClasses            =   file_exists($coreAutoloads) ? require_once $coreAutoloads : array();
 
+        $applicationAutoloads   =   ROOTDIR . "/~cache/autoload-$application.php";
+        $applicationClasses     =   ($application && file_exists($applicationAutoloads)) ? require_once $applicationAutoloads : array();
+
+        self::$classRoutes = array_merge($coreClasses, $applicationClasses);
     }
 	
     static public function get($className)
