@@ -145,10 +145,18 @@ class application
                 'trace' =>  $e->getTraceAsString()
             ), 'mysql');
 
-			response::exception('Database Error');
+            echo "\n********************\n";
+            echo "DB Exception: " . $e->getMessage();
+            echo "\n" . $e->getTraceAsString();
+            echo "\n********************\n";
+
 		}
         catch (controllerException $e)
         {
+            echo "\n********************\n";
+            echo "Exception: " . $e->getMessage();
+            echo "\n" . $e->getTraceAsString();
+            echo "\n********************\n";
         }
 
         return $code;
@@ -174,7 +182,7 @@ class application
 			}
 			else
 			{
-				throw new controllerException;
+				throw new controllerException(sprintf("Action %s:%s not found", $module, $action));
 			}
     	}
 
