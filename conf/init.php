@@ -8,7 +8,7 @@ require_once dirname(__FILE__) . "/../system/sys.php";
 
 !defined('MODE') ? define('MODE', false) : false;
 
-!defined('ROOTDIR') ? define('ROOTDIR', __realpath(dirname(__FILE__) . '/../..')) : false;
+!defined('ROOTDIR') ? define('ROOTDIR', realpath(dirname(__FILE__) . '/../../')) : false;
 
 !defined('CONFDIR') ? define('CONFDIR', ROOTDIR . '/conf') : false;
 

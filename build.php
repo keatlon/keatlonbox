@@ -20,7 +20,7 @@ if (!isset($arguments['target']))
 
 $targets = explode(',', $arguments['target']);
 
-!defined('ROOTDIR') ? define('ROOTDIR', __realpath(dirname(__FILE__) . '/..')) : false;
+!defined('ROOTDIR') ? define('ROOTDIR', realpath(dirname(__FILE__) . '/../')) : false;
 
 if (isset($arguments['confdir']))
 {
