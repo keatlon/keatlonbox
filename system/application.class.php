@@ -22,7 +22,6 @@ class application
 	 */
 	static public function run()
 	{
-		profiler::start();
 		application::init();
 
         try
