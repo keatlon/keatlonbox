@@ -39,9 +39,14 @@ class redis
 		return self::$instances[$connection];
 	}
 
-	static function set($key, $value)
+	static function set($key, $value, $ttl = 0)
 	{
-		return self::i()->set($key, $value);
+		self::i()->set($key, $value);
+
+        if ($ttl)
+        {
+            self::i()->expire($key, $ttl);
+        }
 	}
 
 	static function get($key)
