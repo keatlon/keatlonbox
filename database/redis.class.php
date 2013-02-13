@@ -27,13 +27,18 @@ class redis
     			$port   =	conf::$conf['redis']['pool'][$connection]['port'];
 			}
 
+            $extra  =   array();
+
+            if (conf::$conf['redis']['prefix'])
+            {
+                $extra['prefix'] = conf::$conf['redis']['prefix'] . ':';
+            }
+
 			self::$instances[$connection] =	new Predis\Client(array(
 			    'host'   				=>	$host,
 			    'port'   				=>	$port,
 				'connection_persistent'	=>	true,
-			), array(
-				'prefix' => conf::$conf['redis']['prefix'] . ':'
-			));
+			), $extra);
 		}
 
 		return self::$instances[$connection];

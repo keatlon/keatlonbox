@@ -4,8 +4,8 @@
 
 class %BASECLASSNAME% extends dbPeer
 {
-    protected	$instance		= false;
-    protected	static $connection		=	'%CONNECTION%';
+    protected	$instance		= 	false;
+    protected	static $alias 	=	'%CONNECTION%';
 
     protected	$tableName		=	'%TABLENAME%';
     protected	$primaryKey		=	%PRIMARYKEY%;
@@ -28,10 +28,10 @@ class %BASECLASSNAME% extends dbPeer
      * @param integer $primaryKey
      * @return array
      */
-    public static function  row( $primaryKey, $connection = false )
+    public static function  row( $primaryKey, $alias = false )
     {
-    	$connection =	$connection ? $connection : self::$connection;
-        return dbPeer::getInstance('%CLASSNAME%')->doRow( $primaryKey, $connection );
+    	$alias =	$alias ? $alias : self::$alias;
+        return dbPeer::getInstance('%CLASSNAME%')->doRow( $primaryKey, $alias );
     }
 
     /**
@@ -40,10 +40,10 @@ class %BASECLASSNAME% extends dbPeer
      * @param integer $primaryKey
      * @return array
      */
-    public static function  rows( $primaryKeys, $connection = false )
+    public static function  rows( $primaryKeys, $alias = false )
     {
-    	$connection =	$connection ? $connection : self::$connection;
-        return dbPeer::getInstance('%CLASSNAME%')->doRows( $primaryKeys, $connection );
+    	$alias =	$alias ? $alias : self::$alias;
+        return dbPeer::getInstance('%CLASSNAME%')->doRows( $primaryKeys, $alias );
     }
 
     /**
@@ -66,9 +66,9 @@ class %BASECLASSNAME% extends dbPeer
 									$selectSql	=	false,
 									$fromSql	=	false,
 
-    								$connection = false )
+    								$alias = false )
     {
-    	$connection =	$connection ? $connection : self::$connection;
+    	$alias =	$alias ? $alias : self::$alias;
 
         return dbPeer::getInstance('%CLASSNAME%')->doCols(
         	$where,
@@ -82,7 +82,7 @@ class %BASECLASSNAME% extends dbPeer
 			$selectSql,
 			$fromSql,
 
-        	$connection);
+        	$alias);
     }
 
 
@@ -92,10 +92,10 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return integer
      */
-    public static function  insert( $data, $multi = false, $ignore = false, $connection = false )
+    public static function  insert( $data, $multi = false, $ignore = false, $alias = false )
     {
-    	$connection =	$connection ? $connection : self::$connection;
-        return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data, $multi, $ignore, $connection );
+    	$alias =	$alias ? $alias : self::$alias;
+        return dbPeer::getInstance('%CLASSNAME%')->doInsert( $data, $multi, $ignore, $alias );
     }
 
 
@@ -105,10 +105,10 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return integer
      */
-    public static function  replace( $data, $connection = false )
+    public static function  replace( $data, $alias = false )
     {
-    	$connection =	$connection ? $connection : self::$connection;
-        return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data, $connection );
+    	$alias =	$alias ? $alias : self::$alias;
+        return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data, $alias );
     }
 
 
@@ -119,10 +119,10 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return boolean
      */
-    public static function  update($id,  $data, $connection = false)
+    public static function  update($id,  $data, $alias = false)
     {
-    	$connection =	$connection ? $connection : self::$connection;
-        return dbPeer::getInstance('%CLASSNAME%')->doUpdate($id,  $data, $connection);
+    	$alias =	$alias ? $alias : self::$alias;
+        return dbPeer::getInstance('%CLASSNAME%')->doUpdate($id,  $data, $alias);
     }
 
     /**
@@ -130,16 +130,16 @@ class %BASECLASSNAME% extends dbPeer
      *
      * @param integer $primaryKey
      */
-    public static function  delete( $primaryKey, $connection = false )
+    public static function  delete( $primaryKey, $alias = false )
     {
-    	$connection =	$connection ? $connection : self::$connection;
-        return dbPeer::getInstance('%CLASSNAME%')->doDelete( $primaryKey, $connection );
+    	$alias =	$alias ? $alias : self::$alias;
+        return dbPeer::getInstance('%CLASSNAME%')->doDelete( $primaryKey, $alias );
     }
 
-	static function setMeta($id, $values, $mode = 'override', $connection = false)
+	static function setMeta($id, $values, $mode = 'override', $alias = false)
 	{
-    	$connection =	$connection ? $connection : self::$connection;
-		$item		=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $connection);
+    	$alias =	$alias ? $alias : self::$alias;
+		$item		=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $alias);
 		$meta		=	$item['meta'];
 
 		foreach ($values as $key => $value)
@@ -161,16 +161,16 @@ class %BASECLASSNAME% extends dbPeer
 			}
 		}
 
-		dbPeer::getInstance('%CLASSNAME%')->doUpdate($id, array('meta' => json_encode($meta)), $connection);
+		dbPeer::getInstance('%CLASSNAME%')->doUpdate($id, array('meta' => json_encode($meta)), $alias);
 	}
 
-	static function getMeta($id, $key, $item = false, $connection = false)
+	static function getMeta($id, $key, $item = false, $alias = false)
 	{
-    	$connection =	$connection ? $connection : self::$connection;
+    	$alias =	$alias ? $alias : self::$alias;
 
 		if (!$item)
 		{
-			$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $connection);
+			$item	=	dbPeer::getInstance('%CLASSNAME%')->doRow($id, $alias);
 		}
 
 		if ($item['meta'])

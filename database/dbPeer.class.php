@@ -27,7 +27,7 @@ abstract class dbPeer
 	 * @param integer $primaryKey
 	 * @return array
 	 */
-	public function doRow($pk, $connection = false)
+	public function doRow($pk, $alias = false)
 	{
 		if (!$pk)
 		{
@@ -39,7 +39,7 @@ abstract class dbPeer
 			$pk = $pk[0];
 		}
 
-		$row = db::row('SELECT * FROM `' . $this->tableName . "` WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($pk), $connection ? $connection : $this->connectionName);
+		$row = db::row('SELECT * FROM `' . $this->tableName . "` WHERE {$this->primaryBind} LIMIT 1", $this->doBindPrimaryKey($pk), $alias ? $alias : $this->alias);
 
 		if ($row['meta'])
 		{
@@ -49,7 +49,7 @@ abstract class dbPeer
 		return $row;
 	}
 
-	public function doRows($primaryKeys, $connection = false)
+	public function doRows($primaryKeys, $alias = false)
 	{
 		if (!is_array($primaryKeys) || !$primaryKeys)
 		{
@@ -58,7 +58,7 @@ abstract class dbPeer
 
 		foreach ($primaryKeys as $primaryKey)
 		{
-			$result[] = $this->doRow($primaryKey, $connection);
+			$result[] = $this->doRow($primaryKey, $alias);
 		}
 
 		return $result;
@@ -84,7 +84,7 @@ abstract class dbPeer
 						   	$fields 	=	false,
 							$selectSql	=	false,
 							$fromSql	=	false,
-							$connection	=	false
+							$alias	=	false
 	)
 	{
 		$bind			= array();
@@ -195,7 +195,7 @@ abstract class dbPeer
 			$countSql = ' SELECT count(' . $this->primaryCKey . ') cnt ' . $fromSql .
 				( $where_sql ? ' WHERE ' . $where_sql : '' );
 
-			$countRow	= 	db::row($countSql, $bind, $connection ? $connection : $this->connectionName);
+			$countRow	= 	db::row($countSql, $bind, $alias ? $alias : $this->alias);
 			$total		= 	$countRow['cnt'];
 			$more		=	$total > ((int)$offset + (int)$limit);
 		}
@@ -212,10 +212,10 @@ abstract class dbPeer
 
 		if (count($fields) > 1)
 		{
-			return db::rows($sql, $bind, $connection ? $connection : $this->connectionName);
+			return db::rows($sql, $bind, $alias ? $alias : $this->alias);
 		}
 
-		return db::cols($sql, $bind, $connection ? $connection : $this->connectionName);
+		return db::cols($sql, $bind, $alias ? $alias : $this->alias);
 	}
 
 	/**
@@ -224,8 +224,9 @@ abstract class dbPeer
 	 * @param array $data
 	 * @return integer
 	 */
-	public function doInsert($data, $multi = false, $ignore = false, $connection = false)
+	public function doInsert($data, $multi = false, $ignore = false, $alias = false)
 	{
+        $alias      =   $alias ? $alias : $this->alias;
 		$ignore		=	$ignore ? 'IGNORE' : '';
 
 		if ($multi)
@@ -253,7 +254,7 @@ abstract class dbPeer
 			$columns[]	=	'created';
 			$sqlColumns	=	implode(",", $columns);
 
-			return db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $connection ? $connection : $this->connectionName);
+			return db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $alias ? $alias : $this->alias);
 		}
 
 		$data['created'] = time();
@@ -267,9 +268,9 @@ abstract class dbPeer
 
 		$sql	=	'INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data);
 
-		db::exec($sql, $data, $connection ? $connection : $this->connectionName);
+		db::exec($sql, $data, $alias);
 
-		return db::lastId();
+		return db::lastId($alias);
 	}
 
 	/**
@@ -278,7 +279,7 @@ abstract class dbPeer
 	 * @param array $data
 	 * @return integer
 	 */
-	public function doReplace($data, $connection = false)
+	public function doReplace($data, $alias = false)
 	{
 		$data['created'] = time();
 
@@ -289,7 +290,7 @@ abstract class dbPeer
 			$insert_data[] = self::escape($column) . " = :{$column}";
 		}
 
-		db::exec('REPLACE INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data), $data, $connection ? $connection : $this->connectionName);
+		db::exec('REPLACE INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data), $data, $alias ? $alias : $this->alias);
 
 		return db::lastId();
 	}
@@ -301,7 +302,7 @@ abstract class dbPeer
 	 * @param array $data
 	 * @return boolean
 	 */
-	public function doUpdate($primaryKey, $data, $connection = false)
+	public function doUpdate($primaryKey, $data, $alias = false)
 	{
 		foreach ($data as $column => $value)
 		{
@@ -333,7 +334,7 @@ abstract class dbPeer
 
 		$data = $this->doBindPrimaryKey($primaryKey, $data);
 		
-		return db::exec('UPDATE ' . self::escape($this->tableName) . ' SET ' . implode(', ', $update_data) . " WHERE {$this->primaryBind}", $data, $connection ? $connection : $this->connectionName);
+		return db::exec('UPDATE ' . self::escape($this->tableName) . ' SET ' . implode(', ', $update_data) . " WHERE {$this->primaryBind}", $data, $alias ? $alias : $this->alias);
 	}
 
 	/**
@@ -341,19 +342,19 @@ abstract class dbPeer
 	 *
 	 * @param integer $primaryKey
 	 */
-	public function doDelete($primaryKey, $connection = false)
+	public function doDelete($primaryKey, $alias = false)
 	{
 		if (is_array($primaryKey))
 		{
 			foreach ($primaryKey as $primaryKeyId)
 			{
-				$this->delete($primaryKeyId, $connection);
+				$this->delete($primaryKeyId, $alias);
 			}
 
 			return true;
 		}
 
-		return db::exec('DELETE FROM ' . self::escape($this->tableName) . ' WHERE ' . "{$this->primaryBind}", $this->doBindPrimaryKey($primaryKey), $connection ? $connection : $this->connectionName);
+		return db::exec('DELETE FROM ' . self::escape($this->tableName) . ' WHERE ' . "{$this->primaryBind}", $this->doBindPrimaryKey($primaryKey), $alias ? $alias : $this->alias);
 	}
 
 	/**

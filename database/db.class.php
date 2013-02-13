@@ -96,9 +96,9 @@ class db
 		return $statement->fetchAll( pdo::FETCH_COLUMN );
 	}
 	
-	public static function lastId()
+	public static function lastId($alias = false)
 	{
-		return dbConnection::get()->lastInsertId();
+		return dbConnection::get($alias)->lastInsertId();
 	}
 
 	public static function smart($query, $where, $bind, $connectionAlias = null)
