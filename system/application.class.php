@@ -140,8 +140,8 @@ class application
 		catch (PDOException $e)
 		{
             log::critical($e->getMessage(), array(
-                'info'  =>  $e->errorInfo,
-                'trace' =>  $e->getTraceAsString()
+                'info'  =>  json_encode($e->errorInfo),
+                'trace' =>  log::getTraceInfo($e)
             ), 'mysql');
 
             echo "\n********************\n";

@@ -17,19 +17,45 @@ class log
 
 	static function getTraceInfo(Exception $e)
 	{
-		return "\n" . $e->getTraceAsString();
+        $trace  =   $e->getTrace();
+
+        foreach($trace as $item)
+        {
+            $lines[] = "# line " . $item['line'] . "\t" . $item['class'] . $item['type'] . $item['function'] . "(" . json_encode($item['args']) . ")";
+        }
+
+        return implode("\n", $lines);
 	}
 
-    private static function push($message, $component, $level, $attributes = array())
+    private static function push($message, $component, $level, $params = array())
     {
-        $attributes['env']          =   isset($attributes['env']) ? $attributes['env'] : ENVIRONMENT;
-        $attributes['app']          =   isset($attributes['app']) ? $attributes['app'] : APPLICATION;
-        $attributes['component']    =   $component;
-        $attributes['level']        =   $level;
-        $attributes['created']      =   time();
-        $attributes['ip']           =   $_SERVER['SERVER_ADDR'];
-        $attributes['host']         =   $_SERVER['SERVER_NAME'];
-        $attributes['message']      =   $message;
+        $attributes =   array();
+
+        if (!is_array($params))
+        {
+            $attributes['message']      =   $message . ' ' . $params;
+            $attributes['env']          =   ENVIRONMENT;
+            $attributes['app']          =   APPLICATION;
+            $attributes['created']      =   time();
+            $attributes['ip']           =   $_SERVER['SERVER_ADDR'];
+            $attributes['host']         =   $_SERVER['SERVER_NAME'];
+        }
+        else
+        {
+            $attributes['message']      =   $message;
+            $attributes['env']          =   isset($params['env']) ? $params['env'] : ENVIRONMENT;
+            $attributes['app']          =   isset($params['app']) ? $params['app'] : APPLICATION;
+            $attributes['component']    =   $component;
+            $attributes['level']        =   $level;
+            $attributes['created']      =   time();
+            $attributes['ip']           =   $_SERVER['SERVER_ADDR'];
+            $attributes['host']         =   $_SERVER['SERVER_NAME'];
+
+            if ($params)
+            {
+                $attributes = array_merge($attributes, $params);
+            }
+        }
 
         if (self::$handlers) foreach(self::$handlers as $handler)
         {
