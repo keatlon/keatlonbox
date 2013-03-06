@@ -254,7 +254,8 @@ abstract class dbPeer
 			$columns[]	=	'created';
 			$sqlColumns	=	implode(",", $columns);
 
-			return db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $alias ? $alias : $this->alias);
+			$statement  =   db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $alias ? $alias : $this->alias);
+            return $statement->rowCount();
 		}
 
 		$data['created'] = time();
@@ -268,7 +269,8 @@ abstract class dbPeer
 
 		$sql	=	'INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data);
 
-		db::exec($sql, $data, $alias);
+		$statement      =   db::exec($sql, $data, $alias);
+        db::$affected   =   $statement->rowCount();
 
 		return db::lastId($alias);
 	}

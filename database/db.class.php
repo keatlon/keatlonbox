@@ -4,6 +4,8 @@ class db
 	const READ 	= 1;
 	const WRITE = 2;
 
+    static $affected = 0;
+
 	private static function getConnectionAlias( $connectionAlias, $type)
 	{
 		if (!$connectionAlias) switch($type)
@@ -95,7 +97,7 @@ class db
 		$statement = self::exec( $sql, $bind, self::getConnectionAlias($connectionAlias, self::READ) );
 		return $statement->fetchAll( pdo::FETCH_COLUMN );
 	}
-	
+
 	public static function lastId($alias = false)
 	{
 		return dbConnection::get($alias)->lastInsertId();
