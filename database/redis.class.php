@@ -81,7 +81,7 @@ class redis
         return $handle;
     }
 
-    static function listen($handle, $messagedCallback, callable $subscribedCallback = null, callable $unsubscribedCallback = null)
+    static function listen($handle, $messagedCallback, $subscribedCallback = "", $unsubscribedCallback = "")
     {
         foreach ($handle as $message)
         {
