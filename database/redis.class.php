@@ -74,4 +74,41 @@ class redis
 		return self::i()->del($key);
 	}
 
+    static function subscribe($channel)
+    {
+        $handle     =   redis::i()->pubSub();
+        $handle->subscribe($channel);
+        return $handle;
+    }
+
+    static function listen($handle, $messagedCallback, $subscribedCallback = false, $unsubscribedCallback = false)
+    {
+        foreach ($handle as $message)
+        {
+            switch($message->kind)
+            {
+                case 'subscribe':
+                    if ($subscribedCallback)
+                    {
+                        $subscribedCallback($message->channel, $message->payload);
+                    }
+                    break;
+
+                case 'unsubscribe':
+                    if ($unsubscribedCallback)
+                    {
+                        $unsubscribedCallback($message->channel, $message->payload);
+                    }
+                    break;
+
+                case 'message':
+                    if ($messagedCallback)
+                    {
+                        $messagedCallback($message->channel, $message->payload);
+                    }
+                    break;
+            }
+        }
+    }
+
 }
