@@ -190,7 +190,7 @@ abstract class dbPeer
 		/**
 		 * GET TOTAL ROWS QUERY
 		 */
-		if ($total !== null)
+		if (false && $total !== null)
 		{
 			$countSql = ' SELECT count(' . $this->primaryCKey . ') cnt ' . $fromSql .
 				( $where_sql ? ' WHERE ' . $where_sql : '' );

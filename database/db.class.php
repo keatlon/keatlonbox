@@ -46,7 +46,7 @@ class db
 		}
 
 		log::debug($sql, array(
-            'bind'  =>  $bind,
+            'bind'  =>  json_encode($bind),
             'alias' =>  $connectionAlias
         ), 'mysql');
 
