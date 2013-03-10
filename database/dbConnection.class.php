@@ -3,7 +3,15 @@
 class dbConnection
 {
 	protected static $connections = array();
-	
+
+    static function reset()
+    {
+        foreach ( $databases = conf::$conf['database']['pool'] as $alias => $conf )
+        {
+            unset(self::$connections[$alias]);
+        }
+    }
+
 	public static function create( $alias = null, $params = null )
 	{
 		if ( !$alias )
