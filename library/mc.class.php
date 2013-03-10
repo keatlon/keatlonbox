@@ -13,6 +13,7 @@ class mc
         }
 
         $data = self::i()->get($key);
+
         if (!$data)
         {
             return NULL;
@@ -29,18 +30,13 @@ class mc
         }
 
         $data['v']      = $value;
-        $data['ttl']    = $ttl;
-        $res = self::i()->set($key, $data, 0, $ttl);
+
+        return self::i()->set($key, $data, $ttl);
     }
 
     static public function isEmpty($key)
     {
         return (bool)!self::i()->get($key);
-    }
-
-    static public function buildKey($ns, $params)
-    {
-        return self::$prefix . implode('::', $ns) . '_' . implode($params);
     }
 
     static public function flush()
@@ -67,7 +63,7 @@ class mc
     {
         if (!self::$instance)
         {
-            self::$instance = new Memcache();
+            self::$instance = new Memcached();
         }
 
         return self::$instance;
@@ -75,26 +71,26 @@ class mc
 
     static public function init()
     {
-        foreach (conf::$conf['memcache'] as $memcacheConfig)
+        foreach (conf::$conf['memcache'] as $config)
         {
-            if (!$memcacheConfig['enabled'])
+            if (!$config['enabled'])
             {
                 continue;
             }
 
-            $res = self::i()->addServer(
-                    $memcacheConfig['host'],
-                    $memcacheConfig['port'],
-                    $memcacheConfig['persistent'],
-                    $memcacheConfig['weight'],
-                    $memcacheConfig['timeout'],
-                    $memcacheConfig['retry_interval'],
-                    $memcacheConfig['status'],
-                    $memcacheConfig['failure_callback']
+            self::i()->addServer(
+                $config['host'],
+                $config['port'],
+                $config['weight']
             );
-            self::$prefix   = $memcacheConfig['prefix'];
+
             self::$enabled  = true;
         }
+    }
+
+    static function error($err)
+    {
+        dd($err);
     }
 
 }
