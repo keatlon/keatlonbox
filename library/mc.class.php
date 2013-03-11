@@ -7,8 +7,6 @@ class mc
 
     static public function get($key)
     {
-        return false;
-
         if (!self::$enabled)
         {
             return NULL;
