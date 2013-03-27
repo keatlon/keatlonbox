@@ -81,7 +81,14 @@ class redis
         return $handle;
     }
 
-    static function listen($handle, $messagedCallback, $subscribedCallback = "", $unsubscribedCallback = "")
+    static function unsubscribe($channel)
+    {
+        $handle     =   redis::i()->pubSub();
+        $handle->unsubscribe($channel);
+        return $handle;
+    }
+
+    static function listen($handle, $attributes = array(), $messagedCallback, $subscribedCallback = "", $unsubscribedCallback = "")
     {
         foreach ($handle as $message)
         {
@@ -90,21 +97,22 @@ class redis
                 case 'subscribe':
                     if ($subscribedCallback)
                     {
-                        $subscribedCallback($message->channel, $message->payload);
+                        $subscribedCallback($message->channel, $message->payload, $attributes, $handle);
                     }
                     break;
 
                 case 'unsubscribe':
                     if ($unsubscribedCallback)
                     {
-                        $unsubscribedCallback($message->channel, $message->payload);
+                        $unsubscribedCallback($message->channel, $message->payload, $attributes, $handle);
                     }
+                    return true;
                     break;
 
                 case 'message':
                     if ($messagedCallback)
                     {
-                        $messagedCallback($message->channel, $message->payload);
+                        $messagedCallback($message->channel, $message->payload, $attributes, $handle);
                     }
                     break;
             }
