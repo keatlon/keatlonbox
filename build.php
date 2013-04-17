@@ -94,9 +94,9 @@ function printUsage()
 -----------------------------------------------------------
 USAGE: build.php options
 -----------------------------------------------------------
---product	- product name. Default `default`
---target	- targets to process (comma separated)
---confdir	- directory with configuration files
+--product	 product name. Default `default`
+--target	 targets to process (comma separated)
+--confdir	 directory with configuration files
 -----------------------------------------------------------
 possible targets
 1) core
