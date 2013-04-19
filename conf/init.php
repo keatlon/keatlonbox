@@ -58,8 +58,8 @@ if ($recompile)
     $config     = _amr($globalConfig, $productConfig);
     conf::$conf = _amr($config, $environmentConfig);
 
-    file_put_contents($jsonFile, json_encode(conf::$conf));
-    file_put_contents($metaFile, $changed);
+    @file_put_contents($jsonFile, json_encode(conf::$conf));
+    @file_put_contents($metaFile, $changed);
 }
 else
 {

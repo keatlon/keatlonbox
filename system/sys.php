@@ -143,7 +143,7 @@ function _amr($a, $b)
 {
 	foreach($b as $key => $value)
 	{
-		if(array_key_exists($key, $a) && is_array($value))
+		if(is_array($a) && array_key_exists($key, $a) && is_array($value))
 		{
 			$a[$key] = _amr($a[$key], $b[$key]);
 		}
