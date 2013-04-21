@@ -3,7 +3,8 @@
 abstract class dbPeer
 {
 
-	protected static $instances = array();
+	protected static $instances =   array();
+    protected static $lastId    =   false;
 
 	/**
 	 * @static
@@ -254,7 +255,8 @@ abstract class dbPeer
 			$columns[]	=	'created';
 			$sqlColumns	=	implode(",", $columns);
 
-			$statement  =   db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $alias ? $alias : $this->alias);
+			$statement      =   db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $alias ? $alias : $this->alias);
+            self::$lastId   =   db::lastId($alias);
             return $statement->rowCount();
 		}
 
@@ -274,6 +276,12 @@ abstract class dbPeer
 
 		return db::lastId($alias);
 	}
+
+
+    static function lastId()
+    {
+        return self::$lastId;
+    }
 
 	/**
 	 * replace row
