@@ -227,12 +227,18 @@ abstract class dbPeer
 	 */
 	public function doInsert($data, $multi = false, $ignore = false, $alias = false)
 	{
-        $alias      =   $alias ? $alias : $this->alias;
-		$ignore		=	$ignore ? 'IGNORE' : '';
+        $alias          =   $alias ? $alias : $this->alias;
+		$ignore		    =	$ignore ? 'IGNORE' : '';
+        $addCreated     =   false;
 
 		if ($multi)
 		{
 			$columns = array();
+
+            if (isset($data[0]['created']))
+            {
+                $addCreated = true;
+            }
 
 			foreach ($data as $row)
 			{
@@ -242,7 +248,11 @@ abstract class dbPeer
 				}
 				
 				$values		=	array_values($row);
-				$values[]	=	time();
+
+                if ($addCreated)
+                {
+                    $values[]	=	time();
+                }
 
 				foreach ($values as &$value)
 				{
@@ -252,7 +262,11 @@ abstract class dbPeer
 				$sqlValues[]	=	"(" . implode(",", $values) . ")";
 			}
 
-			$columns[]	=	'created';
+            if ($addCreated)
+            {
+			    $columns[]	=	'created';
+            }
+
 			$sqlColumns	=	implode(",", $columns);
 
 			$statement      =   db::exec('INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $alias ? $alias : $this->alias);
