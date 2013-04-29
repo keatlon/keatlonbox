@@ -229,7 +229,7 @@ abstract class dbPeer
 	{
         $alias          =   $alias ? $alias : $this->alias;
 		$ignore		    =	$ignore ? 'IGNORE' : '';
-        $addCreated     =   false;
+        $addCreated     =   true;
 
 		if ($multi)
 		{
@@ -237,7 +237,7 @@ abstract class dbPeer
 
             if (isset($data[0]['created']))
             {
-                $addCreated = true;
+                $addCreated = false;
             }
 
 			foreach ($data as $row)
