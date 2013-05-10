@@ -145,7 +145,7 @@ class log
 
         $attributes['created']  =   date('d M, Y H:i:s', $attributes['created']);
 
-        file_put_contents($file, d($attributes, true) . "\n\n", FILE_APPEND);
+        file_put_contents($file, d($attributes, true) . "\n", FILE_APPEND);
 
         return true;
     }
