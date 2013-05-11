@@ -65,6 +65,11 @@ class log
         return true;
     }
 
+    static function custom($message, $attributes = array(), $component = 'system')
+   	{
+        return log::push($message, $component, $component, $attributes);
+   	}
+
 	static function critical($message, $attributes = array(), $component = 'system')
 	{
 		if (conf::$conf['log']['critical'])
