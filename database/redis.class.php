@@ -81,6 +81,13 @@ class redis
         return $handle;
     }
 
+    static function psubscribe($pattern)
+    {
+        $handle     =   redis::i()->pubSub();
+        $handle->psubscribe($pattern);
+        return $handle;
+    }
+
     static function unsubscribe($channel)
     {
         $handle     =   redis::i()->pubSub();
@@ -92,8 +99,11 @@ class redis
     {
         foreach ($handle as $message)
         {
+            echo $message->kind . "\n";
+
             switch($message->kind)
             {
+                case 'psubscribe':
                 case 'subscribe':
                     if ($subscribedCallback)
                     {
