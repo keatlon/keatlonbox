@@ -105,10 +105,10 @@ class %BASECLASSNAME% extends dbPeer
      * @param array $data
      * @return integer
      */
-    public static function  replace( $data, $alias = false )
+    public static function  replace( $data, $multi = false, $alias = false )
     {
     	$alias =	$alias ? $alias : self::$alias;
-        return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data, $alias );
+        return dbPeer::getInstance('%CLASSNAME%')->doReplace( $data, $multi, $alias );
     }
 
 

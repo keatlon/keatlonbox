@@ -291,27 +291,77 @@ abstract class dbPeer
 		return db::lastId($alias);
 	}
 
-	/**
-	 * replace row
-	 *
-	 * @param array $data
-	 * @return integer
-	 */
-	public function doReplace($data, $alias = false)
-	{
-		$data['created'] = time();
+    /**
+   	 * Replace row
+   	 *
+   	 * @param array $data
+   	 * @return integer
+   	 */
+   	public function doReplace($data, $multi = false, $alias = false)
+   	{
+        $alias          =   $alias ? $alias : $this->alias;
+   		$ignore		    =	$ignore ? 'IGNORE' : '';
+        $addCreated     =   true;
 
-		$insert_data = array();
+   		if ($multi)
+   		{
+   			$columns = array();
 
-		foreach ($data as $column => $value)
-		{
-			$insert_data[] = self::escape($column) . " = :{$column}";
-		}
+            if (isset($data[0]['created']))
+            {
+                $addCreated = false;
+            }
 
-		db::exec('REPLACE INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data), $data, $alias ? $alias : $this->alias);
+   			foreach ($data as $row)
+   			{
+   				if (!$columns)
+   				{
+   					$columns	=	array_keys($row);
+   				}
 
-		return db::lastId();
-	}
+   				$values		=	array_values($row);
+
+                   if ($addCreated)
+                   {
+                       $values[]	=	time();
+                   }
+
+   				foreach ($values as &$value)
+   				{
+   					$value	=	"'" . addslashes($value) . "'";
+   				}
+
+   				$sqlValues[]	=	"(" . implode(",", $values) . ")";
+   			}
+
+            if ($addCreated)
+            {
+   			    $columns[]	=	'created';
+            }
+
+   			$sqlColumns	=	implode(",", $columns);
+
+   			$statement      =   db::exec('REPLACE INTO ' . self::escape($this->tableName) . ' (' . $sqlColumns . ') VALUES ' . implode(', ', $sqlValues), array(), $alias ? $alias : $this->alias);
+
+            return $statement->rowCount();
+   		}
+
+   		$data['created'] = time();
+
+   		$insert_data = array();
+
+   		foreach ($data as $column => $value)
+   		{
+   			$insert_data[] = self::escape($column) . " = :{$column}";
+   		}
+
+   		$sql	=	'INSERT ' . $ignore . ' INTO ' . self::escape($this->tableName) . ' SET ' . implode(', ', $insert_data);
+
+   		$statement      =   db::exec($sql, $data, $alias);
+           db::$affected   =   $statement->rowCount();
+
+   		return db::lastId($alias);
+   	}
 
 	/**
 	 * update row by primary key
