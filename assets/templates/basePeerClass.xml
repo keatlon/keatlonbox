@@ -162,6 +162,9 @@ class %BASECLASSNAME% extends dbPeer
 		}
 
 		dbPeer::getInstance('%CLASSNAME%')->doUpdate($id, array('meta' => json_encode($meta)), $alias);
+
+		$item['meta'] = $meta;
+		return $item;
 	}
 
 	static function getMeta($id, $key, $item = false, $alias = false)
