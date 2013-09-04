@@ -59,7 +59,7 @@ class mc
         return self::i()->delete($key);
     }
 
-    static protected function i()
+    static function i()
     {
         if (!self::$instance)
         {
