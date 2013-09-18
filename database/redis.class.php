@@ -4,6 +4,11 @@ class redis
 {
 	protected static $instances;
 
+    static function reset()
+    {
+        self::$instances = false;
+    }
+
 	/**
 	 *	get instance of redis
 	 *
